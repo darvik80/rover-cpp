@@ -44,7 +44,7 @@ int Server::main(const std::vector<std::string>& args) {
 
     Poco::Net::HTTPServer server(new handlers::Factory(), socket, parameters);
 
-    loadConfiguration();
+    //loadConfiguration();
     server.start();
     waitForTerminationRequest();
     server.stopAll();
