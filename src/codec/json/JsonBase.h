@@ -1,0 +1,132 @@
+//
+// Created by Ivan Kishchenko on 2019-06-08.
+//
+
+#ifndef ROVER_JSONBASE_H
+#define ROVER_JSONBASE_H
+
+#include <Poco/JSON/Object.h>
+#include <Poco/Optional.h>
+#include "../Interfaces.h"
+
+class JsonDecoder : public IDecoder {
+private:
+    Poco::SharedPtr<IUnMarshaller> _unMarshaller;
+public:
+    explicit JsonDecoder(const Poco::SharedPtr<IUnMarshaller> &unMarshaller)
+            : _unMarshaller(unMarshaller) {
+    }
+
+    void decode(std::istream &is) override;
+};
+
+class JsonEncoder : public IEncoder {
+private:
+    Poco::SharedPtr<IMarshaller> _marshaller;
+public:
+    explicit JsonEncoder(const Poco::SharedPtr<IMarshaller> &marshaller)
+            : _marshaller(marshaller) {
+    }
+
+    std::string encode() override;
+};
+
+template<typename T>
+static void unMarshal(const Poco::JSON::Object::Ptr &ptr, const std::string &tag, Poco::Optional<T> &value) {
+    auto opt = ptr->get(tag).convert<T>();
+    value.assign(opt);
+}
+
+static void unMarshal(const Poco::JSON::Object::Ptr &ptr, const std::string &tag, Poco::Dynamic::Var &value) {
+    value = ptr->get(tag);
+}
+
+template<typename T>
+static void unMarshal(const Poco::JSON::Object::Ptr &ptr, const std::string &tag, T &value) {
+    value = ptr->get(tag).convert<T>();
+}
+
+static void marshal(Poco::JSON::Object &ptr, const std::string &tag, Poco::Dynamic::Var &value) {
+    if (!value.isEmpty()) {
+        ptr.set(tag, value);
+    }
+}
+
+template<typename T>
+static void marshal(Poco::JSON::Object &ptr, const std::string &tag, const T &value) {
+    ptr.set(tag, value);
+}
+
+template<typename T>
+static void marshal(Poco::JSON::Object &ptr, const std::string &tag, const Poco::Optional<T> &value) {
+    if (value.isSpecified()) {
+        marshal(ptr, tag, value.value());
+    }
+}
+
+#define BEGIN_DECLARE_DTO(T)                                                        \
+class T : public IMarshaller, public IUnMarshaller, public ICloneable {             \
+            typedef T Owner;                                                        \
+        public:                                                                     \
+            ICloneable* clone() override {                                          \
+                return new T();                                                     \
+            }
+
+#define __DECLARE_DTO_FIELD(cls, name) \
+public: cls name;
+
+#define END_DECLARE_DTO \
+};
+
+
+#define BEGIN_JSON_UNMARSHAL                                            \
+template <typename Owner>                                               \
+class JsonUnMarshaller : public IUnMarshaller {                         \
+public:                                                                 \
+    explicit JsonUnMarshaller(Owner& obj) : _obj(obj) { }               \
+private:                                                                \
+    Owner& _obj;                                                        \
+public:                                                                 \
+    virtual void unMarshal(const Poco::Dynamic::Var& object) override { \
+        const auto& ptr = object.extract<Poco::JSON::Object::Ptr>();
+#define ITEM_JSON_UNMARSHAL(name) ::unMarshal(ptr, #name, _obj.name);
+#define ITEM_JSON_UNMARSHAL_TAG(tag, name) ::unMarshal(ptr, #tag, _obj.name);;
+#define ITEM_JSON_UNMARSHAL_OBJ(name) _obj.name.unMarshaller()->unMarshal(ptr->get(#name));
+#define END_JSON_UNMARSHAL }                                        \
+};                                                                  \
+typedef JsonUnMarshaller<Owner> UnMarshaller;                       \
+Poco::SharedPtr<IUnMarshaller> unMarshaller() {                     \
+    return Poco::SharedPtr<IUnMarshaller>(new UnMarshaller(*this)); \
+}                                                                   \
+virtual void unMarshal(const Poco::Dynamic::Var& object) override { \
+    this->unMarshaller()->unMarshal(object);                        \
+}
+
+#define BEGIN_JSON_MARSHAL                                      \
+template <typename Owner>                                       \
+class JsonMarshaller : public IMarshaller {                     \
+private:                                                        \
+    const Owner& _obj;                                          \
+public:                                                         \
+    explicit JsonMarshaller(const Owner& obj) : _obj(obj) { }   \
+    virtual Poco::Dynamic::Var marshal() const override {       \
+        Poco::JSON::Object obj;
+#define ITEM_JSON_MARSHAL(name) ::marshal(obj, #name, _obj.name);
+#define ITEM_JSON_MARSHAL_TAG(tag, name) ::marshal(obj, #tag, _obj.name);
+#define ITEM_JSON_MARSHAL_OBJ(name) obj.set(#name, _obj.name.marshaller()->marshal());
+#define ITEM_JSON_MARSHAL_OBJ_OPT(name) if (_obj.name.isSpecified()) {  \
+        const auto val = _obj.name.value().marshaller()->marshal();     \
+        obj.set(#name, val);                                            \
+    }
+#define END_JSON_MARSHAL return Poco::Dynamic::Var(obj);        \
+    }                                                           \
+};                                                              \
+typedef JsonMarshaller<Owner> Marshaller;                       \
+Poco::SharedPtr<IMarshaller> marshaller() const {               \
+    return Poco::SharedPtr<IMarshaller>(new Marshaller(*this)); \
+}                                                               \
+virtual Poco::Dynamic::Var marshal() const override {           \
+    return this->marshaller()->marshal();                       \
+}
+
+#endif //ROVER_JSONBASE_H

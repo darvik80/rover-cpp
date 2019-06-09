@@ -10,7 +10,8 @@ namespace handlers
             Poco::Net::HTTPServerRequest& request,
             Poco::Net::HTTPServerResponse& response)
     {
-        response.send().flush();
+        response.send() << "test";
+        //response.send().flush();
         response.setStatus(Poco::Net::HTTPServerResponse::HTTP_OK);
     }
 
