@@ -45,12 +45,12 @@ __DECLARE_DTO_FIELD(Config, config)
 
     BEGIN_JSON_UNMARSHAL
             ITEM_JSON_UNMARSHAL(id)
-            ITEM_JSON_UNMARSHAL_OBJ(config)
+            ITEM_JSON_UNMARSHAL(config)
     END_JSON_UNMARSHAL
 
     BEGIN_JSON_MARSHAL
             ITEM_JSON_MARSHAL(id)
-            ITEM_JSON_MARSHAL_OBJ(config)
+            ITEM_JSON_MARSHAL(config)
     END_JSON_MARSHAL
 
 END_DECLARE_DTO
@@ -60,12 +60,12 @@ __DECLARE_DTO_FIELD(int, id)
 __DECLARE_DTO_FIELD(Message, message)
     BEGIN_JSON_UNMARSHAL
             ITEM_JSON_UNMARSHAL(id)
-            ITEM_JSON_UNMARSHAL_OBJ(message)
+            ITEM_JSON_UNMARSHAL(message)
     END_JSON_UNMARSHAL
 
     BEGIN_JSON_MARSHAL
             ITEM_JSON_MARSHAL(id)
-            ITEM_JSON_MARSHAL_OBJ(message)
+            ITEM_JSON_MARSHAL(message)
     END_JSON_MARSHAL
 END_DECLARE_DTO
 

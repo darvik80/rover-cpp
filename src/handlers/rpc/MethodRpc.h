@@ -20,13 +20,13 @@ public:
     std::shared_ptr<IMarshaller> handle(const std::shared_ptr<IUnMarshaller>& params) override {
         T* p = dynamic_cast<T*>(params.get());
         if (p) {
-            return exec(p);
+            return exec(*p);
         }
 
         throw std::bad_exception();
     }
 
-    virtual std::shared_ptr<R> exec(const T* params) = 0;
+    virtual std::shared_ptr<R> exec(const T& params) = 0;
 };
 
 #endif //ROVER_METHODRPC_H

@@ -13,7 +13,7 @@ message(INCLUDE, ${CMAKE_BINARY_DIR})
 message(INCLUDE, ${CMAKE_SOURCE_DIR})
 message(INCLUDE, ${PROJECT_SOURCE_DIR})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 include_directories(/usr/local/macchina/include ${PROJECT_SOURCE_DIR}/src)
 link_directories(/usr/local/macchina/lib)

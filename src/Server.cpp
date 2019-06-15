@@ -42,37 +42,6 @@ namespace
 } // anonymous namespace
 
 int Server::main(const std::vector<std::string>& args) {
-    /*
-    TestMessage test;
-    test.id = 1231244;
-    test.message.message="Hello";
-
-    std::string res = JsonEncoder(test.marshaller()).encode();
-
-    Message message;
-    message.id = 12;
-    message.message = "Hello World";
-
-    handlers::JsonRpcRequest request;
-    request.id = "124124324235";
-    request.method = "ping";
-    request.jsonrpc = "2.0";
-
-    request.params = Message::JsonMarshaller<Message>(message).marshal();
-
-    res = JsonEncoder(request.marshaller()).encode();
-
-    handlers::JsonRpcRequest result;
-    auto is = std::istringstream(res);
-    JsonDecoder(result.unMarshaller()).decode(is);
-
-    Controller controller;
-    controller.id = 100;
-    controller.config.id = 200;
-    controller.config.message = "test";
-    res = JsonEncoder(controller.marshaller()).encode();
-     */
-
     loadConfiguration();
 
     Poco::Net::HTTPServerParams::Ptr parameters = new Poco::Net::HTTPServerParams();

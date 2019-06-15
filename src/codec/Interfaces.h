@@ -6,7 +6,6 @@
 #define ROVER_INTERFACES_H
 
 #include <string>
-#include <Poco/Dynamic/Var.h>
 
 class IEncoder {
 public:
@@ -39,6 +38,11 @@ public:
 class IUnMarshaller {
 public:
     virtual void unMarshal(const Poco::Dynamic::Var& object) = 0;
+    virtual void unMarshal(const Poco::Optional<Poco::Dynamic::Var>& object) {
+        if (object.isSpecified()) {
+            unMarshal(object.value());
+        }
+    }
 
     virtual ~IUnMarshaller() = default;
 };

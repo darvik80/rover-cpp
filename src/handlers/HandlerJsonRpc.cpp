@@ -36,24 +36,30 @@ namespace handlers {
         JsonRpcRequest jsonRpcRequest;
         JsonDecoder(jsonRpcRequest.unMarshaller()).decode(request.stream());
 
+        auto s = JsonEncoder(jsonRpcRequest.marshaller()).encode();
+
         JsonRpcResponse jsonRpcResponse;
         jsonRpcResponse.id = jsonRpcRequest.id;
         jsonRpcResponse.jsonrpc = jsonRpcRequest.jsonrpc;
         auto method = _methods.find(jsonRpcRequest.method);
         if (method != _methods.end()) {
-            const auto meta = method->second;
-            auto cloneable = dynamic_cast<ICloneable*>(meta._unMarshaller.get());
-            if (cloneable) {
-                auto params = std::shared_ptr<IUnMarshaller>((IUnMarshaller*)cloneable->clone());
-                if (params) {
-                    params->unMarshal(jsonRpcRequest.params);
-                    std::shared_ptr<IMarshaller> result(meta._method.get()->handle(params));
-                    jsonRpcResponse.result = result->marshal();
+            try {
+                const auto meta = method->second;
+                auto cloneable = dynamic_cast<ICloneable *>(meta._unMarshaller.get());
+                if (cloneable) {
+                    auto params = std::shared_ptr<IUnMarshaller>(dynamic_cast<IUnMarshaller *>(cloneable->clone()));
+                    if (params) {
+                        params->unMarshal(jsonRpcRequest.params);
+                        std::shared_ptr<IMarshaller> result(meta._method.get()->handle(params));
+                        jsonRpcResponse.result = result->marshal();
+                    } else {
+                        jsonRpcResponse.error = error(InternalError, "Can't decode params");
+                    }
                 } else {
-                    jsonRpcResponse.error = error(InternalError, "Can't decode params");
+                    jsonRpcResponse.error = error(InternalError, "Can't find params");
                 }
-            } else {
-                jsonRpcResponse.error = error(InternalError, "Can't find params");
+            } catch (std::exception& ex) {
+                jsonRpcResponse.error = error(InternalError, ex.what());
             }
         } else {
             jsonRpcResponse.error = error(MethodNotFound, "Method not found");

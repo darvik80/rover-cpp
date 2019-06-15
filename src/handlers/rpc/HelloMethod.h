@@ -12,11 +12,9 @@
 /**
  * hello params
  */
-BEGIN_DECLARE_DTO(HelloParams)
-__DECLARE_DTO_FIELD(std::string, name)
+BEGIN_DECLARE_DTO_INC(HelloParams)
 
-    BEGIN_JSON_MARSHAL
-    END_JSON_MARSHAL
+__DECLARE_DTO_FIELD(std::string, name)
 
     BEGIN_JSON_UNMARSHAL
             ITEM_JSON_UNMARSHAL(name)
@@ -27,28 +25,24 @@ END_DECLARE_DTO
 /**
  * hello response
  */
-BEGIN_DECLARE_DTO(HelloResult)
+BEGIN_DECLARE_DTO_OUT(HelloResult)
+
 __DECLARE_DTO_FIELD(std::string, message)
 
     BEGIN_JSON_MARSHAL
             ITEM_JSON_MARSHAL(message)
     END_JSON_MARSHAL
-
-    BEGIN_JSON_UNMARSHAL
-    END_JSON_UNMARSHAL
-
 END_DECLARE_DTO
 
 class HelloMethod : public BaseMethodRpc<HelloParams, HelloResult> {
 public:
-    std::shared_ptr<HelloResult> exec(const HelloParams* params) override {
+    std::shared_ptr<HelloResult> exec(const HelloParams &params) override {
         auto result = std::make_shared<HelloResult>();
-        result->message = "Hello, " + params->name;
+        result->message = "Hello, " + params.name;
 
         return result;
     }
 };
-
 
 
 #endif //ROVER_HELLOMETHOD_H
