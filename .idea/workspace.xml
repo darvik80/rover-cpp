@@ -15,16 +15,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d06589f0-7487-4008-a463-18092db03d83" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/codec/Interfaces.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/codec/Interfaces.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/codec/json/JsonBase.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/codec/json/JsonBase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/codec/json/Samples.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/codec/json/Samples.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/HandlerJsonRpc.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/HandlerJsonRpc.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/HandlerJsonRpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/HandlerJsonRpc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/rpc/HelloMethod.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/rpc/HelloMethod.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/rpc/MethodRpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/rpc/MethodRpc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/CMakeFiles/" />
@@ -54,7 +45,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Server.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="165">
@@ -142,11 +133,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/include/Poco/Types.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="69" column="39" selection-start-line="69" selection-start-column="39" selection-end-line="69" selection-end-column="39" />
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="75">
+                <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -189,7 +183,6 @@
         <option value="$PROJECT_DIR$/src/handlers/Factory.h" />
         <option value="$PROJECT_DIR$/src/handlers/Ping.h" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/rover.properties" />
         <option value="$PROJECT_DIR$/src/handlers/Ping.cpp" />
         <option value="$PROJECT_DIR$/src/handlers/Route.h" />
@@ -213,6 +206,7 @@
         <option value="$PROJECT_DIR$/src/codec/json/JsonBase.h" />
         <option value="$PROJECT_DIR$/src/codec/json/Samples.h" />
         <option value="$PROJECT_DIR$/src/Server.cpp" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -448,12 +442,12 @@
       <workItem from="1559373986558" duration="152000" />
       <workItem from="1559462069622" duration="395000" />
       <workItem from="1559462481284" duration="818000" />
-      <workItem from="1559996235253" duration="40071000" />
+      <workItem from="1559996235253" duration="40407000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="54578000" />
+    <option name="totallyTimeSpent" value="54914000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -582,17 +576,6 @@
           <caret line="145" column="37" selection-start-line="145" selection-start-column="37" selection-end-line="145" selection-end-column="37" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor>
-            <caret column="8" selection-start-column="8" selection-end-column="8" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor" />
     </entry>
     <entry file="file:///usr/local/include/Poco/Net/HTTPRequestHandler.h">
       <provider selected="true" editor-type-id="text-editor" />
@@ -905,6 +888,17 @@
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="75">
+            <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
