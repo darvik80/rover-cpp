@@ -36,8 +36,6 @@ namespace handlers {
         JsonRpcRequest jsonRpcRequest;
         JsonDecoder(jsonRpcRequest.unMarshaller()).decode(request.stream());
 
-        auto s = JsonEncoder(jsonRpcRequest.marshaller()).encode();
-
         JsonRpcResponse jsonRpcResponse;
         jsonRpcResponse.id = jsonRpcRequest.id;
         jsonRpcResponse.jsonrpc = jsonRpcRequest.jsonrpc;
