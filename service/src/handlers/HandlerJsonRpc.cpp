@@ -7,11 +7,10 @@
 #include <Poco/Net/HTTPServerResponse.h>
 #include <iostream>
 
-namespace handlers {
-    void HandlerJsonRpc::registerMethod(const std::shared_ptr<IRpcMethod>& method) {
-        _methods[method->name()] = method;
-    }
+#include <rpc/RpcRegistry.h>
+#include "rpc/HealthRpcSupplier.h"
 
+namespace handlers {
     void HandlerJsonRpc::handleRequest(
             Poco::Net::HTTPServerRequest &request,
             Poco::Net::HTTPServerResponse &response) {
@@ -41,10 +40,10 @@ namespace handlers {
     void HandlerJsonRpc::handle(JsonRpcRequest& request, JsonRpcResponse& response) {
         response.id = request.id;
         response.jsonrpc = request.jsonrpc;
-        auto method = _methods.find(request.method);
-        if (method != _methods.end()) {
+        auto method = RpcRegistry::instance().findMethod(request.method);
+        if (method.isSpecified()) {
             try {
-                response.result = method->second->handle(request.params);
+                response.result = method.value()->handle(request.params);
             } catch (std::exception& ex) {
                 response.error = error(InternalError, ex.what());
             }

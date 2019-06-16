@@ -8,18 +8,20 @@
 #include <string>
 #include "json/Interfaces.h"
 
-class IRpcMethod {
+class RpcMethod : Poco::ReferenceCounter {
+public:
+    typedef Poco::SharedPtr<RpcMethod> Ptr;
 public:
     virtual std::string name() const = 0;
-    virtual Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) = 0;
+    virtual Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const = 0;
 
-    virtual ~IRpcMethod() = default;
+    virtual ~RpcMethod() = default;
 };
 
 template <typename T, typename R>
-class RpcFunction : public IRpcMethod {
+class RpcFunction : public RpcMethod {
 public:
-    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) override {
+    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const override {
         T inc;
         if (params.isSpecified()) {
             inc.unMarshal(params.value());
@@ -28,13 +30,13 @@ public:
         return this->exec(inc).marshaller()->marshal();
     };
 
-    virtual R exec(const T& params) = 0;
+    virtual R exec(const T& params)const = 0;
 };
 
 template <typename T>
-class RpcConsumer : public IRpcMethod {
+class RpcConsumer : public RpcMethod {
 public:
-    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) override {
+    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const override {
         T inc;
         if (params.isSpecified()) {
             inc.unMarshal(params.value());
@@ -45,16 +47,17 @@ public:
         return Poco::Optional<Poco::Dynamic::Var>();
     };
 
-    virtual void exec(const T& params) = 0;
+    virtual void exec(const T& params) const = 0;
 };
 
 template <typename R>
-class RpcSupplier : public IRpcMethod {
-    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) override {
+class RpcSupplier : public RpcMethod {
+    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const override {
         return this->exec().marshaller()->marshal();
     };
 
-    virtual R exec() = 0;
+    virtual R exec() const = 0;
 };
+
 
 #endif //ROVER_RPCMETHOD_H

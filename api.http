@@ -9,58 +9,9 @@ Content-Type: application/json
 
 {
   "id": "1212",
-  "method": "helloWorld",
+  "method": "health",
   "jsonrpc": "2.0"
 }
 
 ###
 
-POST http://localhost:10000/rpc HTTP/1.1
-Content-Type: application/json
-
-{
-  "id": "1212",
-  "method": "hello.function",
-  "params": {
-    "name": "Ivan"
-  },
-  "jsonrpc": "2.0"
-}
-
-###
-
-POST http://localhost:10000/rpc HTTP/1.1
-Content-Type: application/json
-
-{
-  "id": "1212",
-  "method": "hello.consumer",
-  "params": {
-    "name": "Ivan"
-  },
-  "jsonrpc": "2.0"
-}
-
-###
-
-POST http://localhost:10000/rpc HTTP/1.1
-Content-Type: application/json
-
-{
-  "id": "1212",
-  "method": "hello.supplier",
-  "jsonrpc": "2.0"
-}
-
-###
-
-POST http://localhost:10000/rpc HTTP/1.1
-Content-Type: application/json
-
-{
-  "id": "1212",
-  "method": "hello.not.exists",
-  "jsonrpc": "2.0"
-}
-
-###

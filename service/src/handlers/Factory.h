@@ -7,11 +7,12 @@
 
 
 #include <Poco/Net/HTTPRequestHandlerFactory.h>
+#include "HandlerJsonRpc.h"
 
 namespace handlers {
 
     class Factory : public Poco::Net::HTTPRequestHandlerFactory {
-    private:
+    public:
         Poco::Net::HTTPRequestHandler *createRequestHandler(
                 const Poco::Net::HTTPServerRequest &request) override;
     };

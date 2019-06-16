@@ -10,6 +10,8 @@
 #include <Poco/Net/HTTPServer.h>
 #include <Poco/Net/ServerSocketImpl.h>
 #include <Poco/Util/ServerApplication.h>
+#include <rpc/RpcRegistry.h>
+#include <rpc/HealthRpcSupplier.h>
 
 #include "handlers/HandlerJsonRpc.h"
 
@@ -55,4 +57,10 @@ int Server::main(const std::vector<std::string> &args) {
     server.stopAll();
 
     return 0;
+}
+
+void Server::initialize(Poco::Util::Application &self) {
+    Application::initialize(self);
+
+    RpcRegistry::instance().addMethod(new HealthRpcSupplier());
 }

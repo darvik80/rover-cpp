@@ -6,6 +6,7 @@
 
 #include <json/JsonBase.h>
 #include <rpc/RpcMethod.h>
+#include <rpc/RpcRegistry.h>
 
 
 /**
@@ -30,7 +31,7 @@ public:
         return "hello.function";
     }
 
-    HelloResult exec(const HelloParams &params) override {
+    HelloResult exec(const HelloParams &params) const override {
         HelloResult result;
         result.message = "Hello, " + params.name;
 
@@ -44,7 +45,7 @@ public:
         return "hello.supplier";
     }
 
-    HelloResult exec() override {
+    HelloResult exec() const override {
         HelloResult result;
         result.message = "Hello, World";
 
@@ -58,11 +59,10 @@ public:
         return "hello.consumer";
     }
 
-    void exec(const HelloParams &params) override {
+    void exec(const HelloParams &params) const override {
 
     }
 };
-
 
 void HandlerJsonRpcTest::testHandleFunction() {
     JsonRpcRequest request;
@@ -135,7 +135,7 @@ void HandlerJsonRpcTest::testHandleMethodNotExists() {
 void HandlerJsonRpcTest::setUp() {
     TestFixture::setUp();
 
-    handler.registerMethod(std::make_shared<HelloFunction>());
-    handler.registerMethod(std::make_shared<HelloConsumer>());
-    handler.registerMethod(std::make_shared<HelloSupplier>());
+    RpcRegistry::instance().addMethod(new HelloFunction());
+    RpcRegistry::instance().addMethod(new HelloSupplier());
+    RpcRegistry::instance().addMethod(new HelloConsumer());
 }

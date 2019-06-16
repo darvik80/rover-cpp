@@ -15,8 +15,6 @@
 namespace handlers {
 
     class HandlerJsonRpc : public Poco::Net::HTTPRequestHandler {
-    private:
-        std::map<std::string, std::shared_ptr<IRpcMethod> > _methods;
 
     private:
         static JsonRcpError error(int code, const std::string &message) {
@@ -28,10 +26,6 @@ namespace handlers {
         }
 
     public:
-        HandlerJsonRpc() = default;
-
-        void registerMethod(const std::shared_ptr<IRpcMethod> &pointer);
-
         void handle(
                 JsonRpcRequest& request,
                 JsonRpcResponse& response);
@@ -39,7 +33,6 @@ namespace handlers {
         void handleRequest(
                 Poco::Net::HTTPServerRequest &request,
                 Poco::Net::HTTPServerResponse &response) override;
-
     };
 
 

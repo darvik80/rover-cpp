@@ -63,31 +63,31 @@ static void unMarshal(const Poco::JSON::Object::Ptr &ptr, const std::string &tag
     }
 }
 
-static void marshal(Poco::JSON::Object &ptr, const std::string &tag, Poco::Dynamic::Var &value) {
+static void marshal(Poco::JSON::Object::Ptr &ptr, const std::string &tag, Poco::Dynamic::Var &value) {
     if (!value.isEmpty()) {
-        ptr.set(tag, value);
+        ptr->set(tag, value);
     }
 }
 
 template<typename T>
-static void marshal(Poco::JSON::Object &ptr, const std::string &tag, const T &value) {
+static void marshal(Poco::JSON::Object::Ptr &ptr, const std::string &tag, const T &value) {
     if constexpr (std::is_base_of<Poco::Optional<T>, T>::value) {
         if (value.isSpecified()) {
             marshal(value.value());
         }
     } else if constexpr (std::is_base_of<IMarshaller, T>::value) {
-        ptr.set(tag, value.marshal());
+        ptr->set(tag, value.marshal());
     } else {
-        ptr.set(tag, value);
+        ptr->set(tag, value);
     }
 }
 
-static void marshal(Poco::JSON::Object &ptr, const std::string &tag, const IMarshaller &value) {
-    ptr.set(tag, value.marshal());
+static void marshal(Poco::JSON::Object::Ptr &ptr, const std::string &tag, const IMarshaller &value) {
+    ptr->set(tag, value.marshal());
 }
 
 template<typename T>
-static void marshal(Poco::JSON::Object &ptr, const std::string &tag, const Poco::Optional<T> &value) {
+static void marshal(Poco::JSON::Object::Ptr &ptr, const std::string &tag, const Poco::Optional<T> &value) {
     if (value.isSpecified()) {
         marshal(ptr, tag, value.value());
     }
@@ -126,7 +126,7 @@ private:                                                                        
 public:                                                                             \
     explicit JsonMarshaller(const Owner& obj) : _obj(obj) { }                       \
     virtual Poco::Dynamic::Var marshal() const override {                           \
-        Poco::JSON::Object obj;
+        Poco::JSON::Object::Ptr obj(new Poco::JSON::Object());
 #define ITEM_JSON_MARSHAL(name) ::marshal(obj, #name, _obj.name);
 #define ITEM_JSON_MARSHAL_TAG(tag, name) ::marshal(obj, #tag, _obj.name);
 #define END_JSON_MARSHAL return Poco::Dynamic::Var(obj);                            \

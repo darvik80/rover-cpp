@@ -18,7 +18,7 @@ namespace handlers {
             return new HandlerJsonRpc();
 
         if (request.getURI() == ROUTE_PING)
-            return new HandlerJsonRpc();
+            return new Ping();
 
         return nullptr;
     }
