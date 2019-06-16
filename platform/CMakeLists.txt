@@ -11,6 +11,8 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_library(platform SHARED ${SRCS_G})
 
+add_subdirectory(testsuite)
+
 target_link_libraries(platform PUBLIC
         ${CMAKE_THREAD_LIBS_INIT}
         -lPocoUtil
