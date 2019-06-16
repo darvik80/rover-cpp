@@ -43,8 +43,14 @@ static void unMarshal(const Poco::JSON::Object::Ptr &ptr, const std::string &tag
 
 template<typename T>
 static void unMarshal(const Poco::JSON::Object::Ptr &ptr, const std::string &tag, Poco::Optional<T> &value) {
-    auto opt = ptr->get(tag).convert<T>();
-    value.assign(opt);
+    if constexpr (std::is_base_of<IUnMarshaller, T>::value) {
+        T opt;
+        opt.unMarshal(ptr->get(tag));
+        value.assign(opt);
+    } else {
+        auto opt = ptr->get(tag).convert<T>();
+        value.assign(opt);
+    }
 }
 
 template<typename T>
@@ -85,31 +91,6 @@ static void marshal(Poco::JSON::Object &ptr, const std::string &tag, const Poco:
         marshal(ptr, tag, value.value());
     }
 }
-
-#define BEGIN_DECLARE_DTO(T)                                                        \
-class T : public IMarshaller, public IUnMarshaller, public ICloneable {             \
-            typedef T Owner;                                                        \
-        public:                                                                     \
-            ICloneable* clone() override {                                          \
-                return new T();                                                     \
-            }
-#define BEGIN_DECLARE_DTO_OUT(T)                                                    \
-class T : public IMarshaller, public ICloneable {                                   \
-            typedef T Owner;                                                        \
-        public:                                                                     \
-            ICloneable* clone() override {                                          \
-                return new T();                                                     \
-            }
-#define BEGIN_DECLARE_DTO_INC(T)                                                    \
-class T : public IUnMarshaller, public ICloneable {                                 \
-            typedef T Owner;                                                        \
-        public:                                                                     \
-            ICloneable* clone() override {                                          \
-                return new T();                                                     \
-            }
-
-#define __DECLARE_DTO_FIELD(cls, name) \
-public: cls name;
 
 #define END_DECLARE_DTO \
 };
@@ -157,5 +138,85 @@ Poco::SharedPtr<IMarshaller> marshaller() const {                               
 virtual Poco::Dynamic::Var marshal() const override {                               \
     return this->marshaller()->marshal();                                           \
 }
+
+#define BEGIN_DECLARE_DTO(T)                                                        \
+class T : public IMarshaller, public IUnMarshaller, public ICloneable {             \
+            typedef T Owner;                                                        \
+        public:                                                                     \
+            ICloneable* clone() override {                                          \
+                return new T();                                                     \
+            }
+#define BEGIN_DECLARE_DTO_OUT(T)                                                    \
+class T : public IMarshaller, public ICloneable {                                   \
+            typedef T Owner;                                                        \
+        public:                                                                     \
+            ICloneable* clone() override {                                          \
+                return new T();                                                     \
+            }
+#define BEGIN_DECLARE_DTO_INC(T)                                                    \
+class T : public IUnMarshaller, public ICloneable {                                 \
+            typedef T Owner;                                                        \
+        public:                                                                     \
+            ICloneable* clone() override {                                          \
+                return new T();                                                     \
+            }
+
+#define __DECLARE_DTO_FIELD(cls, name) \
+public: cls name;
+
+#define __DECLARE_DTO_FIELDS1(cls, name) \
+public: cls name; \
+BEGIN_JSON_MARSHAL \
+    ITEM_JSON_MARSHAL(name) \
+END_JSON_MARSHAL \
+BEGIN_JSON_UNMARSHAL \
+    ITEM_JSON_UNMARSHAL(name) \
+END_JSON_UNMARSHAL \
+
+#define __DECLARE_DTO_FIELDS2(cls1, name1, cls2, name2) \
+public: cls1 name1; \
+public: cls2 name2; \
+BEGIN_JSON_MARSHAL \
+    ITEM_JSON_MARSHAL(name1) \
+    ITEM_JSON_MARSHAL(name2) \
+END_JSON_MARSHAL \
+BEGIN_JSON_UNMARSHAL \
+    ITEM_JSON_UNMARSHAL(name1) \
+    ITEM_JSON_UNMARSHAL(name2) \
+END_JSON_UNMARSHAL \
+
+
+#define __DECLARE_DTO_FIELDS3(cls1, name1, cls2, name2, cls3, name3) \
+public: cls1 name1; \
+public: cls2 name2; \
+public: cls3 name3; \
+BEGIN_JSON_MARSHAL \
+    ITEM_JSON_MARSHAL(name1) \
+    ITEM_JSON_MARSHAL(name2) \
+    ITEM_JSON_MARSHAL(name3) \
+END_JSON_MARSHAL \
+BEGIN_JSON_UNMARSHAL \
+    ITEM_JSON_UNMARSHAL(name1) \
+    ITEM_JSON_UNMARSHAL(name2) \
+    ITEM_JSON_UNMARSHAL(name3) \
+END_JSON_UNMARSHAL \
+
+#define __DECLARE_DTO_FIELDS4(cls1, name1, cls2, name2, cls3, name3, cls4, name4) \
+public: cls1 name1; \
+public: cls2 name2; \
+public: cls3 name3; \
+public: cls3 name4; \
+BEGIN_JSON_MARSHAL \
+    ITEM_JSON_MARSHAL(name1) \
+    ITEM_JSON_MARSHAL(name2) \
+    ITEM_JSON_MARSHAL(name3) \
+    ITEM_JSON_MARSHAL(name4) \
+END_JSON_MARSHAL \
+BEGIN_JSON_UNMARSHAL \
+    ITEM_JSON_UNMARSHAL(name1) \
+    ITEM_JSON_UNMARSHAL(name2) \
+    ITEM_JSON_UNMARSHAL(name3) \
+    ITEM_JSON_UNMARSHAL(name4) \
+END_JSON_UNMARSHAL \
 
 #endif //ROVER_JSONBASE_H

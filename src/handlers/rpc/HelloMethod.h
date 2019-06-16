@@ -6,41 +6,61 @@
 #define ROVER_HELLOMETHOD_H
 
 #include "codec/json/JsonBase.h"
-#include "MethodRpc.h"
+#include "RpcMethod.h"
 
 
 /**
  * hello params
  */
-BEGIN_DECLARE_DTO_INC(HelloParams)
+BEGIN_DECLARE_DTO(HelloParams)
 
-__DECLARE_DTO_FIELD(std::string, name)
-
-    BEGIN_JSON_UNMARSHAL
-            ITEM_JSON_UNMARSHAL(name)
-    END_JSON_UNMARSHAL
-
+__DECLARE_DTO_FIELDS1(std::string, name)
 END_DECLARE_DTO
 
 /**
  * hello response
  */
-BEGIN_DECLARE_DTO_OUT(HelloResult)
+BEGIN_DECLARE_DTO(HelloResult)
 
-__DECLARE_DTO_FIELD(std::string, message)
-
-    BEGIN_JSON_MARSHAL
-            ITEM_JSON_MARSHAL(message)
-    END_JSON_MARSHAL
+__DECLARE_DTO_FIELDS1(std::string, message)
 END_DECLARE_DTO
 
-class HelloMethod : public BaseMethodRpc<HelloParams, HelloResult> {
+class HelloFunction : public RpcFunction<HelloParams, HelloResult> {
 public:
-    std::shared_ptr<HelloResult> exec(const HelloParams &params) override {
-        auto result = std::make_shared<HelloResult>();
-        result->message = "Hello, " + params.name;
+    std::string name() const override {
+        return "hello.function";
+    }
+
+    HelloResult exec(const HelloParams &params) override {
+        HelloResult result;
+        result.message = "Hello, " + params.name;
 
         return result;
+    }
+};
+
+class HelloSupplier : public RpcSupplier<HelloResult> {
+public:
+    std::string name() const override {
+        return "hello.supplier";
+    }
+
+    HelloResult exec() override {
+        HelloResult result;
+        result.message = "Hello, World";
+
+        return result;
+    }
+};
+
+class HelloConsumer : public RpcConsumer<HelloParams> {
+public:
+    std::string name() const override {
+        return "hello.consumer";
+    }
+
+    void exec(const HelloParams &params) override {
+
     }
 };
 

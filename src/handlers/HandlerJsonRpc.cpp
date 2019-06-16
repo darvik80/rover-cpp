@@ -11,11 +11,13 @@
 
 namespace handlers {
     HandlerJsonRpc::HandlerJsonRpc() {
-        registerMethod("hello", MethodMetaData(new HelloMethod(), new HelloParams()));
+        registerMethod(std::make_shared<HelloFunction>());
+        registerMethod(std::make_shared<HelloConsumer>());
+        registerMethod(std::make_shared<HelloSupplier>());
     }
 
-    void HandlerJsonRpc::registerMethod(const std::string &method, const MethodMetaData& metaData) {
-        _methods[method] = metaData;
+    void HandlerJsonRpc::registerMethod(const std::shared_ptr<IRpcMethod>& method) {
+        _methods[method->name()] = method;
     }
 
     void HandlerJsonRpc::handleRequest(
@@ -42,20 +44,7 @@ namespace handlers {
         auto method = _methods.find(jsonRpcRequest.method);
         if (method != _methods.end()) {
             try {
-                const auto meta = method->second;
-                auto cloneable = dynamic_cast<ICloneable *>(meta._unMarshaller.get());
-                if (cloneable) {
-                    auto params = std::shared_ptr<IUnMarshaller>(dynamic_cast<IUnMarshaller *>(cloneable->clone()));
-                    if (params) {
-                        params->unMarshal(jsonRpcRequest.params);
-                        std::shared_ptr<IMarshaller> result(meta._method.get()->handle(params));
-                        jsonRpcResponse.result = result->marshal();
-                    } else {
-                        jsonRpcResponse.error = error(InternalError, "Can't decode params");
-                    }
-                } else {
-                    jsonRpcResponse.error = error(InternalError, "Can't find params");
-                }
+                jsonRpcResponse.result = method->second->handle(jsonRpcRequest.params);
             } catch (std::exception& ex) {
                 jsonRpcResponse.error = error(InternalError, ex.what());
             }
