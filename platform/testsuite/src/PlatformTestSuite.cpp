@@ -5,6 +5,7 @@
 #include "JsonBaseTest.h"
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/TestSuite.h>
+#include <cppunit/TestResultCollector.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 
@@ -15,6 +16,5 @@ int main(int ac, char **av) {
     CppUnit::TextTestRunner runner;
     runner.addTest(test);
 
-    runner.run();
-    return 0;
+    return !runner.run();
 }

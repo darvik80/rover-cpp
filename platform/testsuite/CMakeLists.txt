@@ -11,4 +11,5 @@ include_directories(${PROJECT_SOURCE_DIR}/../src)
 add_executable(platform_testsuite ${TEST_SRCS} )
 
 target_link_libraries(platform_testsuite PUBLIC -lcppunit platform)
-add_test(NAME platform WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMAND JSON-testrunner -all)
+
+add_test(NAME platform WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMAND platform_testsuite -all)
