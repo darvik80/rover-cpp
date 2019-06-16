@@ -4,14 +4,14 @@
 
 #include <iostream>
 #include <string>
-#include <Poco/Net/HTTPServer.h>
-#include <Poco/Net/ServerSocketImpl.h>
-
-#include <Poco/Util/ServerApplication.h>
-#include "handlers/HandlerJsonRpc.h"
-
 #include <sstream>
 #include <strstream>
+
+#include <Poco/Net/HTTPServer.h>
+#include <Poco/Net/ServerSocketImpl.h>
+#include <Poco/Util/ServerApplication.h>
+
+#include "handlers/HandlerJsonRpc.h"
 
 namespace {
 
@@ -44,7 +44,7 @@ int Server::main(const std::vector<std::string> &args) {
     parameters->setMaxQueued(100);
     parameters->setMaxThreads(4);
 
-    short port = config().getInt("rover.port", 9000);
+    short port = config().getInt("http.port", 9000);
 
     const Poco::Net::ServerSocket socket(Socket("localhost", port));
 
