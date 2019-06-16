@@ -5,8 +5,8 @@
 #ifndef ROVER_HELLOMETHOD_H
 #define ROVER_HELLOMETHOD_H
 
-#include "codec/json/JsonBase.h"
-#include "RpcMethod.h"
+#include <json/JsonBase.h>
+#include <rpc/RpcMethod.h>
 
 
 /**

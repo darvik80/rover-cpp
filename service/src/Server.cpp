@@ -13,21 +13,16 @@
 #include <sstream>
 #include <strstream>
 
-#include "codec/json/Samples.h"
+namespace {
 
-namespace
-{
-
-    class ServerSocketImpl: public Poco::Net::ServerSocketImpl
-    {
+    class ServerSocketImpl : public Poco::Net::ServerSocketImpl {
     public:
         using Poco::Net::SocketImpl::init;
     };
 
-    class Socket: public Poco::Net::Socket
-    {
+    class Socket : public Poco::Net::Socket {
     public:
-        Socket(const std::string & address, short port)
+        Socket(const std::string &address, short port)
                 : Poco::Net::Socket(new ServerSocketImpl()) {
             const Poco::Net::SocketAddress socket_address(address, port);
             auto *socket = dynamic_cast<ServerSocketImpl *>(impl());
@@ -41,7 +36,7 @@ namespace
 
 } // anonymous namespace
 
-int Server::main(const std::vector<std::string>& args) {
+int Server::main(const std::vector<std::string> &args) {
     loadConfiguration();
 
     Poco::Net::HTTPServerParams::Ptr parameters = new Poco::Net::HTTPServerParams();

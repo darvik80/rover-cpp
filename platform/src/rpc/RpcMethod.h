@@ -5,7 +5,8 @@
 #ifndef ROVER_RPCMETHOD_H
 #define ROVER_RPCMETHOD_H
 
-#include "codec/Interfaces.h"
+#include <string>
+#include "json/Interfaces.h"
 
 class IRpcMethod {
 public:

@@ -6,6 +6,8 @@
 #define ROVER_INTERFACES_H
 
 #include <string>
+#include <Poco/Dynamic/Var.h>
+#include <Poco/Optional.h>
 
 class IEncoder {
 public:

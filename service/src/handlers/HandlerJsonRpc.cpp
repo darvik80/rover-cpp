@@ -6,7 +6,7 @@
 #include <Poco/Net/HTTPServerRequest.h>
 #include <Poco/Net/HTTPServerResponse.h>
 #include <iostream>
-#include <handlers/rpc/HelloMethod.h>
+#include "json-rpc/HelloMethod.h"
 
 
 namespace handlers {
@@ -24,13 +24,13 @@ namespace handlers {
             Poco::Net::HTTPServerRequest &request,
             Poco::Net::HTTPServerResponse &response) {
         if (request.getMethod() != Poco::Net::HTTPRequest::HTTP_POST) {
-            response.send() << "rpc support only post requests";
+            response.send() << "json-rpc support only post requests";
             response.setStatus(Poco::Net::HTTPServerResponse::HTTP_REASON_BAD_REQUEST);
             return;
         }
 
         if (request.getContentType().find("application/json") == std::string::npos) {
-            response.send() << "rpc support only application/json content-type";
+            response.send() << "json-rpc support only application/json content-type";
             response.setStatus(Poco::Net::HTTPServerResponse::HTTP_REASON_BAD_REQUEST);
             return;
         }

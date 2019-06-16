@@ -6,9 +6,10 @@
 #define ROVER_JSONBASE_H
 
 #include <Poco/JSON/Object.h>
+#include <Poco/JSON/Parser.h>
 #include <Poco/Optional.h>
 #include <Poco/Dynamic/Var.h>
-#include "../Interfaces.h"
+#include "Interfaces.h"
 
 class JsonDecoder : public IDecoder {
 private:

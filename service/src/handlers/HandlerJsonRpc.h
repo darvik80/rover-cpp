@@ -7,11 +7,10 @@
 
 #include <Poco/Net/HTTPRequestHandler.h>
 
-#include <Poco/Optional.h>
-#include <Poco/Dynamic/Var.h>
-#include "codec/json/JsonBase.h"
+#include <rpc/RpcMethod.h>
+#include <json/JsonBase.h>
+
 #include <map>
-#include <handlers/rpc/RpcMethod.h>
 
 namespace handlers {
     enum Code {
