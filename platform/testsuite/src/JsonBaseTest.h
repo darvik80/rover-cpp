@@ -11,12 +11,12 @@
 class JsonBaseTest: public CppUnit::TestCase {
 public:
 
-    void checkMarshal();
-    void checkUnMarshal();
+    void testMarshal();
+    void testUnMarshal();
 
     CPPUNIT_TEST_SUITE( JsonBaseTest );
-    CPPUNIT_TEST( checkMarshal );
-    CPPUNIT_TEST( checkUnMarshal );
+    CPPUNIT_TEST( testMarshal );
+    CPPUNIT_TEST( testUnMarshal );
     CPPUNIT_TEST_SUITE_END();
 };
 
