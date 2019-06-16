@@ -8,9 +8,6 @@
 #include <iostream>
 
 namespace handlers {
-    HandlerJsonRpc::HandlerJsonRpc() {
-    }
-
     void HandlerJsonRpc::registerMethod(const std::shared_ptr<IRpcMethod>& method) {
         _methods[method->name()] = method;
     }

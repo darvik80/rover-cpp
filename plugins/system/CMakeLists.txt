@@ -11,6 +11,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../platform/src)
 
 add_library(system SHARED ${SRCS_G})
+add_subdirectory(testsuite)
 
 target_link_libraries(system PUBLIC
         platform

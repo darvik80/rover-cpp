@@ -14,7 +14,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_executable(service ${SRCS_G})
 add_library(service_lib ${SRCS_G})
-
 add_subdirectory(testsuite)
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)

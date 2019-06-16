@@ -28,7 +28,7 @@ namespace handlers {
         }
 
     public:
-        HandlerJsonRpc();
+        HandlerJsonRpc() = default;
 
         void registerMethod(const std::shared_ptr<IRpcMethod> &pointer);
 
