@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko on 2019-06-08.
 //
 
-#include "HandlerJsonRpc.h"
+#include "JsonRpcHandler.h"
 #include <Poco/Net/HTTPServerRequest.h>
 #include <Poco/Net/HTTPServerResponse.h>
 #include <iostream>
@@ -11,7 +11,7 @@
 #include "rpc/HealthRpcSupplier.h"
 
 namespace handlers {
-    void HandlerJsonRpc::handleRequest(
+    void JsonRpcHandler::handleRequest(
             Poco::Net::HTTPServerRequest &request,
             Poco::Net::HTTPServerResponse &response) {
         if (request.getMethod() != Poco::Net::HTTPRequest::HTTP_POST) {
@@ -37,7 +37,7 @@ namespace handlers {
         response.send() << JsonEncoder(jsonRpcResponse.marshaller()).encode();
     }
 
-    void HandlerJsonRpc::handle(JsonRpcRequest& request, JsonRpcResponse& response) {
+    void JsonRpcHandler::handle(JsonRpcRequest& request, JsonRpcResponse& response) {
         response.id = request.id;
         response.jsonrpc = request.jsonrpc;
         auto method = RpcRegistry::instance().findMethod(request.method);

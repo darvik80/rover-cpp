@@ -2,8 +2,8 @@
 // Created by Ivan Kishchenko on 2019-06-08.
 //
 
-#ifndef ROVER_HANDLERJSONRPC_H
-#define ROVER_HANDLERJSONRPC_H
+#ifndef ROVER_JSONRPCHANDLER_H
+#define ROVER_JSONRPCHANDLER_H
 
 #include <Poco/Net/HTTPRequestHandler.h>
 
@@ -14,7 +14,7 @@
 
 namespace handlers {
 
-    class HandlerJsonRpc : public Poco::Net::HTTPRequestHandler {
+    class JsonRpcHandler : public Poco::Net::HTTPRequestHandler {
 
     private:
         static JsonRcpError error(int code, const std::string &message) {
@@ -38,4 +38,4 @@ namespace handlers {
 
 }
 
-#endif //ROVER_HANDLERJSONRPC_H
+#endif //ROVER_JSONRPCHANDLER_H

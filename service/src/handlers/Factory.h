@@ -7,7 +7,7 @@
 
 
 #include <Poco/Net/HTTPRequestHandlerFactory.h>
-#include "HandlerJsonRpc.h"
+#include "JsonRpcHandler.h"
 
 namespace handlers {
 

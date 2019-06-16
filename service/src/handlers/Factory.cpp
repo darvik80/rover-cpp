@@ -3,10 +3,11 @@
 //
 
 #include "Factory.h"
-#include "Ping.h"
-#include "HandlerJsonRpc.h"
 
 #include "Route.h"
+
+#include "JsonRpcHandler.h"
+#include "ServletRequestHandler.h"
 #include <Poco/Net/HTTPServerRequest.h>
 
 namespace handlers {
@@ -15,11 +16,8 @@ namespace handlers {
             const Poco::Net::HTTPServerRequest &request) {
 
         if (request.getURI() == ROUTE_JSON_RPC)
-            return new HandlerJsonRpc();
+            return new JsonRpcHandler();
 
-        if (request.getURI() == ROUTE_PING)
-            return new Ping();
-
-        return nullptr;
+        return new ServletRequestHandler();
     }
 }

@@ -13,7 +13,7 @@
 #include <rpc/RpcRegistry.h>
 #include <rpc/HealthRpcSupplier.h>
 
-#include "handlers/HandlerJsonRpc.h"
+#include "handlers/JsonRpcHandler.h"
 
 namespace {
 

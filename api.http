@@ -15,3 +15,7 @@ Content-Type: application/json
 
 ###
 
+
+GET http://localhost:10000/ HTTP/1.1
+
+###

@@ -7,11 +7,11 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "handlers/HandlerJsonRpc.h"
+#include "handlers/JsonRpcHandler.h"
 
 class HandlerJsonRpcTest: public CppUnit::TestCase {
 private:
-    handlers::HandlerJsonRpc handler;
+    handlers::JsonRpcHandler handler;
 public:
     void setUp() override;;
 

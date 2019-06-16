@@ -21,9 +21,6 @@ public:
         return "health";
     }
 
-    ~HealthRpcSupplier() {
-        std::cout << "test";
-    }
 private:
     HealthResponse exec() const override;
 };
