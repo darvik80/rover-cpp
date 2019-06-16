@@ -6,14 +6,9 @@
 #include <Poco/Net/HTTPServerRequest.h>
 #include <Poco/Net/HTTPServerResponse.h>
 #include <iostream>
-#include "json-rpc/HelloMethod.h"
-
 
 namespace handlers {
     HandlerJsonRpc::HandlerJsonRpc() {
-        registerMethod(std::make_shared<HelloFunction>());
-        registerMethod(std::make_shared<HelloConsumer>());
-        registerMethod(std::make_shared<HelloSupplier>());
     }
 
     void HandlerJsonRpc::registerMethod(const std::shared_ptr<IRpcMethod>& method) {
@@ -36,25 +31,30 @@ namespace handlers {
         }
 
         JsonRpcRequest jsonRpcRequest;
+        JsonRpcResponse jsonRpcResponse;
+
         JsonDecoder(jsonRpcRequest.unMarshaller()).decode(request.stream());
 
-        JsonRpcResponse jsonRpcResponse;
-        jsonRpcResponse.id = jsonRpcRequest.id;
-        jsonRpcResponse.jsonrpc = jsonRpcRequest.jsonrpc;
-        auto method = _methods.find(jsonRpcRequest.method);
-        if (method != _methods.end()) {
-            try {
-                jsonRpcResponse.result = method->second->handle(jsonRpcRequest.params);
-            } catch (std::exception& ex) {
-                jsonRpcResponse.error = error(InternalError, ex.what());
-            }
-        } else {
-            jsonRpcResponse.error = error(MethodNotFound, "Method not found");
-        }
-
-        response.send() << JsonEncoder(jsonRpcResponse.marshaller()).encode();
+        handle(jsonRpcRequest, jsonRpcResponse);
 
         response.setStatus(Poco::Net::HTTPServerResponse::HTTP_OK);
+        response.send() << JsonEncoder(jsonRpcResponse.marshaller()).encode();
+    }
+
+    void HandlerJsonRpc::handle(JsonRpcRequest& request, JsonRpcResponse& response) {
+        response.id = request.id;
+        response.jsonrpc = request.jsonrpc;
+        auto method = _methods.find(request.method);
+        if (method != _methods.end()) {
+            try {
+                response.result = method->second->handle(request.params);
+            } catch (std::exception& ex) {
+                response.error = error(InternalError, ex.what());
+            }
+        } else {
+            response.error = error(MethodNotFound, "Method not found");
+        }
+
     }
 
 

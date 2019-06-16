@@ -27,7 +27,7 @@ __DECLARE_DTO_FIELD(std::string, message)
 END_DECLARE_DTO
 
 
-void JsonBaseTest::checkMarshal() {
+void JsonBaseTest::testMarshal() {
     Message message;
     message.id = 10;
     message.message = "Hello";
@@ -43,7 +43,7 @@ void JsonBaseTest::checkMarshal() {
     CPPUNIT_ASSERT_EQUAL(message.message, ptr.get("message").convert<std::string>());
 }
 
-void JsonBaseTest::checkUnMarshal(){
+void JsonBaseTest::testUnMarshal(){
     Poco::JSON::Object::Ptr ptr(new Poco::JSON::Object());
     ptr->set("id", 20);
     ptr->set("message", "hello");
@@ -51,8 +51,8 @@ void JsonBaseTest::checkUnMarshal(){
     Message message;
     message.unMarshal(ptr);
 
-    CPPUNIT_ASSERT_EQUAL(message.id, 20);
-    CPPUNIT_ASSERT_EQUAL(message.message, std::string("hello"));
+    CPPUNIT_ASSERT_EQUAL(20, message.id);
+    CPPUNIT_ASSERT_EQUAL(std::string("hello"), message.message);
 }
 
 

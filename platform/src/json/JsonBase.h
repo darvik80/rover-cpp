@@ -206,7 +206,7 @@ END_JSON_UNMARSHAL \
 public: cls1 name1; \
 public: cls2 name2; \
 public: cls3 name3; \
-public: cls3 name4; \
+public: cls4 name4; \
 BEGIN_JSON_MARSHAL \
     ITEM_JSON_MARSHAL(name1) \
     ITEM_JSON_MARSHAL(name2) \
