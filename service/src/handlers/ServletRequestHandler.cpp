@@ -68,15 +68,19 @@ namespace handlers {
             if (extension == "png") {
                 mediaType = "image/png";
             } else if (extension == "ico") {
-                mediaType = "image/vnd.microsoft.icon";
+                mediaType = "image/x-icon";
             } else if (extension == "jpg") {
                 mediaType = "image/jpg";
+            } else if (extension == "svg") {
+                mediaType = "image/svg+xml; charset=UTF-8";
             } else if (extension == "html") {
-                mediaType = "text/html; chatset=\"utf-8\"";
+                mediaType = "text/html; chatset=UTF-8";
+            } else if (extension == "css") {
+                mediaType = "text/css";
             } else if (extension == "js") {
-                mediaType = "application/javascript; charset=utf-8";
+                mediaType = "application/javascript; charset=UTF-8";
             } else if (extension == "json") {
-                mediaType = "application/json; charset=utf-8";
+                mediaType = "application/json; charset=UTF-8";
             }
             if ("" != mediaType) {
                 res.setContentType(mediaType);
