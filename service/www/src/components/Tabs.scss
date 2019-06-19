@@ -1,0 +1,24 @@
+@import "./../varables";
+
+.nav-tabs {
+  .nav-link {
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+  }
+
+  .nav-link:hover {
+    border: none;
+    background-color: $gray-200;
+  }
+
+  .nav-link.active, .nav-item.show .nav-link {
+    border: none;
+    border-bottom: 2px solid $gray-600;
+  }
+}
+
+.tab-content {
+  border-bottom: $table-border-width solid $table-border-color;
+}

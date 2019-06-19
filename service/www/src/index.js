@@ -1,9 +1,11 @@
+// import 'react-app-polyfill/ie11'; // For IE 11 support
+import 'react-app-polyfill/stable'; // For other old browsers support
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'react-app-polyfill/jsdom';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

@@ -1,28 +1,32 @@
-// @flow
+import React, {Fragment} from 'react';
+import {Route, Switch} from 'react-router-dom';
+import 'react-dates/initialize';
+import './fontAwesome';
+import './App.scss';
+import {Container, Row} from "reactstrap";
+import routes from "./routes/routes";
+import {NavMenu} from "./components";
+import useNavigation from "./routes/_nav";
 
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+const App = () => {
+    const navigation = useNavigation();
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    return (
+        <Fragment>
+            <Container fluid>
+                <Row>
+                    <NavMenu
+                        vertical
+                        navigation={navigation}
+                        className="sidebar d-none d-md-block col-md-2 col-lg-1 bg-light"
+                        innerWrapperClassName="sidebar-sticky" />
+
+                    <main role="main" className="col-md-10 col-lg-11 ml-sm-auto bg-light pl-0">
+                    </main>
+                </Row>
+            </Container>
+        </Fragment>
+);
+};
 
 export default App;
