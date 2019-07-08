@@ -29,11 +29,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/service.properties DESTINATION ${EXECUTABL
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
 target_link_libraries(service PUBLIC
-        platform
-        -lPocoUtil
-        -lPocoFoundation
-        -lPocoNet
-        -lPocoJSON
+        platform ${CONAN_LIBS}
 )
 
 

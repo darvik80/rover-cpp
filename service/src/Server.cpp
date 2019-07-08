@@ -15,6 +15,9 @@
 
 #include "handlers/JsonRpcHandler.h"
 
+#include <Poco/ClassLoader.h>
+#include "plugin/Module.h"
+
 namespace {
 
     class ServerSocketImpl : public Poco::Net::ServerSocketImpl {
@@ -61,6 +64,29 @@ int Server::main(const std::vector<std::string> &args) {
 
 void Server::initialize(Poco::Util::Application &self) {
     Application::initialize(self);
+
+    // Load Plugins
+    Poco::ClassLoader<Module> cl;
+
+    std::string path = "../lib";
+
+    try
+    {
+        cl.loadLibrary(path);
+        if (cl.isLibraryLoaded(path)) {
+            for(auto iter = cl.begin(); iter != cl.end(); ++iter) {
+                Module* pModule = cl.classFor(iter->first).create();
+                std::cout << pModule->name();
+                delete pModule;
+            }
+            cl.unloadLibrary(path);
+        }
+    }
+    catch(Poco::LibraryLoadException& exc)
+    {
+        std::cout << (Poco::format(" %s \"%s\"", std::string(exc.name()), path));
+    }
+
 
     RpcRegistry::instance().addMethod(new HealthRpcSupplier());
 }
