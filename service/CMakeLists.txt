@@ -10,8 +10,15 @@ file(GLOB SRCS_G
         src/handlers/json-rpc/*.cpp
         )
 
-include_directories(${PROJECT_SOURCE_DIR}/../platform/src)
-include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(
+        /usr/local/include
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/../platform/src
+)
+
+link_directories(
+    /usr/local/lib
+)
 
 add_executable(service ${SRCS_G})
 add_library(service_lib ${SRCS_G})

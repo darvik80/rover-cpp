@@ -7,7 +7,14 @@ file(GLOB SRCS_G
         src/json/*.cpp
         )
 
-include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(
+        /usr/local/include
+        ${PROJECT_SOURCE_DIR}/src
+)
+
+link_directories(
+        /usr/local/lib
+)
 
 add_library(platform SHARED ${SRCS_G})
 
