@@ -42,7 +42,8 @@ namespace {
 } // anonymous namespace
 
 int Server::main(const std::vector<std::string> &args) {
-    loadConfiguration();
+    this->logger().information(this->config().getString("application.dir"));
+    loadConfiguration(this->config().getString("application.dir")+"../etc/service.properties");
 
     Poco::Net::HTTPServerParams::Ptr parameters = new Poco::Net::HTTPServerParams();
     parameters->setTimeout(10000);
