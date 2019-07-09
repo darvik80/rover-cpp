@@ -7,7 +7,7 @@
 
 #include "plugin/Module.h"
 
-class SystemModule : Module {
+class SystemModule : public Module {
     std::string name() const override;
 };
 

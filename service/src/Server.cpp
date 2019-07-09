@@ -16,7 +16,13 @@
 #include "handlers/JsonRpcHandler.h"
 
 #include <Poco/ClassLoader.h>
+#include <Poco/Manifest.h>
 #include "plugin/Module.h"
+
+#include <Poco/DirectoryIterator.h>
+#include <Poco/String.h>
+
+#include <boost/algorithm/string/predicate.hpp>
 
 namespace {
 
@@ -69,24 +75,35 @@ void Server::initialize(Poco::Util::Application &self) {
     // Load Plugins
     Poco::ClassLoader<Module> cl;
 
-    std::string path = "../lib";
+    std::string path = this->config().getString("application.dir") + "../lib";
 
-    try
-    {
-        cl.loadLibrary(path);
-        if (cl.isLibraryLoaded(path)) {
-            for(auto iter = cl.begin(); iter != cl.end(); ++iter) {
-                Module* pModule = cl.classFor(iter->first).create();
-                std::cout << pModule->name();
-                delete pModule;
+    Poco::DirectoryIterator end;
+    for (Poco::DirectoryIterator it(path); it != end; ++it) {
+        if (it->isFile() && boost::algorithm::ends_with(it->path(), Poco::SharedLibrary::suffix())) {
+            std::cout << it->path() << std::endl;
+
+            try {
+                cl.loadLibrary(it->path());
+                if (cl.isLibraryLoaded(it->path())) {
+                    for(auto iter = cl.begin(); iter != cl.end(); ++iter) {
+                        std::cout << "Lib: " << iter->first << std::endl;
+                        Poco::Manifest<Module>::Iterator itMan(iter->second->begin());
+                        Poco::Manifest<Module>::Iterator endMan(iter->second->end());
+                        for (; itMan != endMan; ++itMan) {
+                            std::cout << itMan->name() << std::endl;
+                            Module* pModule = cl.classFor(itMan->name()).create();
+                            std::cout << pModule->name() << std::endl;
+                            delete pModule;
+                        }
+                    }
+                    cl.unloadLibrary(it->path());
+                }
+            } catch(Poco::LibraryLoadException& exc) {
+                std::cout << exc.name() << std::endl;
             }
-            cl.unloadLibrary(path);
         }
     }
-    catch(Poco::LibraryLoadException& exc)
-    {
-        std::cout << (Poco::format(" %s \"%s\"", std::string(exc.name()), path));
-    }
+
 
 
     RpcRegistry::instance().addMethod(new HealthRpcSupplier());

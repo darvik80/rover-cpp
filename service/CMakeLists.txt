@@ -28,9 +28,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/service.properties DESTINATION ${EXECUTABLE_OUTPUT_PATH})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
-target_link_libraries(service PUBLIC
-        platform ${CONAN_LIBS}
-)
+target_link_libraries(service platform ${CONAN_LIBS})
 
 
 

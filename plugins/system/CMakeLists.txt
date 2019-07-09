@@ -24,12 +24,11 @@ link_directories(
         /usr/local/lib
 )
 
-
 message(${PROJECT_SOURCE_DIR}/../platform/src)
 
 add_library(system SHARED ${SRCS_G} src/dllEntry.cpp)
 add_subdirectory(testsuite)
 
-target_link_libraries(system PUBLIC platform ${CONAN_LIBS})
+target_link_libraries(system platform ${CONAN_LIBS})
 
 SET(CMAKE_LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../../lib)
