@@ -10,6 +10,10 @@ include_directories(${PROJECT_SOURCE_DIR}/../src)
 
 add_executable(platform_testsuite ${TEST_SRCS} )
 
-target_link_libraries(platform_testsuite PUBLIC -lcppunit platform)
+enable_testing()
 
-add_test(NAME platform WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMAND platform_testsuite -all)
+target_link_libraries(platform_testsuite PUBLIC platform ${CONAN_LIBS})
+
+# add_test(test_all platform_testsuite)
+
+add_test(NAME platform_testsuite WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMAND platform_testsuite)

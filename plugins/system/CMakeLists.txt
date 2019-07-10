@@ -27,6 +27,7 @@ link_directories(
 message(${PROJECT_SOURCE_DIR}/../platform/src)
 
 add_library(system SHARED ${SRCS_G} src/dllEntry.cpp)
+
 add_subdirectory(testsuite)
 
 target_link_libraries(system platform ${CONAN_LIBS})

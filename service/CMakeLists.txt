@@ -10,6 +10,12 @@ file(GLOB SRCS_G
         src/handlers/json-rpc/*.cpp
         )
 
+file(GLOB LIB_SRCS_G
+        src/rpc/*.cpp
+        src/handlers/*.cpp
+        src/handlers/json-rpc/*.cpp
+        )
+
 include_directories(
         /usr/local/include
         ${PROJECT_SOURCE_DIR}/src
@@ -21,7 +27,7 @@ link_directories(
 )
 
 add_executable(service ${SRCS_G})
-add_library(service_lib ${SRCS_G})
+add_library(service_lib ${LIB_SRCS_G})
 add_subdirectory(testsuite)
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)

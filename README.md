@@ -8,6 +8,7 @@ Service based on POCO C++ Libraries (https://pocoproject.org/)
 ## build
 ```bash
 mkdir -p build && cd build
+conan install . -s build_type=Debug --install-folder=build
 cmake ../
 make all CTEST_OUTPUT_ON_FAILURE=1 test
 

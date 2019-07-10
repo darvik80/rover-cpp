@@ -5,30 +5,17 @@
 #ifndef ROVER_HANDLERJSONRPCTEST_H
 #define ROVER_HANDLERJSONRPCTEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
+#define BOOST_TEST_MODULE Service
 
-#include "handlers/JsonRpcHandler.h"
+#include <boost/test/unit_test.hpp>
+#include <handlers/JsonRpcHandler.h>
 
-class HandlerJsonRpcTest: public CppUnit::TestCase {
-private:
+class HandlerJsonRpcFixture {
+public:
     handlers::JsonRpcHandler handler;
 public:
-    void setUp() override;;
 
-    void testHandleFunction();
-    void testHandleSupplier();
-    void testHandleConsumer();
-    void testHandleMethodNotExists();
-
-    CPPUNIT_TEST_SUITE(HandlerJsonRpcTest);
-        CPPUNIT_TEST(testHandleFunction);
-        CPPUNIT_TEST(testHandleSupplier);
-        CPPUNIT_TEST(testHandleConsumer);
-        CPPUNIT_TEST(testHandleMethodNotExists);
-    CPPUNIT_TEST_SUITE_END();
+    HandlerJsonRpcFixture();
 };
-
-CPPUNIT_TEST_SUITE_REGISTRATION (HandlerJsonRpcTest);
-
 
 #endif //ROVER_HANDLERJSONRPCTEST_H

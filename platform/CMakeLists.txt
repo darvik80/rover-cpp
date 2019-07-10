@@ -21,7 +21,6 @@ link_directories(
         /usr/local/lib
 )
 
-# set(LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/../lib/)
 message(test ${LIBRARY_OUTPUT_DIRECTORY})
 
 add_library(platform STATIC ${SRCS_G})
