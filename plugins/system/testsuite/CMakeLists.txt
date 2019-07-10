@@ -8,8 +8,10 @@ file(GLOB TEST_SRCS src/*.cpp)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 include_directories(${PROJECT_SOURCE_DIR}/../src)
 
+enable_testing()
+
 add_executable(system_testsuite ${TEST_SRCS} )
 
-target_link_libraries(system_testsuite PUBLIC -lcppunit system)
+target_link_libraries(system_testsuite PRIVATE system ${CONAN_LIBS})
 
-add_test(NAME system WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMAND system_testsuite -all)
+add_test(NAME system_testsuite WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} COMMAND system_testsuite)
