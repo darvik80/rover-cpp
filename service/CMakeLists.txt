@@ -17,21 +17,21 @@ file(GLOB LIB_SRCS_G
         )
 
 include_directories(
-        /usr/local/include
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
-)
-
-link_directories(
-    /usr/local/lib
 )
 
 add_executable(service ${SRCS_G})
 add_library(service_lib ${LIB_SRCS_G})
 add_subdirectory(testsuite)
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/service.properties DESTINATION ${EXECUTABLE_OUTPUT_PATH})
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
+set(PROPERTIES_DIR ${EXECUTABLE_OUTPUT_PATH}/../etc)
+set(PLUGINS_DIR ${EXECUTABLE_OUTPUT_PATH}/../lib)
+
+file(MAKE_DIRECTORY ${PROPERTIES_DIR})
+file(MAKE_DIRECTORY ${PLUGINS_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/service.properties DESTINATION ${PROPERTIES_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
 target_link_libraries(service platform ${CONAN_LIBS})
