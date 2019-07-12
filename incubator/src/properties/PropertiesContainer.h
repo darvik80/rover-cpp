@@ -1,15 +1,16 @@
 //
-// Created by Ivan Kishchenko on 2019-07-11.
+// Created by Ivan Kishchenko (Lazada Group) on 2019-07-12.
 //
 
-#ifndef ROVER_PROPERTIESJSON_H
-#define ROVER_PROPERTIESJSON_H
+#ifndef ROVER_PROPERTIESCONTAINER_H
+#define ROVER_PROPERTIESCONTAINER_H
 
 
 #include "Properties.h"
-#include <boost/property_tree/ptree.hpp>
+#include <set>
+#include <memory>
 
-class PropertiesJson : public Properties {
+class PropertiesContainer : public Properties {
 public:
     void load(const std::string &filePath) override;
 
@@ -25,9 +26,14 @@ public:
 
     std::list<std::string> getStringArray(const std::string &name) const override;
 
+    void addProperties(const SPProperties &properties) {
+        _properties.insert(properties);
+    }
+
 private:
-    boost::property_tree::ptree tree;
+    typedef std::set<std::shared_ptr<Properties> > PropertiesVec;
+    PropertiesVec _properties;
 };
 
 
-#endif //ROVER_PROPERTIESJSON_H
+#endif //ROVER_PROPERTIESCONTAINER_H

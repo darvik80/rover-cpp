@@ -1,15 +1,18 @@
 //
-// Created by Ivan Kishchenko on 2019-07-11.
+// Created by Ivan Kishchenko (Lazada Group) on 2019-07-12.
 //
 
-#ifndef ROVER_PROPERTIESJSON_H
-#define ROVER_PROPERTIESJSON_H
+#ifndef ROVER_PROPERTIESMAP_H
+#define ROVER_PROPERTIESMAP_H
 
 
 #include "Properties.h"
-#include <boost/property_tree/ptree.hpp>
+#include <map>
+#include <string>
 
-class PropertiesJson : public Properties {
+class PropertiesMap : public Properties {
+private:
+    std::map<std::string, std::string> tree;
 public:
     void load(const std::string &filePath) override;
 
@@ -25,9 +28,10 @@ public:
 
     std::list<std::string> getStringArray(const std::string &name) const override;
 
-private:
-    boost::property_tree::ptree tree;
+    void setString(const std::string &name, const std::string &value) {
+        tree[name] = value;
+    }
 };
 
 
-#endif //ROVER_PROPERTIESJSON_H
+#endif //ROVER_PROPERTIESMAP_H
