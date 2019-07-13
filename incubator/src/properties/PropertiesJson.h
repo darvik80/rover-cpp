@@ -29,5 +29,4 @@ private:
     boost::property_tree::ptree tree;
 };
 
-
 #endif //ROVER_PROPERTIESJSON_H

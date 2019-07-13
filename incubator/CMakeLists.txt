@@ -1,17 +1,13 @@
 cmake_minimum_required(VERSION 3.0)
 project(incubator VERSION 1.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
 
 file(GLOB SRCS_G
         src/*.cpp
         src/http/*.cpp
         src/properties/*.cpp
         src/subsystem/*.cpp
-        )
-
-file(GLOB LIB_SRCS_G
-        src/http/*.cpp
         )
 
 include_directories(
@@ -21,7 +17,7 @@ include_directories(
 
 add_executable(incubator ${SRCS_G})
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 
 target_link_libraries(incubator ${CONAN_LIBS})
 

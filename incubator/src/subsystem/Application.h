@@ -5,13 +5,13 @@
 #ifndef ROVER_APPLICATION_H
 #define ROVER_APPLICATION_H
 
-
-#include "Subsystem.h"
 #include <vector>
 #include <memory>
 #include <string>
-#include <exception/LogicException.h>
-#include <properties/Properties.h>
+
+#include "Subsystem.h"
+#include "exception/LogicException.h"
+#include "properties/Properties.h"
 
 class Logger;
 

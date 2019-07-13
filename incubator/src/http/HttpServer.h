@@ -2,13 +2,14 @@
 // Created by Ivan Kishchenko on 2019-07-11.
 //
 
-#ifndef ROVER_HTTPSERVER_H
-#define ROVER_HTTPSERVER_H
+#ifndef HTTP_SERVER_H
+#define HTTP_SERVER_H
 
 
 class HttpServer {
-
+public:
+    int run();
 };
 
 
-#endif //ROVER_HTTPSERVER_H
+#endif //HTTP_SERVER_H
