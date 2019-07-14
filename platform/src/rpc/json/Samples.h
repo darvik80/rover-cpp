@@ -5,7 +5,7 @@
 #ifndef ROVER_SAMPLES_H
 #define ROVER_SAMPLES_H
 
-#include "JsonBase.h"
+#include "Helper.h"
 
 BEGIN_DECLARE_DTO(Message)
 __DECLARE_DTO_FIELD(int, id)

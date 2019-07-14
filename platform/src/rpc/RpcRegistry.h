@@ -5,27 +5,21 @@
 #ifndef ROVER_RPCREGISTRY_H
 #define ROVER_RPCREGISTRY_H
 
-
-#include <Poco/SingletonHolder.h>
-#include <Poco/HashMap.h>
+#include <map>
 #include "RpcMethod.h"
 
 class RpcRegistry {
 private:
-    Poco::HashMap<std::string, RpcMethod::Ptr> _methods;
+    std::map<std::string, RpcMethod::Ptr> _methods;
 
 public:
-    static RpcRegistry& instance() {
-        static Poco::SingletonHolder<RpcRegistry> sh;
-        return *sh.get();
+    template<class T>
+    void addMethod(std::shared_ptr<T> method) {
+        _methods[method->name()] = method;
     }
 
-    void addMethod(RpcMethod* method) {
-        _methods[method->name()] = RpcMethod::Ptr(method);
-    }
-
-    Poco::Optional<RpcMethod::Ptr> findMethod(const std::string& method) {
-        Poco::Optional<RpcMethod::Ptr> result;
+    boost::optional<RpcMethod::Ptr> findMethod(const std::string& method) {
+        boost::optional<RpcMethod::Ptr> result;
         auto iter = _methods.find(method);
         if (iter != _methods.end()) {
             result = iter->second;

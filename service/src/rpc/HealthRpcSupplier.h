@@ -7,7 +7,7 @@
 
 #include <rpc/RpcMethod.h>
 #include <rpc/RpcRegistry.h>
-#include <json/JsonBase.h>
+#include <rpc/json/Helper.h>
 
 BEGIN_DECLARE_DTO(HealthResponse)
 

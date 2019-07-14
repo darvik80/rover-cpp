@@ -7,7 +7,6 @@
 #include "http/HttpServer.h"
 
 int main(int argc, char *argv[]) {
-
     HttpServer server;
     server.run();
 

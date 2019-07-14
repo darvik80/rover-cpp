@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko on 2019-06-16.
 //
 
-#include "json/JsonBase.h"
+#include "rpc/json/Helper.h"
 
 BEGIN_DECLARE_DTO(Message)
 
@@ -36,20 +36,15 @@ BOOST_AUTO_TEST_SUITE(JsonBaseTest)
         message.message = "Hello";
 
         auto res = message.marshal();
-        const auto &ptr = res.extract<Poco::JSON::Object::Ptr>();
-        BOOST_ASSERT_MSG("id", ptr->get("id"));
-        BOOST_ASSERT_MSG("id", ptr->get("id").isInteger());
-        BOOST_REQUIRE_EQUAL(message.id, ptr->get("id").convert<int>());
+        BOOST_REQUIRE_EQUAL(message.id, res.get<int>("id"));
 
-        BOOST_ASSERT_MSG("message", ptr->get("message"));
-        BOOST_ASSERT_MSG("message", ptr->get("message").isString());
-        BOOST_REQUIRE_EQUAL(message.message, ptr->get("message").convert<std::string>());
+        BOOST_REQUIRE_EQUAL(message.message, res.get<std::string>("message"));
     }
 
     BOOST_AUTO_TEST_CASE(testUnMarshal) {
-        Poco::JSON::Object::Ptr ptr(new Poco::JSON::Object());
-        ptr->set("id", 20);
-        ptr->set("message", "hello");
+        boost::property_tree::ptree ptr;
+        ptr.put("id", 20);
+        ptr.put("message", "hello");
 
         Message message;
         message.unMarshal(ptr);

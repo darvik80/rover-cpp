@@ -6,54 +6,58 @@
 #define ROVER_RPCMETHOD_H
 
 #include <string>
-#include "json/Interfaces.h"
+#include <memory>
+#include <boost/optional.hpp>
+#include <boost/property_tree/ptree.hpp>
 
-class RpcMethod : Poco::ReferenceCounter {
+class RpcMethod {
 public:
-    typedef Poco::SharedPtr<RpcMethod> Ptr;
+    typedef std::shared_ptr<RpcMethod> Ptr;
 public:
     virtual std::string name() const = 0;
-    virtual Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const = 0;
+
+    virtual boost::optional<boost::property_tree::ptree> handle(const boost::optional<boost::property_tree::ptree> &params) const = 0;
 
     virtual ~RpcMethod() = default;
 };
 
-template <typename T, typename R>
+template<typename T, typename R>
 class RpcFunction : public RpcMethod {
 public:
-    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const override {
+    boost::optional<boost::property_tree::ptree>
+    handle(const boost::optional<boost::property_tree::ptree> &params) const override {
         T inc;
-        if (params.isSpecified()) {
+        if (params) {
             inc.unMarshal(params.value());
         }
 
-        return this->exec(inc).marshaller()->marshal();
+        return exec(inc).marshal();
     };
 
-    virtual R exec(const T& params)const = 0;
+    virtual R exec(const T &params) const = 0;
 };
 
-template <typename T>
+template<typename T>
 class RpcConsumer : public RpcMethod {
 public:
-    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const override {
+    boost::optional<boost::property_tree::ptree> handle(const boost::optional<boost::property_tree::ptree> &params) const override {
         T inc;
-        if (params.isSpecified()) {
+        if (params) {
             inc.unMarshal(params.value());
         }
 
-        this->exec(inc);
+        exec(inc);
 
-        return Poco::Optional<Poco::Dynamic::Var>();
+        return boost::optional<boost::property_tree::ptree>();
     };
 
-    virtual void exec(const T& params) const = 0;
+    virtual void exec(const T &params) const = 0;
 };
 
-template <typename R>
+template<typename R>
 class RpcSupplier : public RpcMethod {
-    Poco::Optional<Poco::Dynamic::Var> handle(const Poco::Optional<Poco::Dynamic::Var>& params) const override {
-        return this->exec().marshaller()->marshal();
+    boost::optional<boost::property_tree::ptree> handle(const boost::optional<boost::property_tree::ptree> &params) const override {
+        return exec().marshal();
     };
 
     virtual R exec() const = 0;

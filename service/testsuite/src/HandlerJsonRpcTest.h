@@ -8,11 +8,11 @@
 #define BOOST_TEST_MODULE Service
 
 #include <boost/test/unit_test.hpp>
-#include <handlers/JsonRpcHandler.h>
+#include <http/JsonRpcHandler.h>
 
 class HandlerJsonRpcFixture {
 public:
-    handlers::JsonRpcHandler handler;
+    JsonRpcHandler _rpcHandler;
 public:
 
     HandlerJsonRpcFixture();

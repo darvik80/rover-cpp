@@ -1,19 +1,24 @@
 cmake_minimum_required(VERSION 3.0)
 project(service VERSION 1.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
 
 file(GLOB SRCS_G
         src/*.cpp
+        src/exception/*.cpp
+        src/http/*.cpp
         src/rpc/*.cpp
-        src/handlers/*.cpp
-        src/handlers/json-rpc/*.cpp
+        src/properties/*.cpp
+        src/subsystem/*.cpp
+
         )
 
 file(GLOB LIB_SRCS_G
+        src/exception/*.cpp
+        src/properties/*.cpp
+        src/subsystem/*.cpp
+        src/http/*.cpp
         src/rpc/*.cpp
-        src/handlers/*.cpp
-        src/handlers/json-rpc/*.cpp
         )
 
 include_directories(

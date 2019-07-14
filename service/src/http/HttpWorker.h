@@ -11,8 +11,10 @@
 #include <boost/beast/core.hpp>
 #include <boost/asio.hpp>
 #include <boost/filesystem.hpp>
+#include <rpc/RpcRegistry.h>
 
 #include "FieldsAlloc.h"
+#include "JsonRpcHandler.h"
 
 namespace ip = boost::asio::ip;         // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;       // from <boost/asio.hpp>
@@ -28,7 +30,7 @@ public:
 
     HttpWorker &operator=(HttpWorker const &) = delete;
 
-    HttpWorker(tcp::acceptor &acceptor, std::string docRoot);
+    HttpWorker(const JsonRpcHandler::Ptr rpcRegistry, tcp::acceptor &acceptor, std::string docRoot);
 
     void start();
 
@@ -71,12 +73,18 @@ private:
     // The file-based response serializer.
     boost::optional<http::response_serializer<http::file_body, http::basic_fields<alloc_t>>> _fileSerializer;
 
+    const JsonRpcHandler::Ptr _rpcHandler;
 private:
     void accept();
+
     void readRequest();
+
     void processRequest(const HttpRequest &req);
-    void sendBadResponse(http::status status,std::string const &error);
+
+    void sendBadResponse(http::status status, std::string const &error);
+
     void sendFile(boost::beast::string_view target);
+
     void checkDeadline();
 
     void rpc(const HttpRequest &req);

@@ -1,5 +1,12 @@
 #include <iostream>
 
-#include "Server.h"
+#include "http/HttpServer.h"
+#include "subsystem/Application.h"
 
-POCO_SERVER_MAIN(Server)
+int main(int argc, char *argv[]) {
+    HttpServer server;
+    server.run();
+
+    Application app;
+    return app.run(argc, argv);
+}

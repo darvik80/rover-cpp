@@ -3,7 +3,7 @@
 //
 
 #include "HttpWorker.h"
-#include "json-rpc/Spec.h"
+#include "rpc/json/Spec.h"
 
 #include <boost/beast/version.hpp>
 #include <iostream>
@@ -46,9 +46,8 @@ beast::string_view mimeType(beast::string_view path) {
     return "application/text";
 }
 
-HttpWorker::HttpWorker(tcp::acceptor &acceptor, std::string docRoot)
-        : _acceptor(acceptor),
-          _docRoot(std::move(docRoot)) {
+HttpWorker::HttpWorker(const JsonRpcHandler::Ptr rpcHandler, tcp::acceptor &acceptor, std::string docRoot)
+        : _rpcHandler(rpcHandler), _acceptor(acceptor), _docRoot(std::move(docRoot)) {
 
 }
 
@@ -229,13 +228,8 @@ void HttpWorker::rpc(const HttpRequest &req) {
         std::shared_ptr<JsonRpcRequest> request = std::make_shared<JsonRpcRequest>();
         JsonDecoder(request).decode(req.body());
 
-        _stringResponse->set(http::field::content_type, "application/json; charset=utf-8");
-        _stringResponse->result(http::status::ok);
-
         std::shared_ptr<JsonRpcResponse> response = std::make_shared<JsonRpcResponse>();
-        response->id = request->id;
-        response->jsonrpc = request->jsonrpc;
-
+        _rpcHandler->handle(*request, *response);
 
         _stringResponse->body() = JsonEncoder(response).encode();
     }
