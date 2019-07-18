@@ -9,7 +9,14 @@
 #include "plugin/Module.h"
 
 #include <map>
+#include <vector>
+
 #include <string>
+
+#include <boost/function.hpp>
+
+typedef Module::Ptr (PluginCreator)();
+
 
 class PluginManager : public Subsystem {
 public:
@@ -17,8 +24,34 @@ public:
 
     void postConstruct(Application &app) override;
 
+    Module::Ptr getModule(const char* name) {
+        return getModule(std::string(name));
+    }
+
+    Module::Ptr getModule(const std::string& name) {
+        Module::Ptr result;
+        auto it = _modules.find(name);
+        if (it != _modules.end()) {
+            result = it->second;
+        }
+
+        return result;
+    }
+
+    Module::PtrVec getModules() {
+        Module::PtrVec result;
+
+        for (auto it = _modules.begin(); it != _modules.end(); ++it) {
+            result.push_back(it->second);
+        }
+
+        return result;
+    }
+
     void preDestroy() override;
 private:
+    std::vector<boost::function<PluginCreator>> _libs;
+
     std::map<std::string, Module::Ptr> _modules;
 };
 

@@ -15,22 +15,20 @@
 
 class Logger;
 
-class Application : public Subsystem{
+class Application : public Subsystem {
 public:
+    Application();
+
     const char *name() const override;
 
     void postConstruct(Application &app) override;
 
+    virtual int run(int argc, char *argv[]);
     virtual void run();
 
     void preDestroy() override;
 
     Logger& logger();
-
-public:
-    Application();
-
-    int run(int argc, char *argv[]);
 
     void addSubsystem(std::shared_ptr<Subsystem> spSubSystem) {
         _spSubsystems.push_back(spSubSystem);

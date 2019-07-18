@@ -13,6 +13,7 @@
 class RpcMethod {
 public:
     typedef std::shared_ptr<RpcMethod> Ptr;
+    typedef std::vector<Ptr> PtrVec;
 public:
     virtual std::string name() const = 0;
 

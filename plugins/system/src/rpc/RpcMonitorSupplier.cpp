@@ -8,9 +8,9 @@
 SystemResponse RpcMonitorSupplier::exec() const {
     SystemResponse response;
 
-    response.cpu = SysInfo::NumberOfProcessors();
+    response.cpuCount = SysInfo::NumberOfProcessors();
+    response.cpuTemp = SysInfo::cpuTemperature();
     response.physicalMemory = SysInfo::AmountOfPhysicalMemory();
-    response.virtualMemory = SysInfo::AmountOfVirtualMemory();
 
     return response;
 }

@@ -6,9 +6,14 @@
 #define HTTP_SERVER_H
 
 
+#include <rpc/RpcMethod.h>
+
 class HttpServer {
+private:
+    std::string _docRoot;
 public:
-    int run();
+    HttpServer(std::string docRoot);
+    int run(RpcMethod::PtrVec& methods);
 };
 
 

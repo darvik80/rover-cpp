@@ -13,9 +13,9 @@
 BEGIN_DECLARE_DTO(SystemResponse)
 
 __DECLARE_DTO_FIELDS3(
-        int, cpu,
-        int64_t, physicalMemory,
-        int64_t, virtualMemory
+        int, cpuCount,
+        float, cpuTemp,
+        int64_t, physicalMemory
 )
 END_DECLARE_DTO
 

@@ -23,6 +23,8 @@ namespace plugin {
         static std::shared_ptr<Module> create() {
             return std::make_shared<SystemModule>();
         }
+
+        virtual ~SystemModule();
     };
 
     BOOST_DLL_ALIAS(plugin::SystemModule::create, createModule)

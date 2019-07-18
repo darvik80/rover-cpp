@@ -4,15 +4,21 @@
 
 #include <rpc/RpcMonitorSupplier.h>
 #include "SystemModule.h"
+#include <iostream>
 
 namespace plugin {
 
     SystemModule::SystemModule() {
-        //addMethod(std::make_shared<RpcMonitorSupplier>());
+        std::cout << "Create SystemModule" << std::endl;
+        addMethod(std::make_shared<RpcMonitorSupplier>());
+
     }
 
     std::string SystemModule::name() const {
         return "system";
     }
 
+    SystemModule::~SystemModule() {
+        std::cout << "Destroy SystemModule" << std::endl;
+    }
 }

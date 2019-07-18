@@ -12,9 +12,12 @@
 #include <memory>
 #include <rpc/RpcMethod.h>
 
+#define FN_CREATE_MODULE "createModule"
+
 class BOOST_SYMBOL_VISIBLE Module {
 public:
     typedef std::shared_ptr<Module> Ptr;
+    typedef std::vector<Ptr> PtrVec;
 
     virtual std::string name() const = 0;
 
