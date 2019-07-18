@@ -6,6 +6,7 @@
 #define ROVER_CONST_H
 
 #define PROP_APPLICATION_PATH "application.path"
+#define PROP_APPLICATION_LIBRARY "application.library"
 #define PROP_APPLICATION_NAME "application.name"
 #define PROP_APPLICATION_CONFIG_DIR "application.config"
 #define PROP_APPLICATION_DATA_DIR "application.data"

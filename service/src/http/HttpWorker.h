@@ -30,7 +30,7 @@ public:
 
     HttpWorker &operator=(HttpWorker const &) = delete;
 
-    HttpWorker(const JsonRpcHandler::Ptr rpcRegistry, tcp::acceptor &acceptor, std::string docRoot);
+    HttpWorker(JsonRpcHandler::Ptr rpcRegistry, tcp::acceptor &acceptor, std::string docRoot);
 
     void start();
 

@@ -14,7 +14,7 @@ private:
 
 public:
     template<class T>
-    void addMethod(std::shared_ptr<T> method) {
+    void addMethod(const std::shared_ptr<T> method) {
         _methods[method->name()] = method;
     }
 
@@ -26,6 +26,10 @@ public:
         }
 
         return result;
+    }
+
+    std::map<std::string, RpcMethod::Ptr> getMethods() const {
+        return _methods;
     }
 };
 

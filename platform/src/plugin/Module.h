@@ -5,12 +5,20 @@
 #ifndef ROVER_MODULE_H
 #define ROVER_MODULE_H
 
-#include <string>
+#include <boost/config.hpp>
 
-class Module {
+#include <string>
+#include <map>
+#include <memory>
+#include <rpc/RpcMethod.h>
+
+class BOOST_SYMBOL_VISIBLE Module {
 public:
+    typedef std::shared_ptr<Module> Ptr;
 
     virtual std::string name() const = 0;
+
+    virtual std::map<std::string, RpcMethod::Ptr> getRpcMethods() const = 0;
 
     virtual ~Module() = default;
 };

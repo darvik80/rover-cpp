@@ -46,7 +46,7 @@ beast::string_view mimeType(beast::string_view path) {
     return "application/text";
 }
 
-HttpWorker::HttpWorker(const JsonRpcHandler::Ptr rpcHandler, tcp::acceptor &acceptor, std::string docRoot)
+HttpWorker::HttpWorker(JsonRpcHandler::Ptr rpcHandler, tcp::acceptor &acceptor, std::string docRoot)
         : _rpcHandler(rpcHandler), _acceptor(acceptor), _docRoot(std::move(docRoot)) {
 
 }

@@ -5,11 +5,27 @@
 #ifndef ROVER_SYSTEMMODULE_H
 #define ROVER_SYSTEMMODULE_H
 
-#include "plugin/Module.h"
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
 
-class SystemModule : public Module {
-    std::string name() const override;
-};
+#include <boost/dll/alias.hpp> // for BOOST_DLL_ALIAS
 
+#include "plugin/ModuleBase.h"
+
+namespace plugin {
+
+    class SystemModule : public ModuleBase {
+    public:
+        SystemModule();
+
+        std::string name() const override;
+
+        // Factory method
+        static std::shared_ptr<Module> create() {
+            return std::make_shared<SystemModule>();
+        }
+    };
+
+    BOOST_DLL_ALIAS(plugin::SystemModule::create, createModule)
+}
 
 #endif //ROVER_SYSTEMMODULE_H

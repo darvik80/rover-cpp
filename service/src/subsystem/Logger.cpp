@@ -22,7 +22,7 @@ const char *Logger::name() const {
 
 void Logger::postConstruct(Application &app) {
     std::string filePath = app.getProperties()->getString(PROP_APPLICATION_LOG_DIR)
-                           + "/" + app.getProperties()->getString(PROP_APPLICATION_NAME) + ".log";
+                           + app.getProperties()->getString(PROP_APPLICATION_NAME) + ".log";
 
     log::register_simple_formatter_factory<log::trivial::severity_level, char>("Severity");
 

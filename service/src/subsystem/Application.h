@@ -16,7 +16,7 @@
 class Logger;
 
 class Application : public Subsystem{
-protected:
+public:
     const char *name() const override;
 
     void postConstruct(Application &app) override;
@@ -52,7 +52,7 @@ public:
     ~Application() override;
 
 private:
-    typedef std::vector<std::shared_ptr<Subsystem> > SubSystemVec;
+    typedef std::vector<Subsystem::Ptr> SubSystemVec;
     SubSystemVec _spSubsystems;
 
     SPProperties _properties;

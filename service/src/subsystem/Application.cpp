@@ -12,6 +12,7 @@
 #include "const.h"
 
 #include "subsystem/Logger.h"
+#include "subsystem/PluginManager.h"
 
 using namespace std;
 
@@ -48,11 +49,12 @@ int Application::run(int argc, char *argv[]) {
     auto envProperties = std::make_shared<PropertiesMap>();
 
     envProperties->setString(PROP_APPLICATION_PATH, path.string());
+    envProperties->setString(PROP_APPLICATION_LIBRARY, path.parent_path().append("lib/").string());
     envProperties->setString(PROP_APPLICATION_NAME, appPath.filename().string());
-    envProperties->setString(PROP_APPLICATION_CONFIG_DIR, path.parent_path().append("etc").string());
-    envProperties->setString(PROP_APPLICATION_DATA_DIR, path.parent_path().append("var").string());
-    envProperties->setString(PROP_APPLICATION_TEMP_DIR, path.parent_path().append("var/tmp").string());
-    envProperties->setString(PROP_APPLICATION_LOG_DIR, path.parent_path().append("var/logs").string());
+    envProperties->setString(PROP_APPLICATION_CONFIG_DIR, path.parent_path().append("etc/").string());
+    envProperties->setString(PROP_APPLICATION_DATA_DIR, path.parent_path().append("var/").string());
+    envProperties->setString(PROP_APPLICATION_TEMP_DIR, path.parent_path().append("var/tmp/").string());
+    envProperties->setString(PROP_APPLICATION_LOG_DIR, path.parent_path().append("var/logs/").string());
     properties->addProperties(envProperties);
 
     logger().debug("try load application properties");
@@ -68,6 +70,8 @@ int Application::run(int argc, char *argv[]) {
 
     logger().debug("init log system");
     _logger->postConstruct(*this);
+
+    this->addSubsystem(std::make_shared<PluginManager>());
 
     postConstruct(*this);
 
