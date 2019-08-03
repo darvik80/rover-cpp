@@ -10,12 +10,16 @@
 
 #include <cstdint>
 
+#include <string>
+
 BEGIN_DECLARE_DTO(SystemResponse)
 
-__DECLARE_DTO_FIELDS3(
+    __DECLARE_DTO_FIELDS5(
         int, cpuCount,
         float, cpuTemp,
-        int64_t, physicalMemory
+        int64_t, physicalMemory,
+        std::string, platform,
+        std::string, osName
 )
 END_DECLARE_DTO
 

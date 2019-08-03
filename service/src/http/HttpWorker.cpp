@@ -168,6 +168,34 @@ void HttpWorker::processRequest(const HttpRequest &req) {
         case http::verb::get:
             sendFile(req.target());
             break;
+        case http::verb::options:
+            if (req.target() == "/rpc") {
+                _stringResponse.emplace(std::piecewise_construct, std::make_tuple(), std::make_tuple(_alloc));
+
+                _stringResponse->result(http::status::ok);
+                _stringResponse->keep_alive(false);
+                _stringResponse->set(http::field::server, "Beast");
+                _stringResponse->set(http::field::content_length, 0);
+                _stringResponse->set(http::field::allow, "POST");
+                _stringResponse->set(http::field::access_control_allow_origin, "*");
+                _stringResponse->set(http::field::access_control_allow_methods, "GET,HEAD,OPTIONS,POST,PUP");
+                _stringResponse->set(http::field::access_control_allow_headers, "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+                _stringResponse->prepare_payload();
+
+                _stringSerializer.emplace(*_stringResponse);
+
+                http::async_write(
+                        _socket,
+                        *_stringSerializer,
+                        [this](beast::error_code ec, size_t) {
+                            _socket.shutdown(tcp::socket::shutdown_send, ec);
+                            _stringSerializer.reset();
+                            _stringResponse.reset();
+                            accept();
+                        }
+                );
+            }
+            break;
         case http::verb::post: {
             if (req.target() == "/rpc") {
                 this->rpc(req);
@@ -231,6 +259,7 @@ void HttpWorker::rpc(const HttpRequest &req) {
         std::shared_ptr<JsonRpcResponse> response = std::make_shared<JsonRpcResponse>();
         _rpcHandler->handle(*request, *response);
 
+        std::string tmp = JsonEncoder(response).encode();
         _stringResponse->body() = JsonEncoder(response).encode();
     }
 

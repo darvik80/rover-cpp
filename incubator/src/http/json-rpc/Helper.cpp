@@ -16,7 +16,7 @@ std::string JsonEncoder::encode() {
     auto raw = _marshaller->marshal();
 
     std::ostringstream os;
-    boost::property_tree::write_json(os, raw, false);
+    boost::property_tree::write_json(os, raw, true);
 
     return os.str();
 }
