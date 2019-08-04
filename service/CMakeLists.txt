@@ -10,8 +10,7 @@ file(GLOB SRCS_G
         src/rpc/*.cpp
         src/properties/*.cpp
         src/subsystem/*.cpp
-
-        )
+)
 
 file(GLOB LIB_SRCS_G
         src/exception/*.cpp
@@ -19,7 +18,7 @@ file(GLOB LIB_SRCS_G
         src/subsystem/*.cpp
         src/http/*.cpp
         src/rpc/*.cpp
-        )
+)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/src
@@ -36,7 +35,7 @@ set(PLUGINS_DIR ${EXECUTABLE_OUTPUT_PATH}/../lib)
 
 file(MAKE_DIRECTORY ${PROPERTIES_DIR})
 file(MAKE_DIRECTORY ${PLUGINS_DIR})
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/service.properties DESTINATION ${PROPERTIES_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
 target_link_libraries(service platform ${CONAN_LIBS})

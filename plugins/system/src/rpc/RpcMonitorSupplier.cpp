@@ -13,6 +13,7 @@ SystemResponse RpcMonitorSupplier::exec() const {
 
     response.cpuCount = SysInfo::NumberOfProcessors();
     response.cpuTemp = SysInfo::cpuTemperature();
+    response.batteryTemp = SysInfo::batteryTemperature();
     response.physicalMemory = SysInfo::AmountOfPhysicalMemory();
     response.platform = BOOST_PLATFORM;
 

@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko (Lazada Group) on 2019-07-12.
 //
 
-#include "Logger.h"
+#include "LoggerSubsystem.h"
 
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
@@ -14,13 +14,13 @@
 
 using namespace boost;
 
-Logger::Logger() = default;
+LoggerSubsystem::LoggerSubsystem() = default;
 
-const char *Logger::name() const {
+const char *LoggerSubsystem::name() const {
     return "logger";
 }
 
-void Logger::postConstruct(Application &app) {
+void LoggerSubsystem::postConstruct(Application &app) {
     std::string filePath = app.getProperties()->getString(PROP_APPLICATION_LOG_DIR)
                            + app.getProperties()->getString(PROP_APPLICATION_NAME) + ".log";
 
@@ -29,7 +29,8 @@ void Logger::postConstruct(Application &app) {
     if (app.getProperties()->getBoolean(PROP_LOG_ENABLE_FILE, true)) {
         log::add_file_log(
                 log::keywords::file_name = filePath,
-                log::keywords::format = "[%TimeStamp%] [%ThreadID%] [%Severity%] %Message%"
+                log::keywords::format = "[%TimeStamp%] [%ThreadID%] [%Severity%] %Message%",
+                log::keywords::auto_flush = true
         );
     }
 
@@ -62,30 +63,30 @@ void Logger::postConstruct(Application &app) {
     log::add_common_attributes();
 }
 
-void Logger::preDestroy() {
+void LoggerSubsystem::preDestroy() {
 
 }
 
-void Logger::trace(const std::string &message) {
+void LoggerSubsystem::trace(const std::string &message) {
     BOOST_LOG_TRIVIAL(trace) << message;
 }
 
-void Logger::debug(const std::string &message) {
+void LoggerSubsystem::debug(const std::string &message) {
     BOOST_LOG_TRIVIAL(debug) << message;
 }
 
-void Logger::info(const std::string &message) {
+void LoggerSubsystem::info(const std::string &message) {
     BOOST_LOG_TRIVIAL(info) << message;
 }
 
-void Logger::warning(const std::string &message) {
+void LoggerSubsystem::warning(const std::string &message) {
     BOOST_LOG_TRIVIAL(warning) << message;
 }
 
-void Logger::error(const std::string &message) {
+void LoggerSubsystem::error(const std::string &message) {
     BOOST_LOG_TRIVIAL(error) << message;
 }
 
-void Logger::fatal(const std::string &message) {
+void LoggerSubsystem::fatal(const std::string &message) {
     BOOST_LOG_TRIVIAL(fatal) << message;
 }

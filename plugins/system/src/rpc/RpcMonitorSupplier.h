@@ -14,9 +14,10 @@
 
 BEGIN_DECLARE_DTO(SystemResponse)
 
-    __DECLARE_DTO_FIELDS5(
+__DECLARE_DTO_FIELDS6(
         int, cpuCount,
-        float, cpuTemp,
+        double, cpuTemp,
+        double, batteryTemp,
         int64_t, physicalMemory,
         std::string, platform,
         std::string, osName

@@ -9,11 +9,11 @@
 #include <memory>
 #include <string>
 
+#include <Logger.h>
+
 #include "Subsystem.h"
 #include "exception/LogicException.h"
 #include "properties/Properties.h"
-
-class Logger;
 
 class Application : public Subsystem {
 public:
@@ -29,6 +29,7 @@ public:
     void preDestroy() override;
 
     Logger& logger();
+    Logger::Ptr loggerPtr();
 
     void addSubsystem(std::shared_ptr<Subsystem> spSubSystem) {
         _spSubsystems.push_back(spSubSystem);
@@ -55,7 +56,7 @@ private:
 
     SPProperties _properties;
 
-    std::shared_ptr<Logger> _logger;
+    Logger::Ptr _logger;
 };
 
 

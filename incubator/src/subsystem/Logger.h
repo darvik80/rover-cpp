@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko (Lazada Group) on 2019-07-12.
 //
 
-#ifndef ROVER_LOGGER_H
+#ifndef ROVER_LOGGERSUBSYSTEM_H
 #define ROVER_LOGGER_H
 
 
@@ -33,4 +33,4 @@ public:
 };
 
 
-#endif //ROVER_LOGGER_H
+#endif //ROVER_LOGGERSUBSYSTEM_H

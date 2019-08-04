@@ -47,7 +47,23 @@ beast::string_view mimeType(beast::string_view path) {
 }
 
 HttpWorker::HttpWorker(JsonRpcHandler::Ptr rpcHandler, tcp::acceptor &acceptor, std::string docRoot)
-        : _rpcHandler(rpcHandler), _acceptor(acceptor), _docRoot(std::move(docRoot)) {
+        : _rpcHandler(rpcHandler)
+        , _acceptor(acceptor)
+        , _docRoot(std::move(docRoot))
+        , _signals(acceptor.get_io_context())
+{
+    _signals.add(SIGINT);
+    _signals.add(SIGTERM);
+#if defined(SIGQUIT)
+    _signals.add(SIGQUIT);
+#endif
+
+    _signals.async_wait(
+            [this](boost::system::error_code errorCode, int) {
+                _acceptor.close();
+                _acceptor.get_io_context().stop();
+            }
+    );
 
 }
 
@@ -70,9 +86,7 @@ void HttpWorker::sendFile(beast::string_view target) {
     beast::error_code ec;
     file.open(full_path.c_str(), beast::file_mode::read, ec);
     if (ec) {
-        sendBadResponse(
-                http::status::not_found,
-                "File not found\r\n");
+        sendBadResponse(http::status::not_found, "File not found\r\n");
         return;
     }
 

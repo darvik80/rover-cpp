@@ -29,10 +29,11 @@ int HttpServer::run(RpcMethod::PtrVec& methods) {
     try {
         auto const address = boost::asio::ip::make_address("0.0.0.0");
         unsigned short port = 8080;
-        int num_workers = 1;
+        int num_workers = 4;
         //bool spin = (std::strcmp(argv[5], "spin") == 0);
 
         boost::asio::io_context ioc{1};
+
         tcp::acceptor acceptor{ioc, {address, port}};
 
         std::list<HttpWorker> workers;

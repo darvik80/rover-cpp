@@ -19,7 +19,6 @@
 
 #ifndef __SMC_H__
 #define __SMC_H__
-#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -99,19 +98,8 @@ typedef struct {
 } SMCVal_t;
 
 // prototypes
-float SMCGetFanSpeed(int fanNum);
-int SMCGetFanNumber(char *key);
+kern_return_t SMCOpen();
+kern_return_t SMCClose();
 double SMCGetTemperature(char *key);
-const char* getBatteryHealth();
-int getDesignCycleCount();
-int getBatteryCharge();
-CFTypeRef IOPSCopyPowerSourcesInfo(void);
-CFArrayRef IOPSCopyPowerSourcesList(CFTypeRef blob);
-CFDictionaryRef IOPSGetPowerSourceDescription(CFTypeRef blob, CFTypeRef ps);
 
-// formatted string functions
-char* getCPUTemperature();
-char* getBatteryTemperature();
-char* getBatteryCyclesCount();
-char* getBatteryChargePercentage();
-char* getFanSpeed(int);
+#endif
