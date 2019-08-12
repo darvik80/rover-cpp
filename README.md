@@ -2,12 +2,15 @@
 
 Service based on Boost C++ Libraries (https://boost.org/)
 
-* JSON-RPC Server (Boost.PropertyTree, Boost.Beast, C++ 17)
+* JSON-RPC Server (nlohmann/json, Boost.Beast, C++ 17)
 * Logging (Boost.Log)
 * macchina.io like IoT (https://macchina.io/) 
 
 ## build
 ```bash
+
+
+
 mkdir -p build && cd build
 conan install . -s build_type=Debug --install-folder=build
 cmake ../
