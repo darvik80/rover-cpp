@@ -29,7 +29,7 @@ void PluginManager::postConstruct(Application &app) {
     for (filesystem::directory_iterator it(path); it != end_iter; ++it) {
         app.logger().info(it->path().string());
 
-        if (!filesystem::is_regular_file(*it) || it->path().extension() != ".dylib") {
+        if (!filesystem::is_regular_file(*it)) {
             continue;
         }
 

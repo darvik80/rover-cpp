@@ -13,19 +13,9 @@
 #include <boost/property_tree/json_parser.hpp>
 
 std::string JsonEncoder::encode() {
-    auto raw = _marshaller->marshal();
-
-    std::ostringstream os;
-    boost::property_tree::write_json(os, raw, false);
-
-    return os.str();
+    return _marshaller->marshal().dump();
 }
 
 void JsonDecoder::decode(const std::string &json) {
-    tree doc;
-
-    std::istringstream is(json);
-    boost::property_tree::read_json(is, doc);
-
-    _unMarshaller->unMarshal(doc);
+    _unMarshaller->unMarshal(nlohmann::json::parse(json.begin(), json.end()));
 }

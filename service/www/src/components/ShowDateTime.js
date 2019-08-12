@@ -51,7 +51,10 @@ class ShowDateTime extends React.Component {
                             <td className="text-right">mem</td><td>{this.state.systemState.physicalMemory/1024/1024/1024} Gb</td>
                         </tr>
                         <tr>
-                            <td className="text-right">temp</td><td>{this.state.systemState.cpuTemp}</td>
+                            <td className="text-right">cpu temp</td><td>{this.state.systemState.cpuTemp}</td>
+                        </tr>
+                        <tr>
+                            <td className="text-right">battery temp</td><td>{this.state.systemState.batteryTemp}</td>
                         </tr>
                         <tr>
                             <td className="text-right">platform</td><td>{this.state.systemState.platform}</td>

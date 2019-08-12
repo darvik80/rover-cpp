@@ -8,6 +8,8 @@
 #include <boost/version.hpp>
 #include <boost/config.hpp>
 
+#include <iostream>
+
 SystemResponse RpcMonitorSupplier::exec() const {
     SystemResponse response;
 
@@ -17,5 +19,7 @@ SystemResponse RpcMonitorSupplier::exec() const {
     response.physicalMemory = SysInfo::AmountOfPhysicalMemory();
     response.platform = BOOST_PLATFORM;
 
+    auto t = response.marshal().dump();
+    std::cout << t << std::endl;
     return response;
 }

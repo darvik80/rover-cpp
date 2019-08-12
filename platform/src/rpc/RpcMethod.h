@@ -6,9 +6,10 @@
 #define ROVER_RPCMETHOD_H
 
 #include <string>
+#include <vector>
 #include <memory>
 #include <boost/optional.hpp>
-#include <boost/property_tree/ptree.hpp>
+#include <nlohmann/json.hpp>
 
 class RpcMethod {
 public:
@@ -17,7 +18,7 @@ public:
 public:
     virtual std::string name() const = 0;
 
-    virtual boost::optional<boost::property_tree::ptree> handle(const boost::optional<boost::property_tree::ptree> &params) const = 0;
+    virtual boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const = 0;
 
     virtual ~RpcMethod() = default;
 };
@@ -25,8 +26,7 @@ public:
 template<typename T, typename R>
 class RpcFunction : public RpcMethod {
 public:
-    boost::optional<boost::property_tree::ptree>
-    handle(const boost::optional<boost::property_tree::ptree> &params) const override {
+    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         T inc;
         if (params) {
             inc.unMarshal(params.value());
@@ -41,7 +41,7 @@ public:
 template<typename T>
 class RpcConsumer : public RpcMethod {
 public:
-    boost::optional<boost::property_tree::ptree> handle(const boost::optional<boost::property_tree::ptree> &params) const override {
+    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         T inc;
         if (params) {
             inc.unMarshal(params.value());
@@ -49,7 +49,7 @@ public:
 
         exec(inc);
 
-        return boost::optional<boost::property_tree::ptree>();
+        return boost::optional<nlohmann::json>();
     };
 
     virtual void exec(const T &params) const = 0;
@@ -57,7 +57,7 @@ public:
 
 template<typename R>
 class RpcSupplier : public RpcMethod {
-    boost::optional<boost::property_tree::ptree> handle(const boost::optional<boost::property_tree::ptree> &params) const override {
+    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         return exec().marshal();
     };
 

@@ -38,38 +38,38 @@ public:
 
 static void unMarshal(const tree &ptr, const std::string &tag, boost::optional<tree> &value) {
     auto iter = ptr.find(tag);
-    if (iter != ptr.not_found()){
-        value = iter->second;
+    if (iter != ptr.end()){
+        value = *iter;
     }
 }
 
 static void unMarshal(const tree &ptr, const std::string &tag, tree &value) {
-    value = ptr.get_child(tag);
+    value = ptr[tag];
 }
 
 template<typename T>
 static void unMarshal(const tree &ptr, const std::string &tag, boost::optional<T> &value) {
     if constexpr (std::is_base_of<UnMarshaller, T>::value) {
         T opt;
-        opt.unMarshal(ptr.get_child(tag));
+        opt.unMarshal(ptr[tag]);
         value = opt;
     } else {
-        value = ptr.get<T>(tag);
+        value = ptr[tag];
     }
 }
 
 template<typename T>
 static void unMarshal(const tree &ptr, const std::string &tag, T &value) {
     if constexpr (std::is_base_of<UnMarshaller, T>::value) {
-        value.unMarshal(ptr.get_child(tag));
+        value.unMarshal(ptr[tag]);
     } else {
-        value = ptr.get<T>(tag);
+        value = ptr[tag];
     }
 }
 
 
 static void marshal(tree &ptr, const std::string &tag, const tree &value) {
-    ptr.put_child(tag, value);
+    ptr[tag] = value;
 }
 
 template<typename T>
@@ -79,14 +79,14 @@ static void marshal(tree &ptr, const std::string &tag, const T &value) {
             marshal(value.value());
         }
     } else if constexpr (std::is_base_of<Marshaller, T>::value) {
-        ptr.put_child(tag, value.marshal());
+        ptr[tag] = value.marshal();
     } else {
-        ptr.put<T>(tag, value);
+        ptr[tag] = value;
     }
 }
 
 static void marshal(tree &ptr, const std::string &tag, const Marshaller &value) {
-    ptr.put_child(tag, value.marshal());
+    ptr[tag] = value.marshal();
 }
 
 template<typename T>
@@ -125,7 +125,8 @@ class JsonMarshaller : public Marshaller  {                                     
             tree obj;
 #define ITEM_JSON_MARSHAL(name) ::marshal(obj, #name, _obj->name);
 #define ITEM_JSON_MARSHAL_TAG(tag, name) ::marshal(obj, #tag, _obj->name);
-#define END_JSON_MARSHAL return obj;                                                    \
+#define END_JSON_MARSHAL std::string t = obj.dump(); \
+            return obj;                                                    \
         }                                                                               \
     };                                                                                  \
 public:                                                                                 \

@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
 project(service VERSION 1.0)
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden -DBOOST_LOG_DYN_LINK")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
 
 file(GLOB SRCS_G
@@ -21,6 +22,7 @@ file(GLOB LIB_SRCS_G
 )
 
 include_directories(
+        /usr/local/include
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
 )
@@ -38,7 +40,7 @@ file(MAKE_DIRECTORY ${PLUGINS_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
-target_link_libraries(service platform ${CONAN_LIBS})
+target_link_libraries(service platform dl)
 
 
 

@@ -20,7 +20,6 @@ namespace plugin {
 #endif
         info("Create SystemModule");
         addMethod(std::make_shared<RpcMonitorSupplier>());
-
     }
 
     std::string SystemModule::name() const {

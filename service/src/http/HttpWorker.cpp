@@ -273,7 +273,6 @@ void HttpWorker::rpc(const HttpRequest &req) {
         std::shared_ptr<JsonRpcResponse> response = std::make_shared<JsonRpcResponse>();
         _rpcHandler->handle(*request, *response);
 
-        std::string tmp = JsonEncoder(response).encode();
         _stringResponse->body() = JsonEncoder(response).encode();
     }
 

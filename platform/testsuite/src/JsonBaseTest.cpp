@@ -36,15 +36,18 @@ BOOST_AUTO_TEST_SUITE(JsonBaseTest)
         message.message = "Hello";
 
         auto res = message.marshal();
-        BOOST_REQUIRE_EQUAL(message.id, res.get<int>("id"));
+        BOOST_REQUIRE_EQUAL(message.id, res["id"]);
 
-        BOOST_REQUIRE_EQUAL(message.message, res.get<std::string>("message"));
+        BOOST_REQUIRE_EQUAL(message.message, res["message"]);
     }
 
     BOOST_AUTO_TEST_CASE(testUnMarshal) {
-        boost::property_tree::ptree ptr;
-        ptr.put("id", 20);
-        ptr.put("message", "hello");
+        nlohmann::json ptr = R"(
+        {
+            "id": 20,
+            "message": "hello"
+        }
+        )"_json;
 
         Message message;
         message.unMarshal(ptr);

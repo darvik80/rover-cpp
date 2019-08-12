@@ -19,6 +19,7 @@
 namespace ip = boost::asio::ip;         // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;       // from <boost/asio.hpp>
 namespace http = boost::beast::http;    // from <boost/beast/http.hpp>
+namespace asio = boost::asio;    // from <boost/beast/http.hpp>
 
 typedef http::request<http::string_body, http::basic_fields<fields_alloc<char>>> HttpRequest;
 typedef http::response<http::string_body, http::basic_fields<fields_alloc<char>>> HttpResponse;

@@ -18,7 +18,7 @@
     "react-jsonrpc-client": "^1.0.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "reactstrap": "^8.0.0",
+    "reactstrap": "^8.0.1",
     "use-query-params": "^0.3.3",
     "use-react-router": "^1.0.7"
   },
