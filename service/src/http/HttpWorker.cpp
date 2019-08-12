@@ -47,7 +47,23 @@ beast::string_view mimeType(beast::string_view path) {
 }
 
 HttpWorker::HttpWorker(JsonRpcHandler::Ptr rpcHandler, tcp::acceptor &acceptor, std::string docRoot)
-        : _rpcHandler(rpcHandler), _acceptor(acceptor), _docRoot(std::move(docRoot)) {
+        : _rpcHandler(rpcHandler)
+        , _acceptor(acceptor)
+        , _docRoot(std::move(docRoot))
+        , _signals(acceptor.get_io_context())
+{
+    _signals.add(SIGINT);
+    _signals.add(SIGTERM);
+#if defined(SIGQUIT)
+    _signals.add(SIGQUIT);
+#endif
+
+    _signals.async_wait(
+            [this](boost::system::error_code errorCode, int) {
+                _acceptor.close();
+                _acceptor.get_io_context().stop();
+            }
+    );
 
 }
 
@@ -70,9 +86,7 @@ void HttpWorker::sendFile(beast::string_view target) {
     beast::error_code ec;
     file.open(full_path.c_str(), beast::file_mode::read, ec);
     if (ec) {
-        sendBadResponse(
-                http::status::not_found,
-                "File not found\r\n");
+        sendBadResponse(http::status::not_found, "File not found\r\n");
         return;
     }
 
@@ -167,6 +181,34 @@ void HttpWorker::processRequest(const HttpRequest &req) {
     switch (req.method()) {
         case http::verb::get:
             sendFile(req.target());
+            break;
+        case http::verb::options:
+            if (req.target() == "/rpc") {
+                _stringResponse.emplace(std::piecewise_construct, std::make_tuple(), std::make_tuple(_alloc));
+
+                _stringResponse->result(http::status::ok);
+                _stringResponse->keep_alive(false);
+                _stringResponse->set(http::field::server, "Beast");
+                _stringResponse->set(http::field::content_length, 0);
+                _stringResponse->set(http::field::allow, "POST");
+                _stringResponse->set(http::field::access_control_allow_origin, "*");
+                _stringResponse->set(http::field::access_control_allow_methods, "GET,HEAD,OPTIONS,POST,PUP");
+                _stringResponse->set(http::field::access_control_allow_headers, "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+                _stringResponse->prepare_payload();
+
+                _stringSerializer.emplace(*_stringResponse);
+
+                http::async_write(
+                        _socket,
+                        *_stringSerializer,
+                        [this](beast::error_code ec, size_t) {
+                            _socket.shutdown(tcp::socket::shutdown_send, ec);
+                            _stringSerializer.reset();
+                            _stringResponse.reset();
+                            accept();
+                        }
+                );
+            }
             break;
         case http::verb::post: {
             if (req.target() == "/rpc") {

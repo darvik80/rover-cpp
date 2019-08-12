@@ -1,33 +1,36 @@
-#include <utility>
-
 //
-// Created by Ivan Kishchenko (Lazada Group) on 2019-07-15.
+// Created by Ivan Kishchenko on 2019-08-04.
 //
 
-#ifndef ROVER_MODULEBASE_H
-#define ROVER_MODULEBASE_H
+#ifndef ROVER_SUBSYSTEMBASE_H
+#define ROVER_SUBSYSTEMBASE_H
 
 
-#include <rpc/RpcRegistry.h>
-#include "Module.h"
+#include <Logger.h>
+#include "Subsystem.h"
 
-class ModuleBase : public Module, protected RpcRegistry {
+class SubsystemBase : public Subsystem, public Logger {
 private:
     Logger::Ptr _logger;
-protected:
+private:
     std::string message(const std::string& msg);
 public:
-    explicit ModuleBase(Logger::Ptr logger);
-    std::map<std::string, RpcMethod::Ptr> getRpcMethods() const override;
-
-    
     void trace(const std::string &message) override;
+
     void debug(const std::string &message) override;
+
     void info(const std::string &message) override;
+
     void warning(const std::string &message) override;
+
     void error(const std::string &message) override;
+
     void fatal(const std::string &message) override;
+
+    void postConstruct(Application &app) override;
+
+    ~SubsystemBase() override = default;
 };
 
 
-#endif //ROVER_MODULEBASE_H
+#endif //ROVER_SUBSYSTEMBASE_H

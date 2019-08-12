@@ -19,6 +19,7 @@
 namespace ip = boost::asio::ip;         // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;       // from <boost/asio.hpp>
 namespace http = boost::beast::http;    // from <boost/beast/http.hpp>
+namespace asio = boost::asio;    // from <boost/beast/http.hpp>
 
 typedef http::request<http::string_body, http::basic_fields<fields_alloc<char>>> HttpRequest;
 typedef http::response<http::string_body, http::basic_fields<fields_alloc<char>>> HttpResponse;
@@ -35,6 +36,9 @@ public:
     void start();
 
 private:
+    boost::asio::signal_set _signals;
+
+
     using alloc_t = fields_alloc<char>;
     //using request_body_t = http::basic_dynamic_body<boost::beast::flat_static_buffer<1024 * 1024>>;
     using request_body_t = http::string_body;

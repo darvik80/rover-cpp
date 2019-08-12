@@ -5,13 +5,13 @@
 #ifndef ROVER_BASE_H
 #define ROVER_BASE_H
 
-#include <boost/property_tree/ptree.hpp>
+#include <nlohmann/json.hpp>
 #include <boost/optional.hpp>
 #include <string>
 
 namespace json {
 
-    typedef boost::property_tree::ptree tree;
+    typedef nlohmann::json tree;
 
     class Encoder {
     public:

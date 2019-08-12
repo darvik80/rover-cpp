@@ -13,7 +13,8 @@ class SysInfo {
 public:
     static int NumberOfProcessors();
     static int64_t AmountOfPhysicalMemory();
-    static float cpuTemperature();
+    static double cpuTemperature();
+    static double batteryTemperature();
 };
 
 

@@ -6,12 +6,20 @@
 #include "SystemModule.h"
 #include <iostream>
 
+#include "config.h"
+
+#if CFG_OS_MACOSX
+#include "platform-mac-os/CpuInfo.h"
+#endif
+
 namespace plugin {
 
-    SystemModule::SystemModule() {
-        std::cout << "Create SystemModule" << std::endl;
+    SystemModule::SystemModule(Logger::Ptr logger) : ModuleBase(logger){
+#if CFG_OS_MACOSX
+        SMCOpen();
+#endif
+        info("Create SystemModule");
         addMethod(std::make_shared<RpcMonitorSupplier>());
-
     }
 
     std::string SystemModule::name() const {
@@ -19,6 +27,9 @@ namespace plugin {
     }
 
     SystemModule::~SystemModule() {
-        std::cout << "Destroy SystemModule" << std::endl;
+        info("Destroy SystemModule");
+#if CFG_OS_MACOSX
+        SMCClose();
+#endif
     }
 }

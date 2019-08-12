@@ -12,21 +12,16 @@ file(GLOB SRCS_G
         )
 
 include_directories(
+        /usr/local/include
+        /usr/include
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
 )
+
+find_package(nlohmann_json 3.2.0 REQUIRED)
 
 add_executable(incubator ${SRCS_G})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 
-target_link_libraries(incubator ${CONAN_LIBS})
-
-set(PROPERTIES_DIR ${EXECUTABLE_OUTPUT_PATH}/../etc)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR})
-
-file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../var/logs)
-file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../var/tmp)
-
-
-
+target_link_libraries(incubator ${CONAN_LIBS} nlohmann_json::nlohmann_json)

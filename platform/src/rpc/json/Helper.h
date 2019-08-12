@@ -38,38 +38,38 @@ public:
 
 static void unMarshal(const tree &ptr, const std::string &tag, boost::optional<tree> &value) {
     auto iter = ptr.find(tag);
-    if (iter != ptr.not_found()){
-        value = iter->second;
+    if (iter != ptr.end()){
+        value = *iter;
     }
 }
 
 static void unMarshal(const tree &ptr, const std::string &tag, tree &value) {
-    value = ptr.get_child(tag);
+    value = ptr[tag];
 }
 
 template<typename T>
 static void unMarshal(const tree &ptr, const std::string &tag, boost::optional<T> &value) {
     if constexpr (std::is_base_of<UnMarshaller, T>::value) {
         T opt;
-        opt.unMarshal(ptr.get_child(tag));
+        opt.unMarshal(ptr[tag]);
         value = opt;
     } else {
-        value = ptr.get<T>(tag);
+        value = ptr[tag];
     }
 }
 
 template<typename T>
 static void unMarshal(const tree &ptr, const std::string &tag, T &value) {
     if constexpr (std::is_base_of<UnMarshaller, T>::value) {
-        value.unMarshal(ptr.get_child(tag));
+        value.unMarshal(ptr[tag]);
     } else {
-        value = ptr.get<T>(tag);
+        value = ptr[tag];
     }
 }
 
 
 static void marshal(tree &ptr, const std::string &tag, const tree &value) {
-    ptr.put_child(tag, value);
+    ptr[tag] = value;
 }
 
 template<typename T>
@@ -79,14 +79,14 @@ static void marshal(tree &ptr, const std::string &tag, const T &value) {
             marshal(value.value());
         }
     } else if constexpr (std::is_base_of<Marshaller, T>::value) {
-        ptr.put_child(tag, value.marshal());
+        ptr[tag] = value.marshal();
     } else {
-        ptr.put(tag, value);
+        ptr[tag] = value;
     }
 }
 
 static void marshal(tree &ptr, const std::string &tag, const Marshaller &value) {
-    ptr.put_child(tag, value.marshal());
+    ptr[tag] = value.marshal();
 }
 
 template<typename T>
@@ -125,7 +125,8 @@ class JsonMarshaller : public Marshaller  {                                     
             tree obj;
 #define ITEM_JSON_MARSHAL(name) ::marshal(obj, #name, _obj->name);
 #define ITEM_JSON_MARSHAL_TAG(tag, name) ::marshal(obj, #tag, _obj->name);
-#define END_JSON_MARSHAL return obj;                                                    \
+#define END_JSON_MARSHAL std::string t = obj.dump(); \
+            return obj;                                                    \
         }                                                                               \
     };                                                                                  \
 public:                                                                                 \
@@ -198,6 +199,51 @@ BEGIN_JSON_UNMARSHAL                                                            
     ITEM_JSON_UNMARSHAL(name2)                                                          \
     ITEM_JSON_UNMARSHAL(name3)                                                          \
     ITEM_JSON_UNMARSHAL(name4)                                                          \
+END_JSON_UNMARSHAL
+
+#define __DECLARE_DTO_FIELDS5(cls1, name1, cls2, name2, cls3, name3, cls4, name4, cls5, name5)       \
+public: cls1 name1;                                                                     \
+public: cls2 name2;                                                                     \
+public: cls3 name3;                                                                     \
+public: cls4 name4;                                                                     \
+public: cls5 name5;                                                                     \
+BEGIN_JSON_MARSHAL                                                                      \
+    ITEM_JSON_MARSHAL(name1)                                                            \
+    ITEM_JSON_MARSHAL(name2)                                                            \
+    ITEM_JSON_MARSHAL(name3)                                                            \
+    ITEM_JSON_MARSHAL(name4)                                                            \
+    ITEM_JSON_MARSHAL(name5)                                                            \
+END_JSON_MARSHAL                                                                        \
+BEGIN_JSON_UNMARSHAL                                                                    \
+    ITEM_JSON_UNMARSHAL(name1)                                                          \
+    ITEM_JSON_UNMARSHAL(name2)                                                          \
+    ITEM_JSON_UNMARSHAL(name3)                                                          \
+    ITEM_JSON_UNMARSHAL(name4)                                                          \
+    ITEM_JSON_UNMARSHAL(name5)                                                          \
+END_JSON_UNMARSHAL
+
+#define __DECLARE_DTO_FIELDS6(cls1, name1, cls2, name2, cls3, name3, cls4, name4, cls5, name5, cls6, name6)       \
+public: cls1 name1;                                                                     \
+public: cls2 name2;                                                                     \
+public: cls3 name3;                                                                     \
+public: cls4 name4;                                                                     \
+public: cls5 name5;                                                                     \
+public: cls6 name6;                                                                     \
+BEGIN_JSON_MARSHAL                                                                      \
+    ITEM_JSON_MARSHAL(name1)                                                            \
+    ITEM_JSON_MARSHAL(name2)                                                            \
+    ITEM_JSON_MARSHAL(name3)                                                            \
+    ITEM_JSON_MARSHAL(name4)                                                            \
+    ITEM_JSON_MARSHAL(name5)                                                            \
+    ITEM_JSON_MARSHAL(name6)                                                            \
+END_JSON_MARSHAL                                                                        \
+BEGIN_JSON_UNMARSHAL                                                                    \
+    ITEM_JSON_UNMARSHAL(name1)                                                          \
+    ITEM_JSON_UNMARSHAL(name2)                                                          \
+    ITEM_JSON_UNMARSHAL(name3)                                                          \
+    ITEM_JSON_UNMARSHAL(name4)                                                          \
+    ITEM_JSON_UNMARSHAL(name5)                                                          \
+    ITEM_JSON_UNMARSHAL(name6)                                                          \
 END_JSON_UNMARSHAL
 
 #endif //ROVER_HELPER_H

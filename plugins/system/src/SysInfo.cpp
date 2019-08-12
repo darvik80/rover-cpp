@@ -15,6 +15,10 @@
 #include <sys/sysctl.h>
 #include <cstdio>
 
+#if CFG_OS_MACOSX
+#include "platform-mac-os/CpuInfo.h"
+#endif
+
 template<typename T, size_t N>
 char (&ArraySizeHelper(const T (&array)[N]))[N];
 
@@ -32,14 +36,24 @@ int SysInfo::NumberOfProcessors() {
 }
 
 // static
-float SysInfo::cpuTemperature() {
-#if CFG_OS_LINUX
+double SysInfo::cpuTemperature() {
+#if CFG_OS_MACOSX
+    return SMCGetTemperature(SMC_KEY_CPU_TEMP);
+#elif CFG_OS_LINUX
     float millideg;
     FILE *thermal = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
     int n = fscanf(thermal, "%f", &millideg);
     fclose(thermal);
     return millideg / 1000;
 #else
+    return 0;
+#endif
+}
+
+double SysInfo::batteryTemperature() {
+#if CFG_OS_MACOSX
+    return SMCGetTemperature(SMC_KEY_BATTERY_TEMP);
+#elif CFG_OS_LINUX
     return 0;
 #endif
 }

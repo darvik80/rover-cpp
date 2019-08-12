@@ -5,7 +5,7 @@
 #ifndef ROVER_PLUGINGMANAGER_H
 #define ROVER_PLUGINGMANAGER_H
 
-#include "Subsystem.h"
+#include "SubsystemBase.h"
 #include "plugin/Module.h"
 
 #include <map>
@@ -15,10 +15,7 @@
 
 #include <boost/function.hpp>
 
-typedef Module::Ptr (PluginCreator)();
-
-
-class PluginManager : public Subsystem {
+class PluginManager : public SubsystemBase {
 public:
     const char *name() const override;
 
@@ -41,8 +38,8 @@ public:
     Module::PtrVec getModules() {
         Module::PtrVec result;
 
-        for (auto it = _modules.begin(); it != _modules.end(); ++it) {
-            result.push_back(it->second);
+        for (auto & _module : _modules) {
+            result.push_back(_module.second);
         }
 
         return result;

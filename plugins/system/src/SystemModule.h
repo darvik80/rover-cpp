@@ -15,16 +15,15 @@ namespace plugin {
 
     class SystemModule : public ModuleBase {
     public:
-        SystemModule();
-
+        SystemModule(Logger::Ptr logger);
         std::string name() const override;
 
         // Factory method
-        static std::shared_ptr<Module> create() {
-            return std::make_shared<SystemModule>();
+        static std::shared_ptr<Module> create(Logger::Ptr logger) {
+            return std::make_shared<SystemModule>(logger);
         }
 
-        virtual ~SystemModule();
+        ~SystemModule() override;
     };
 
     BOOST_DLL_ALIAS(plugin::SystemModule::create, createModule)

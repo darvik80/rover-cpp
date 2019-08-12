@@ -11,7 +11,7 @@
 #include <memory>
 #include "const.h"
 
-#include "subsystem/Logger.h"
+#include "subsystem/LoggerSubsystem.h"
 #include "subsystem/PluginManager.h"
 
 using namespace std;
@@ -22,6 +22,10 @@ const char *Application::name() const {
 
 Logger& Application::logger() {
     return *_logger;
+}
+
+Logger::Ptr Application::loggerPtr() {
+    return _logger;
 }
 
 void Application::postConstruct(Application &app) {
@@ -69,7 +73,7 @@ int Application::run(int argc, char *argv[]) {
     _properties = properties;
 
     logger().debug("init log system");
-    _logger->postConstruct(*this);
+    ((LoggerSubsystem*)(_logger.get()))->postConstruct(*this);
 
     this->addSubsystem(std::make_shared<PluginManager>());
 
@@ -87,7 +91,7 @@ void Application::run() {
 }
 
 Application::Application() {
-    _logger = make_shared<Logger>();
+    _logger = make_shared<LoggerSubsystem>();
 };
 
 Application::~Application() = default;

@@ -11,10 +11,11 @@
 #include <map>
 #include <memory>
 #include <rpc/RpcMethod.h>
+#include "Logger.h"
 
 #define FN_CREATE_MODULE "createModule"
 
-class BOOST_SYMBOL_VISIBLE Module {
+class BOOST_SYMBOL_VISIBLE Module : public Logger {
 public:
     typedef std::shared_ptr<Module> Ptr;
     typedef std::vector<Ptr> PtrVec;
@@ -26,5 +27,6 @@ public:
     virtual ~Module() = default;
 };
 
+typedef Module::Ptr (PluginCreator)(Logger::Ptr);
 
 #endif //ROVER_MODULE_H
