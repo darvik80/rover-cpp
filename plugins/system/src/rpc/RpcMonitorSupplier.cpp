@@ -9,8 +9,13 @@
 #include <boost/config.hpp>
 
 #include <iostream>
+#include <sys/utsname.h>
 
 SystemResponse RpcMonitorSupplier::exec() const {
+    struct utsname uNameData;
+
+    uname(&uNameData);
+
     SystemResponse response;
 
     response.cpuCount = SysInfo::NumberOfProcessors();
@@ -18,8 +23,7 @@ SystemResponse RpcMonitorSupplier::exec() const {
     response.batteryTemp = SysInfo::batteryTemperature();
     response.physicalMemory = SysInfo::AmountOfPhysicalMemory();
     response.platform = BOOST_PLATFORM;
+    response.osName = uNameData.version;
 
-    auto t = response.marshal().dump();
-    std::cout << t << std::endl;
     return response;
 }

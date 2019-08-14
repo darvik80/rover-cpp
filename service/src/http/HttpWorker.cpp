@@ -268,10 +268,18 @@ void HttpWorker::rpc(const HttpRequest &req) {
         _stringResponse->body() = "json-rpc support only application/json content-type";
     } else {
         std::shared_ptr<JsonRpcRequest> request = std::make_shared<JsonRpcRequest>();
-        JsonDecoder(request).decode(req.body());
-
         std::shared_ptr<JsonRpcResponse> response = std::make_shared<JsonRpcResponse>();
-        _rpcHandler->handle(*request, *response);
+        try {
+            JsonDecoder(request).decode(req.body());
+
+            _rpcHandler->handle(*request, *response);
+
+        } catch (std::exception& ex) {
+            JsonRcpError error;
+            error.code = InternalError;
+            error.message = ex.what();
+            response->error = error;
+        }
 
         _stringResponse->body() = JsonEncoder(response).encode();
     }
