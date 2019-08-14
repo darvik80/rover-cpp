@@ -24,7 +24,7 @@ BEGIN_DECLARE_DTO(JsonRpcRequest)
 __DECLARE_DTO_FIELDS4(
         std::string, method,
         boost::optional<json::tree>, params,
-        boost::optional<std::string>, id,
+        boost::optional<int>, id,
         std::string, jsonrpc
 )
 END_DECLARE_DTO
@@ -50,7 +50,7 @@ BEGIN_DECLARE_DTO(JsonRpcResponse)
 __DECLARE_DTO_FIELDS4(
         boost::optional<json::tree>, result,
         boost::optional<JsonRcpError>, error,
-        boost::optional<std::string>, id,
+        boost::optional<int>, id,
         std::string, jsonrpc
 )
 END_DECLARE_DTO

@@ -5,19 +5,21 @@ Service based on Boost C++ Libraries (https://boost.org/)
 * JSON-RPC Server (nlohmann/json, Boost.Beast, C++ 17)
 * Logging (Boost.Log)
 * macchina.io like IoT (https://macchina.io/) 
+* conan (https://conan.io) for build on Mac OS (no pre-compiled libraries for arm/arm64)
 
 ## build
 ```bash
-
-
-
-mkdir -p build && cd build
+git submodule init
+git submodule update
+cd lib/json && cmake ./ && make && make install && cd ../..
+mkdir -p build
+# for Mac OS {
 conan install . -s build_type=Debug --install-folder=build
-cmake ../
+#  } for Mac OS
+cd build && cmake ../
 make all CTEST_OUTPUT_ON_FAILURE=1 test
 
 ```
-
 ## json-rpc
 
 ### dto examples:

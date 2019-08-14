@@ -11,7 +11,7 @@ class ShowDateTime extends React.Component {
             systemState: null,
         };
 
-        this.api = new JsonRpcClient({endpoint: 'http://localhost:8080/rpc'});
+        this.api = new JsonRpcClient({endpoint: '/rpc'});
 
     }
     componentDidMount() {
@@ -58,6 +58,9 @@ class ShowDateTime extends React.Component {
                         </tr>
                         <tr>
                             <td className="text-right">platform</td><td>{this.state.systemState.platform}</td>
+                        </tr>
+                        <tr>
+                            <td className="text-right">version</td><td>{this.state.systemState.osName}</td>
                         </tr>
                         </tbody>
                     </Table>
