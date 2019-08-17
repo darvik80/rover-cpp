@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.2)
 
 project(platform VERSION 1.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden -fPIC")
 
-find_package(nlohmann_json 3.2.0 REQUIRED)
+find_package(nlohmann_json 3.7.0 REQUIRED)
 
 file(GLOB SRCS_G
         src/json/*.cpp

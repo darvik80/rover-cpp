@@ -18,7 +18,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/../platform/src
 )
 
-find_package(nlohmann_json 3.2.0 REQUIRED)
+find_package(nlohmann_json 3.7.0 REQUIRED)
 
 add_executable(incubator ${SRCS_G})
 
