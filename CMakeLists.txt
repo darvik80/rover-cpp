@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.13)
 project(rover VERSION 1.0)
 
 set (MAIN_LIBS "empty")
@@ -30,7 +30,8 @@ set(CMAKE_INSTALL_NAME_DIR "")
 enable_testing()
 
 add_subdirectory(platform)
-add_subdirectory(service)
 add_subdirectory(plugins/system)
+add_subdirectory(service/www)
+add_subdirectory(service)
 
 add_subdirectory(incubator)
