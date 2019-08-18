@@ -24,7 +24,7 @@
             "value": {
               "cpuTemp": 55.00,
               "cpuCount": 12,
-              "physicalMemory": 16,
+              "physicalMemory": 17179869184,
               "platform": "Mock",
               "osName": "Fake"
             }

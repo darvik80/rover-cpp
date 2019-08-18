@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import 'react-dates/initialize';
 import './fontAwesome';
 import './App.scss';
@@ -7,6 +7,8 @@ import { Navbar, NavDropdown } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
 
 import Clocks from "components/Clocks";
+import Monitoring from "components/Monitoring";
+import config from "config/config";
 
 
 const App = () => {
@@ -24,15 +26,18 @@ const App = () => {
                     { ' Rover' }
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                /*
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <NavDropdown title="Menu" id="collasible-nav-dropdown">
                         <NavDropdown.Item href="#monitoring">Monitoring</NavDropdown.Item>
                     </NavDropdown>
                 </Navbar.Collapse>
+                 */
                 <Clocks/>
             </Navbar>
             <Row>
-                <Col></Col>
+                <Col>{process.env.NODE_ENV}</Col>
+                <Col md={{ offset: 8 }}><Monitoring title="System info" config={config}/></Col>
             </Row>
         </Container>
     );
