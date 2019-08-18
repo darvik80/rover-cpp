@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.13)
+
 project(service VERSION 1.0)
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden -DBOOST_LOG_DYN_LINK")
@@ -38,6 +39,8 @@ set(PLUGINS_DIR ${EXECUTABLE_OUTPUT_PATH}/../lib)
 file(MAKE_DIRECTORY ${PROPERTIES_DIR})
 file(MAKE_DIRECTORY ${PLUGINS_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR})
+
+message("Copy FE")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
 target_link_libraries(service platform dl)
