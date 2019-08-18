@@ -11,7 +11,7 @@ const Clocks = () => {
         return () => {
             clearInterval(id);
         };
-    });
+    }, []);
 
 
     return (

@@ -18,7 +18,7 @@ const SystemInfo = (props) => {
         return () => {
             clearInterval(id)
         };
-    });
+    }, []);
 
     const renderRow = (name, value) => {
         if (value) {
