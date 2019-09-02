@@ -50,7 +50,7 @@ Content-Type: application/json
   "method": "serial.write",
   "params": {
     "port": "/dev/cu.SLAB_USBtoUART",
-    "data": "Test"
+    "data": "Hello"
   },
   "jsonrpc": "2.0"
 }

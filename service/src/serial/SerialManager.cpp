@@ -25,6 +25,10 @@ std::vector<serial::PortInfo> SerialManager::getFoundDevices() {
 SerialManager::handler SerialManager::openDevice(const std::string &port, uint32_t baud) {
     std::lock_guard<std::mutex> guard(_mutexDevice);
 
+    if (_openDevices.find(port) != _openDevices.end()) {
+        return port;
+    }
+
     DevicePtr device = std::make_shared<serial::Serial>(port, baud, serial::Timeout::simpleTimeout(1000));
     if (device->isOpen()) {
         DeviceCtrlInfo info;
