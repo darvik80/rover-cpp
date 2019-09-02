@@ -8,6 +8,8 @@
 #include "SubsystemBase.h"
 #include "plugin/Module.h"
 
+#include <rpc/RpcRegistry.h>
+
 #include <map>
 #include <vector>
 
@@ -15,7 +17,7 @@
 
 #include <boost/function.hpp>
 
-class PluginManager : public SubsystemBase {
+class PluginManager : public SubsystemBase, public RpcRegistry {
 public:
     const char *name() const override;
 

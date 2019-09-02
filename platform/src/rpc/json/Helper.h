@@ -8,6 +8,8 @@
 #include "Base.h"
 #include <memory>
 
+#pragma GCC system_header
+
 using namespace json;
 
 class JsonEncoder : public Encoder {
@@ -67,9 +69,26 @@ static void unMarshal(const tree &ptr, const std::string &tag, T &value) {
     }
 }
 
+template<typename T>
+static void unMarshal(const tree &ptr, const std::string &tag, std::vector<T> &value) {
+}
+
 
 static void marshal(tree &ptr, const std::string &tag, const tree &value) {
     ptr[tag] = value;
+}
+
+template<typename T>
+static void marshal(tree &ptr, const std::string &tag, const std::vector<T> &value) {
+    tree arr;
+    for (const auto& item : value) {
+        if constexpr (std::is_base_of<Marshaller, T>::value) {
+            arr.push_back(item.marshal());
+        } else {
+            arr.push_back(value);
+        }
+    }
+    ptr[tag] = arr;
 }
 
 template<typename T>
@@ -93,6 +112,46 @@ template<typename T>
 static void marshal(tree &ptr, const std::string &tag, const boost::optional<T> &value) {
     if (value) {
         marshal(ptr, tag, value.value());
+    }
+}
+
+static boost::optional<tree> marshal(const Marshaller &value) {
+    return value.marshal();
+}
+
+template<typename T>
+static boost::optional<tree> marshal(const  T &value) {
+    if constexpr (std::is_base_of<boost::optional<T>, T>::value) {
+        if (value) {
+            return marshal(value.value());
+        }
+    } else if constexpr (std::is_base_of<Marshaller, T>::value) {
+        return value.marshal();
+    } else {
+        return tree(value);
+    }
+
+    return boost::optional<tree>();
+}
+
+template<typename T>
+static boost::optional<tree> marshal(const std::vector<T> &value) {
+    tree res;
+    for (const auto& item : value) {
+        res.push_back(marshal(item).value());
+    }
+
+    return res;
+}
+
+template<typename T>
+static T unMarshal(const  tree &value) {
+    if constexpr (std::is_base_of<UnMarshaller, T>::value) {
+        T inc;
+        inc.unMarshal(value);
+        return inc;
+    } else {
+        return value.get<T>();
     }
 }
 

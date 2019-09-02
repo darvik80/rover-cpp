@@ -52,3 +52,7 @@ void SubsystemBase::fatal(const std::string &msg) {
 void SubsystemBase::postConstruct(Application &app) {
     _logger = app.loggerPtr();
 }
+
+void SubsystemBase::preDestroy() {
+
+}

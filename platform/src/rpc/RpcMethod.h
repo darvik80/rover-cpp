@@ -10,6 +10,7 @@
 #include <memory>
 #include <boost/optional.hpp>
 #include <nlohmann/json.hpp>
+#include "json/Helper.h"
 
 class RpcMethod {
 public:
@@ -32,7 +33,7 @@ public:
             inc.unMarshal(params.value());
         }
 
-        return exec(inc).marshal();
+        return marshal(exec(inc));
     };
 
     virtual R exec(const T &params) const = 0;
@@ -44,7 +45,7 @@ public:
     boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         T inc;
         if (params) {
-            inc.unMarshal(params.value());
+            inc = unMarshal<T>(params.value());
         }
 
         exec(inc);
@@ -58,7 +59,9 @@ public:
 template<typename R>
 class RpcSupplier : public RpcMethod {
     boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
-        return exec().marshal();
+        nlohmann::json res;
+
+        return marshal(exec());
     };
 
     virtual R exec() const = 0;

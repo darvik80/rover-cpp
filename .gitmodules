@@ -4,3 +4,9 @@
 [submodule "lib/serial"]
 	path = lib/serial
 	url = https://github.com/darvik80/serial.git
+[submodule "arduino"]
+	path = arduino
+	url = https://github.com/darvik80/rover-arduino.git
+[submodule "lib/arduino"]
+	path = lib/arduino
+	url = https://github.com/darvik80/rover-arduino.git

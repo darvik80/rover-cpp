@@ -13,6 +13,7 @@
 
 #include "subsystem/LoggerSubsystem.h"
 #include "subsystem/PluginManager.h"
+#include <rpc/RpcRegistry.h>
 
 using namespace std;
 

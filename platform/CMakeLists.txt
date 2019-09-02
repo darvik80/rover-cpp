@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(platform VERSION 1.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1z -fvisibility=hidden -fPIC")
 
 find_package(nlohmann_json 3.7.0 REQUIRED)
 
@@ -23,4 +23,4 @@ add_library(platform STATIC ${SRCS_G})
 
 add_subdirectory(testsuite)
 
-target_link_libraries(platform ${MAIN_LIBS} ${PLATFORM_SPECIFIC_LIBS} nlohmann_json::nlohmann_json)
+target_link_libraries(platform ${MAIN_LIBS} nlohmann_json::nlohmann_json)
