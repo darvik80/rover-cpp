@@ -104,3 +104,10 @@ public:
     }
 };
 ```
+
+
+Mac OS:
+
+```asm
+brew install libserialport
+```

@@ -6,7 +6,6 @@
 #define ROVER_HEALTHRPCSUPPLIER_H
 
 #include <rpc/RpcMethod.h>
-#include <rpc/RpcRegistry.h>
 #include <rpc/json/Helper.h>
 
 BEGIN_DECLARE_DTO(HealthResponse)
@@ -20,8 +19,6 @@ public:
     std::string name() const override {
         return "health";
     }
-
-private:
     HealthResponse exec() const override;
 };
 

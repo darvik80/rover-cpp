@@ -28,6 +28,7 @@ public:
     void fatal(const std::string &message) override;
 
     void postConstruct(Application &app) override;
+    void preDestroy() override;
 
     ~SubsystemBase() override = default;
 };
