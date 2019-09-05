@@ -12,13 +12,11 @@ using namespace boost;
 
 int main(int argc, char *argv[]) {
     std::string packet = "?MSG Hello World";
-    uint32_t cmd = *(uint32_t*)packet.substr(0, 4).c_str();
 
+    protocol::OperationManager manager;
+    auto op = manager.parse(packet);
 
-    switch (cmd) {
-        case 1:
-            std::cout << "Init message" << std::endl;
-    }
+    std::cout << op->toString();
 
-        return 0;
+    return 0;
 }

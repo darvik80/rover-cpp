@@ -20,6 +20,7 @@ file(GLOB LIB_SRCS_G
         src/subsystem/*.cpp
         src/http/*.cpp
         src/rpc/*.cpp
+        src/serial/*.cpp
 )
 
 include_directories(

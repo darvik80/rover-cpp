@@ -92,6 +92,36 @@ namespace protocol {
         }
     };
 
+    class PutPin : public Operation {
+    private:
+        int _pin;
+        bool _value;
+    public:
+        PutPin(int pin, bool value) : Operation(PROTO_PUT), _pin(pin), _value(value) {}
+
+        int getPin() const {
+            return _pin;
+        }
+
+        int getValue() const {
+            return _value;
+        }
+
+        void setPin(int pin) {
+            _pin = pin;
+        }
+
+        void setValue(bool value) {
+            _value = value;
+        }
+
+        std::string toString() override {
+            std::stringstream str;
+            str << getOperation() << " " << getPin() << ":" << getValue();
+            return str.str();
+        }
+    };
+
     class GetPin : public Operation {
     private:
         int _pin;
