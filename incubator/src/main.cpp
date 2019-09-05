@@ -2,55 +2,23 @@
 // Created by Ivan Kishchenko on 2019-07-11.
 //
 
+#include "Protocol.h"
+#include <string>
+#include <boost/algorithm/string.hpp>
 
-#include <nlohmann/json.hpp>
+#include <iostream>
+
+using namespace boost;
 
 int main(int argc, char *argv[]) {
-    nlohmann::json test = {
-            {
-                    "pi",      3.141
-            },
-            {
-                    "happy",   true
-            },
-            {
-                    "name",    "Niels"
-            },
-            {
-                    "nothing", nullptr
-            },
-            {
-                    "answer",  {
-                                       {
-                                               "everything", 42
-                                       }
-                               }
-            },
-            {
-                    "list",    {
-                                       1,
-                                       0,
-                                       2
-                               }
-            },
-            {
-                    "object",  {
-                                       {
-                                               "currency",   "USD"
-                                       },
-                                       {
-                                               "value", 42.99
-                                       }
-                               }
-            }
-    };
-
-    std::string s = test.dump();
+    std::string packet = "?MSG Hello World";
+    uint32_t cmd = *(uint32_t*)packet.substr(0, 4).c_str();
 
 
-    auto t = test;
+    switch (cmd) {
+        case 1:
+            std::cout << "Init message" << std::endl;
+    }
 
-    s = t.dump();
-    
-    return 0;
+        return 0;
 }
