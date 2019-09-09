@@ -9,14 +9,10 @@
 #include <iostream>
 
 using namespace boost;
+using namespace std;
 
 int main(int argc, char *argv[]) {
-    std::string packet = "?MSG Hello World";
 
-    protocol::OperationManager manager;
-    auto op = manager.parse(packet);
-
-    std::cout << op->toString();
 
     return 0;
 }

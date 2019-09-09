@@ -27,6 +27,7 @@ include_directories(
         /usr/local/include
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
+        ${PROJECT_SOURCE_DIR}/lib
 )
 
 link_directories(
