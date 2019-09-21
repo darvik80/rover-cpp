@@ -3,7 +3,7 @@ project(service_testsuite VERSION 1.0)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
 
-file(GLOB TEST_SRCS src/*.cpp)
+file(GLOB TEST_SRCS src/*.cpp src/serial/*.cpp)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/src

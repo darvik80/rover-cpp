@@ -24,4 +24,4 @@ add_executable(incubator ${SRCS_G})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 
-target_link_libraries(incubator ${CONAN_LIBS} nlohmann_json::nlohmann_json)
+target_link_libraries(incubator ${CONAN_LIBS} nlohmann_json::nlohmann_json ${CONAN_LIBS})

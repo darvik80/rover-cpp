@@ -67,5 +67,17 @@ class RpcSupplier : public RpcMethod {
     virtual R exec() const = 0;
 };
 
+class RpcExec : public RpcMethod {
+    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
+        nlohmann::json res;
+
+        exec();
+
+        return boost::optional<nlohmann::json>();
+    };
+
+    virtual void exec() const = 0;
+};
+
 
 #endif //ROVER_RPCMETHOD_H

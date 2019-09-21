@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko on 2019-06-16.
 //
 
-#include "HandlerJsonRpcTest.h"
+#include "JsonRpcHandlerTest.h"
 
 #include <rpc/json/Helper.h>
 #include <rpc/RpcMethod.h>
@@ -63,20 +63,20 @@ public:
     }
 };
 
-HandlerJsonRpcFixture::HandlerJsonRpcFixture() {
+JsonRpcHandlerFixture::JsonRpcHandlerFixture() {
     _rpcHandler.addMethod(std::make_shared<HelloFunction>());
     _rpcHandler.addMethod(std::make_shared<HelloSupplier>());
     _rpcHandler.addMethod(std::make_shared<HelloConsumer>());
 }
 
-BOOST_FIXTURE_TEST_SUITE(HandlerJsonRpcTest, HandlerJsonRpcFixture)
+BOOST_FIXTURE_TEST_SUITE(JsonRpcHandlerTest, JsonRpcHandlerFixture)
 
     BOOST_AUTO_TEST_CASE(testHandleFunction) {
         JsonRpcRequest request;
-        request.id = "1";
+        request.id = 1;
         request.method = "hello.function";
-        boost::property_tree::ptree params;
-        params.put("name", "Ivan");
+        json::tree params;
+        params["name"] = "Ivan";
         request.params = params;
         request.jsonrpc = "2.0";
 
@@ -85,14 +85,14 @@ BOOST_FIXTURE_TEST_SUITE(HandlerJsonRpcTest, HandlerJsonRpcFixture)
         _rpcHandler.handle(request, response);
 
         BOOST_REQUIRE_EQUAL(std::string("2.0"), response.jsonrpc);
-        BOOST_REQUIRE_EQUAL(std::string("1"), response.id.value());
+        BOOST_REQUIRE_EQUAL(1, response.id.value());
         BOOST_REQUIRE_EQUAL(false, response.error.is_initialized());
         BOOST_REQUIRE_EQUAL(true, response.result.is_initialized());
     }
 
     BOOST_AUTO_TEST_CASE(testHandleSupplier) {
         JsonRpcRequest request;
-        request.id = "1";
+        request.id = 1;
         request.method = "hello.supplier";
         request.jsonrpc = "2.0";
 
@@ -101,14 +101,14 @@ BOOST_FIXTURE_TEST_SUITE(HandlerJsonRpcTest, HandlerJsonRpcFixture)
         _rpcHandler.handle(request, response);
 
         BOOST_REQUIRE_EQUAL(std::string("2.0"), response.jsonrpc);
-        BOOST_REQUIRE_EQUAL(std::string("1"), response.id.value());
+        BOOST_REQUIRE_EQUAL(1, response.id.value());
         BOOST_REQUIRE_EQUAL(false, response.error.is_initialized());
         BOOST_REQUIRE_EQUAL(true, response.result.is_initialized());
     }
 
     BOOST_AUTO_TEST_CASE(testHandleConsumer) {
         JsonRpcRequest request;
-        request.id = "1";
+        request.id = 1;
         request.method = "hello.consumer";
         request.jsonrpc = "2.0";
 
@@ -117,14 +117,14 @@ BOOST_FIXTURE_TEST_SUITE(HandlerJsonRpcTest, HandlerJsonRpcFixture)
         _rpcHandler.handle(request, response);
 
         BOOST_REQUIRE_EQUAL(std::string("2.0"), response.jsonrpc);
-        BOOST_REQUIRE_EQUAL(std::string("1"), response.id.value());
+        BOOST_REQUIRE_EQUAL(1, response.id.value());
         BOOST_REQUIRE_EQUAL(false, response.error.is_initialized());
         BOOST_REQUIRE_EQUAL(false, response.result.is_initialized());
     }
 
     BOOST_AUTO_TEST_CASE(testHandleMethodNotExists) {
         JsonRpcRequest request;
-        request.id = "1";
+        request.id = 1;
         request.method = "hello.failed";
         request.jsonrpc = "2.0";
 
@@ -133,7 +133,7 @@ BOOST_FIXTURE_TEST_SUITE(HandlerJsonRpcTest, HandlerJsonRpcFixture)
         _rpcHandler.handle(request, response);
 
         BOOST_REQUIRE_EQUAL(std::string("2.0"), response.jsonrpc);
-        BOOST_REQUIRE_EQUAL(std::string("1"), response.id.value());
+        BOOST_REQUIRE_EQUAL(1, response.id.value());
         BOOST_REQUIRE_EQUAL(true, response.error.is_initialized());
         BOOST_REQUIRE_EQUAL(-32601, response.error.value().code);
         BOOST_REQUIRE_EQUAL(false, response.result.is_initialized());
