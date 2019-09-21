@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(system VERSION 1.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 if (UNIX AND NOT APPLE)
     message("Build Unix")
@@ -30,7 +30,7 @@ add_subdirectory(testsuite)
 if (UNIX AND NOT APPLE)
     target_link_libraries(system platform ${CONAN_LIBS})
 elseif (APPLE)
-    find_library(IOKIT_LIBRARY IOKit)
+    #find_library(IOKIT_LIBRARY IOKit)
     target_link_libraries(system platform ${CONAN_LIBS} ${IOKIT_LIBRARY})
 endif()
 

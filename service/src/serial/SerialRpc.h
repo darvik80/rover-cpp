@@ -10,6 +10,7 @@
 
 #include "serial/SerialManager.h"
 #include "../../../lib/arduino/Protocol.h"
+#include <string.h>
 
 BEGIN_DECLARE_DTO(SerialPortInfo)
 
@@ -145,39 +146,54 @@ public:
     void exec(const std::string& device) const override {
         protocol::Mode mode(13, protocol::Output);
         protocol::DigitalWrite switchOn(13, true);
-        protocol::Delay delay(10000);
+        protocol::Delay delay(5000);
         protocol::DigitalWrite switchOff (13, false);
+        protocol::Message message ("done");
 
         size_t size = 256;
         uint8_t data[256];
-        uint16_t code;
+        uint8_t code;
 
-        size_t base = switchOn.pack(data, 256);
-        size_t res = _serialManager->writeDevice(device, data, base);
+        size_t base = 0;
+        size_t res = 0;
+
+        /*
+        base = delay.pack(data, 256);
+        res = _serialManager->writeDevice(device, data, base);
+        _serialManager->readDevice(device, (uint8_t*)&code, sizeof(code));
+
+        base = mode.pack(data, 256);
+        res = _serialManager->writeDevice(device, data, base);
+        _serialManager->readDevice(device, (uint8_t*)&code, sizeof(uint16_t));
+
+        base = switchOn.pack(data, 256);
+        res = _serialManager->writeDevice(device, data, base);
         _serialManager->readDevice(device, (uint8_t*)&code, sizeof(uint16_t));
 
         base = switchOff.pack(data, 256);
         res = _serialManager->writeDevice(device, data, base);
         _serialManager->readDevice(device, (uint8_t*)&code, sizeof(uint16_t));
+         */
 
         base = mode.pack(data, size);
         base += switchOn.pack(data + base, size-base);
         base += delay.pack(data + base, size-base);
         base += switchOff.pack(data + base, size-base);
+        delay.delay = 1000;
         base += delay.pack(data + base, size-base);
-
+        //base += message.pack(data + base, size-base);
 
         protocol::RegisterBatch batch(0, data, base);
         uint8_t batchData[256];
         base = batch.pack(batchData, 256);
         res = _serialManager->writeDevice(device, batchData, base);
 
-        _serialManager->readDevice(device, (uint8_t*)&code, sizeof(uint16_t));
+        _serialManager->readDevice(device, (uint8_t*)&code, sizeof(code));
         if (code == batch.code) {
             protocol::ExecBatch exec(0);
             base = exec.pack(batchData, 256);
             res = _serialManager->writeDevice(device, batchData, base);
-            _serialManager->readDevice(device, (uint8_t *) &code, sizeof(uint16_t));
+            _serialManager->readDevice(device, (uint8_t *) &code, sizeof(code));
         }
     }
 

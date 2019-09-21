@@ -90,8 +90,12 @@ size_t SerialManager::readDevice(const SerialManager::handler &device, uint8_t *
 
     const auto it = _openDevices.find(device);
     if (it != _openDevices.end()) {
+        int cnt = 0;
         while (it->second.device->available() < size) {
-            usleep(100);
+            if (cnt++ > 3) {
+                throw std::underflow_error("read timeout");
+            }
+            sleep(1);
         };
         info(device + " available " + std::to_string(it->second.device->available()));
 
