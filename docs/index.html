@@ -14,6 +14,8 @@
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
 </head>
+<body>
+<div class="container-fluid">
 <table class="table table-primary">
     <thead>
     <tr>
@@ -22,12 +24,20 @@
     </thead>
     <tbody>
     <tr>
-        <td>Raspberry PI B ver. 2.0</td>
+        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Raspberry PI B ver. 2.0</button></td>
     </tr>
     </tbody>
 
 </table>
-<body>
-
+</div>
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="img/raspberry-pi-bv2.0.png" class="img-responsive" alt="raspberry-pi-bv2.0">
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
