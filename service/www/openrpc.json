@@ -1,0 +1,36 @@
+{
+  "openrpc": "1.0.0-rc1",
+  "info": {
+    "title": "Simple RPC overview",
+    "version": "2.0.0"
+  },
+  "methods": [
+    {
+      "name": "systemMonitor",
+      "summary": "Show system info",
+      "params": [],
+      "result": {
+        "name": "info",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "examples": [
+        {
+          "name": "test1",
+          "params": [],
+          "result": {
+            "name": "info example",
+            "value": {
+              "cpuTemp": 55.00,
+              "cpuCount": 12,
+              "physicalMemory": 17179869184,
+              "platform": "Mock",
+              "osName": "Fake"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

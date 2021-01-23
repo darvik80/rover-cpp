@@ -1,0 +1,86 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+POST http://localhost:8080/rpc HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "method": "serial.devices",
+  "jsonrpc": "2.0"
+}
+
+###
+
+POST http://localhost:8080/rpc HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": 2,
+  "method": "serial.open",
+  "params": {
+    "port": "/dev/cu.SLAB_USBtoUART",
+    "baud": 57600
+  },
+  "jsonrpc": "2.0"
+}
+
+###
+
+POST http://localhost:8080/rpc HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": 3,
+  "method": "serial.close",
+  "params": "/dev/cu.SLAB_USBtoUART",
+  "jsonrpc": "2.0"
+}
+
+###
+
+POST http://localhost:8080/rpc HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": 4,
+  "method": "serial.write",
+  "params": {
+    "port": "/dev/cu.SLAB_USBtoUART",
+    "data": "Hello"
+  },
+  "jsonrpc": "2.0"
+}
+
+###
+
+POST http://localhost:8080/rpc HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": 4,
+  "method": "serial.init",
+  "params": "/dev/cu.SLAB_USBtoUART",
+  "jsonrpc": "2.0"
+}
+
+###
+
+POST http://localhost:8080/rpc HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": 4,
+  "method": "serial.write",
+  "params": {
+    "port": "/dev/cu.SLAB_USBtoUART",
+    "data": "?EXE 0"
+  },
+  "jsonrpc": "2.0"
+}
+
+###
+
