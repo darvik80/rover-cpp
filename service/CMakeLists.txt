@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(service VERSION 1.0)
 
+set(CMAKE_CXX_STANDARD 17)
+
 file(GLOB SRCS_G
         src/*.cpp
         src/exception/*.cpp
@@ -47,7 +49,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR
 message("Copy FE")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
-target_link_libraries(service platform dl serial)
+target_link_libraries(service platform dl serial mqtt)
 
 
 

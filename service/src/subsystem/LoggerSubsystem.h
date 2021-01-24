@@ -20,7 +20,7 @@ class LoggerSubsystem : public Subsystem, public Logger {
 public:
     LoggerSubsystem();
 
-    const char *name() const override;
+    [[nodiscard]] const char *name() const override;
 
     void postConstruct(Application &app) override;
 

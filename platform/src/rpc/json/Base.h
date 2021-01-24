@@ -31,7 +31,7 @@ namespace json {
     public:
         typedef std::shared_ptr<Marshaller> Ptr;
     public:
-        virtual tree marshal() const = 0;
+        [[nodiscard]] virtual tree marshal() const = 0;
 
         virtual ~Marshaller() = default;
     };

@@ -17,9 +17,9 @@ public:
     typedef std::shared_ptr<RpcMethod> Ptr;
     typedef std::vector<Ptr> PtrVec;
 public:
-    virtual std::string name() const = 0;
+    [[nodiscard]] virtual std::string name() const = 0;
 
-    virtual boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const = 0;
+    [[nodiscard]] virtual boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const = 0;
 
     virtual ~RpcMethod() = default;
 };
@@ -27,7 +27,7 @@ public:
 template<typename T, typename R>
 class RpcFunction : public RpcMethod {
 public:
-    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
+    [[nodiscard]] boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         T inc;
         if (params) {
             inc.unMarshal(params.value());
@@ -42,7 +42,7 @@ public:
 template<typename T>
 class RpcConsumer : public RpcMethod {
 public:
-    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
+    [[nodiscard]] boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         T inc;
         if (params) {
             inc = unMarshal<T>(params.value());
@@ -58,7 +58,7 @@ public:
 
 template<typename R>
 class RpcSupplier : public RpcMethod {
-    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
+    [[nodiscard]] boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         nlohmann::json res;
 
         return marshal(exec());
@@ -68,7 +68,7 @@ class RpcSupplier : public RpcMethod {
 };
 
 class RpcExec : public RpcMethod {
-    boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
+    [[nodiscard]] boost::optional<nlohmann::json> handle(const boost::optional<nlohmann::json> &params) const override {
         nlohmann::json res;
 
         exec();

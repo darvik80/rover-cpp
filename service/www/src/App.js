@@ -3,8 +3,7 @@ import 'react-dates/initialize';
 import './fontAwesome';
 import './App.scss';
 import {Container} from "reactstrap";
-import {Navbar, NavDropdown} from "react-bootstrap";
-import {Row, Col} from "react-bootstrap";
+import {Col, Navbar, NavDropdown, Row} from "react-bootstrap";
 
 import Clocks from "components/Clocks";
 import Monitoring from "components/Monitoring";

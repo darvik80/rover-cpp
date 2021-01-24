@@ -31,5 +31,18 @@ public:
     virtual void fatal(std::string_view message) = 0;
 };
 
+class DevNullLogger : public Logger {
+    void trace(std::string_view message) override {}
+
+    void debug(std::string_view message) override {}
+
+    void info(std::string_view message) override {}
+
+    void warning(std::string_view message) override {}
+
+    void error(std::string_view message) override {}
+
+    void fatal(std::string_view message) override {}
+};
 
 #endif //ROVER_LOGGER_H

@@ -28,7 +28,7 @@ public:
         return result;
     }
 
-    std::map<std::string, RpcMethod::Ptr> getMethods() const {
+    [[nodiscard]] std::map<std::string, RpcMethod::Ptr> getMethods() const {
         return _methods;
     }
 };

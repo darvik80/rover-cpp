@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(rover VERSION 1.0)
 
+set(CMAKE_CXX_STANDARD 17)
+
 if (APPLE)
     message("Apple build")
     find_library(IOKIT_LIBRARY IOKit)
