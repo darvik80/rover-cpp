@@ -28,13 +28,16 @@ const char *LoggerSubsystem::name() const {
 }
 
 BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp,
-                            "TimeStamp", log::attributes::local_clock::value_type)
+                            "TimeStamp", boost::posix_time::ptime)
 BOOST_LOG_ATTRIBUTE_KEYWORD(threadId,
                             "ThreadID", log::attributes::current_thread_id::value_type)
+auto static date_time_formatter = log::expressions::stream << log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S.%f");
 
 void consoleFormatter(log::record_view const &rec, log::formatting_ostream &strm) {
 
-    strm << rec[timestamp];
+    strm << "[";
+    date_time_formatter(rec, strm);
+    strm << "]";
 
     auto severity = rec[log::trivial::severity];
     if (severity) {
@@ -59,14 +62,17 @@ void consoleFormatter(log::record_view const &rec, log::formatting_ostream &strm
         }
     }
 
-    strm << " <" << std::setw(7) << std::right << severity << "> ";
+    strm << " [" << std::setw(7) << std::right << severity << "] ";
     strm << "\033[36m[ " << rec[threadId] << " ]";
     strm << "\033[0m : " << rec[log::expressions::smessage];
 }
 
 void fileFormatter(log::record_view const &rec, log::formatting_ostream &strm) {
+    strm << "[";
+    date_time_formatter(rec, strm);
+    strm << "] [";
 
-    strm << rec[timestamp] << " <" << std::setw(7) << std::right << rec[log::trivial::severity] << "> ";
+    strm << std::setw(7) << std::right << rec[log::trivial::severity] << "] ";
     strm << "[ " << rec[threadId] << " ] : " << rec[log::expressions::smessage];
 }
 
@@ -83,20 +89,10 @@ void LoggerSubsystem::postConstruct(Application &app) {
                 log::keywords::time_based_rotation = log::sinks::file::rotation_at_time_point(0, 0, 0),
                 log::keywords::auto_flush = true
         )->set_formatter(&fileFormatter);
-
-//        log::add_file_log(
-//                log::keywords::file_name = filePath,
-//                log::keywords::format = "[%TimeStamp%] [%ThreadID%] [%Severity%] %Message%",
-//                log::keywords::auto_flush = true
-//        );
     }
 
     if (app.getProperties()->getBoolean(PROP_LOG_ENABLE_CONSOLE, true)) {
         log::add_console_log(std::cout)->set_formatter(&consoleFormatter);
-//        log::add_console_log(
-//                std::cout,
-//                log::keywords::format = "[%TimeStamp%] [%ThreadID%] [%Severity%] %Message%"
-//        );
     }
 
     auto logLevel = app.getProperties()->getString(PROP_LOG_LEVEL, "debug");
