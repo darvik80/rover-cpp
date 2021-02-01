@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 
+
 namespace resource_files {
 
     struct FilePtr {
