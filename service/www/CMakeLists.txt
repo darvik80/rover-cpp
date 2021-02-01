@@ -4,8 +4,6 @@ project(www VERSION 1.0 LANGUAGES CXX)
 
 include_directories(${CMAKE_JS_INC})
 
-message(Test ${CMAKE_JS_INC})
-
 file(GLOB SRCS_G
         src/*.js
         src/views/*.js

@@ -28,7 +28,13 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
         ${PROJECT_SOURCE_DIR}/lib
+        resources/src
 )
+
+#==================================================================
+# Set directory with resources
+#==================================================================
+set(RESOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/www/build)
 
 link_directories(
         /usr/local/lib
@@ -36,6 +42,9 @@ link_directories(
 
 add_executable(service ${SRCS_G})
 add_library(service_lib ${LIB_SRCS_G})
+
+add_subdirectory(resources)
+
 add_subdirectory(testsuite)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
@@ -49,7 +58,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR
 message("Copy FE")
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
-target_link_libraries(service platform dl serial mqtt)
+target_link_libraries(service platform dl serial mqtt resources)
 
 
 
