@@ -43,7 +43,7 @@ link_directories(
 add_executable(service ${SRCS_G})
 add_library(service_lib ${LIB_SRCS_G})
 
-add_subdirectory(resources)
+#add_subdirectory(resources)
 
 add_subdirectory(testsuite)
 
@@ -56,9 +56,9 @@ file(MAKE_DIRECTORY ${PLUGINS_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR})
 
 message("Copy FE")
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
+# file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
-target_link_libraries(service platform dl serial mqtt resources)
+target_link_libraries(service platform dl serial mqtt)
 
 
 

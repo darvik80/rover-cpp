@@ -104,5 +104,6 @@ Application::Application() {
     _logger = make_shared<LoggerSubsystem>();
 }
 
-Application::~Application() = default;
+Application::~Application() {
+}
 

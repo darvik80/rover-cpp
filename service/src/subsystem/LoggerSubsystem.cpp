@@ -92,7 +92,7 @@ void LoggerSubsystem::postConstruct(Application &app) {
     }
 
     if (app.getProperties()->getBoolean(PROP_LOG_ENABLE_CONSOLE, true)) {
-        log::add_console_log(std::cout)->set_formatter(&consoleFormatter);
+        log::add_console_log(std::clog)->set_formatter(&consoleFormatter);
     }
 
     auto logLevel = app.getProperties()->getString(PROP_LOG_LEVEL, "debug");

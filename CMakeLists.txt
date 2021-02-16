@@ -28,7 +28,7 @@ add_subdirectory(lib/serial)
 add_subdirectory(lib/mqtt)
 add_subdirectory(platform)
 add_subdirectory(plugins/system)
-add_subdirectory(service/www)
+#add_subdirectory(service/www)
 add_subdirectory(service)
 
 add_subdirectory(incubator)
