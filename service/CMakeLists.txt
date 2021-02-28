@@ -24,6 +24,7 @@ file(GLOB LIB_SRCS_G
         )
 
 include_directories(
+        /usr/include
         /usr/local/include
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
@@ -55,10 +56,15 @@ file(MAKE_DIRECTORY ${PROPERTIES_DIR})
 file(MAKE_DIRECTORY ${PLUGINS_DIR})
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/settings.json DESTINATION ${PROPERTIES_DIR})
 
-message("Copy FE")
+message(${CMAKE_HOST_SYSTEM_PROCESSOR})
+if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES arm OR CMAKE_HOST_SYSTEM_PROCESSOR MATCHES aarch)
+    message(${CMAKE_HOST_SYSTEM_PROCESSOR})
+    add_definitions(-DPROFILE_GPIO)
+    set(WIRING_PI wiringPi crypt)
+endif ()
 # file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${EXECUTABLE_OUTPUT_PATH}/../var/www)
 
-target_link_libraries(service platform dl serial mqtt)
+target_link_libraries(service platform dl serial mqtt ${WIRING_PI})
 
 
 

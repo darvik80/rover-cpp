@@ -7,15 +7,24 @@ if (APPLE)
     message("Apple build")
     find_library(IOKIT_LIBRARY IOKit)
     find_library(CORE_LIBRARY CoreFoundation)
-else()
+else ()
     message("Unix build")
-endif()
+endif ()
 
 find_package(Boost REQUIRED COMPONENTS system filesystem thread log log_setup)
 FIND_PACKAGE(Threads)
 
-set (MAIN_LIBS ${Boost_LIBRARIES} ${IOKIT_LIBRARY} ${CORE_LIBRARY})
+set(MAIN_LIBS ${Boost_LIBRARIES} ${IOKIT_LIBRARY} ${CORE_LIBRARY})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
+
+if (CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-type-limits -Wno-psabi")
+    include_directories(
+            /usr/include/c++/8
+            /usr/include
+            /usr/local/include
+    )
+endif ()
 
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_INSTALL_NAME_DIR "")

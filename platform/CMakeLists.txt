@@ -12,6 +12,8 @@ file(GLOB SRCS_G
         )
 
 include_directories(
+        /usr/include
+        /usr/local/include
         ${PROJECT_SOURCE_DIR}/src
 )
 
