@@ -112,3 +112,4 @@ https://bugs.launchpad.net/gdb/+bug/1576432
 ### Error during pretty printers setup: Error while executing Python code
 https://youtrack.jetbrains.com/issue/CPP-14177
 
+[OdroidC2](OdroidC2.md)
