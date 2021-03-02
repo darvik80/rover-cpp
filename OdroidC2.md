@@ -55,3 +55,10 @@ sudo nano /etc/fstab
   /swapfile swap swap defaults 0 0
 "
 ```
+
+## Monitoring
+
+* CPU
+```asm
+cat /sys/devices/virtual/thermal/thermal_zone0/temp
+```

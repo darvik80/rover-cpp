@@ -164,7 +164,7 @@ void HttpWorker::processRequest(const HttpRequest &req) {
                 _response->result(http::status::ok);
                 _response->keep_alive(false);
                 _response->set(http::field::server, "Beast");
-                _response->set(http::field::content_length, 0);
+                _response->set(http::field::content_length, "0");
                 _response->set(http::field::allow, "POST");
                 _response->set(http::field::access_control_allow_origin, "*");
                 _response->set(http::field::access_control_allow_methods, "GET,HEAD,OPTIONS,POST,PUP");
