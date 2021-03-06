@@ -13,7 +13,7 @@ void SubsystemBase::trace(std::string_view msg) {
     _logger->trace(message(msg));
 }
 
-void SubsystemBase::debug(const std::string_view msg) {
+void SubsystemBase::debug(std::string_view msg) {
     _logger->debug(message(msg));
 }
 

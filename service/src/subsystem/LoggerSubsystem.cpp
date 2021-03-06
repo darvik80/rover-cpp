@@ -15,6 +15,7 @@
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/log/support/date_time.hpp>
+#include <boost/stacktrace.hpp>
 
 #include "subsystem/Application.h"
 #include "const.h"
@@ -35,36 +36,45 @@ auto static date_time_formatter = log::expressions::stream << log::expressions::
 
 void consoleFormatter(log::record_view const &rec, log::formatting_ostream &strm) {
 
-    strm << "[";
+    strm << "\033[38;5;15m[";
     date_time_formatter(rec, strm);
-    strm << "]";
+    strm << "] [";
 
     auto severity = rec[log::trivial::severity];
     if (severity) {
         // Set the color
         switch (severity.get()) {
             case log::trivial::severity_level::debug:
-                strm << "\033[37m";
+                strm << "\033[1;37m";
                 break;
 
             case log::trivial::severity_level::info:
-                strm << "\033[32m";
+                strm << "\033[1;32m";
                 break;
             case log::trivial::severity_level::warning:
-                strm << "\033[33m";
+                strm << "\033[1;33m";
                 break;
             case log::trivial::severity_level::error:
             case log::trivial::severity_level::fatal:
-                strm << "\033[31m";
+                strm << "\033[1;31m";
                 break;
             default:
                 break;
         }
     }
 
-    strm << " [" << std::setw(7) << std::right << severity << "] ";
-    strm << "\033[36m[ " << rec[threadId] << " ]";
-    strm << "\033[0m : " << rec[log::expressions::smessage];
+    strm << std::setw(7) << std::right << severity << "\033[38;5;15m] [";
+    strm << "\033[36m " << rec[threadId] << "\033[38;5;15m ] : ";
+    strm << "\033[38;5;250m" << rec[log::expressions::smessage] << "\033[38;5;1m";
+
+    switch (severity.get()) {
+        case log::trivial::severity_level::error:
+        case log::trivial::severity_level::fatal:
+            strm << std::endl << "\033[31m" << stacktrace::stacktrace() << "\033[0m";
+        default:
+            break;
+    }
+    strm << "\033[0m";
 }
 
 void fileFormatter(log::record_view const &rec, log::formatting_ostream &strm) {

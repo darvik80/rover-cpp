@@ -22,7 +22,7 @@ public:
 
     Application();
 
-    const char *name() const override;
+    [[nodiscard]] const char *name() const override;
 
     void postConstruct(Application &app) override;
 
@@ -60,7 +60,7 @@ public:
 
     ~Application() override;
 
-    const ConfigSource::Ptr &getConfigSource() const {
+    [[nodiscard]] const ConfigSource::Ptr &getConfigSource() const {
         return _configSource;
     }
 
