@@ -2,16 +2,24 @@
 // Created by Ivan Kishchenko on 2019-07-11.
 //
 
-#include <string>
-#include <boost/algorithm/string.hpp>
+#include <Kernel.h>
 
-#include <iostream>
-
-using namespace boost;
 using namespace std;
 
-int main(int argc, char *argv[]) {
+Kernel kernel;
 
+void setup() {
+   kernel.create();
+}
+
+void loop() {
+    kernel.run();
+}
+
+int main(int argc, char *argv[]) {
+    setup();
+
+    while(kernel.run()) { };
 
     return 0;
 }

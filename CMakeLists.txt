@@ -12,7 +12,7 @@ else ()
 endif ()
 
 find_package(Boost REQUIRED COMPONENTS system filesystem thread log log_setup)
-FIND_PACKAGE(Threads)
+find_package(Threads)
 
 set(MAIN_LIBS ${Boost_LIBRARIES} ${IOKIT_LIBRARY} ${CORE_LIBRARY})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
