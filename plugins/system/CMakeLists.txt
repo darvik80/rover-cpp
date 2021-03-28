@@ -26,10 +26,10 @@ add_library(system SHARED ${SRCS_G})
 add_subdirectory(testsuite)
 
 if (UNIX AND NOT APPLE)
-    target_link_libraries(system platform ${CONAN_LIBS})
+    target_link_libraries(system platform)
 elseif (APPLE)
     #find_library(IOKIT_LIBRARY IOKit)
-    target_link_libraries(system platform ${CONAN_LIBS} ${IOKIT_LIBRARY})
+    target_link_libraries(system platform ${IOKIT_LIBRARY})
 endif ()
 
 SET(CMAKE_LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../../lib)

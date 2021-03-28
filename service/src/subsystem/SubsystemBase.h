@@ -17,12 +17,12 @@ private:
     static Logger::Ptr devNullLogger;
     Logger::Ptr _logger = devNullLogger;
 private:
-    std::string message(const std::string_view msg);
+    std::string message(std::string_view msg);
 
 public:
     void trace(std::string_view msg) override;
 
-    void debug(const std::string_view msg) override;
+    void debug(std::string_view msg) override;
 
     void info(std::string_view msg) override;
 
