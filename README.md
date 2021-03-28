@@ -113,3 +113,16 @@ https://bugs.launchpad.net/gdb/+bug/1576432
 https://youtrack.jetbrains.com/issue/CPP-14177
 
 [OdroidC2](OdroidC2.md)
+
+### Logs
+
+ANSI escape code: [link](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit)
+
+### FAQ
+
+* *bash: warning: setlocale: LC_ALL: cannot change locale (en-US.UTF-8).*
+```shell
+sudo apt-get install locale-all
+sudo dpkg-reconfigure locales
+sudo locale-gen.
+```
