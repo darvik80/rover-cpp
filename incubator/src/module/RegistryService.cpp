@@ -5,9 +5,10 @@
 #include "RegistryService.h"
 #include "MulticastMessage.h"
 
-#include "module/raspberry/BoostMulticast.h"
+#include "MulticastFactory.h"
 
 #include <iostream>
+#include <raspberry/BoostMulticastMessage.h>
 
 std::error_code RegistryService::create(Content &content) {
     _server = std::make_shared<AsyncUdp>(
@@ -20,11 +21,11 @@ std::error_code RegistryService::create(Content &content) {
         _server->send(packet.handler, packet.data, packet.size);
     });
 
-
-    _receiver = std::make_shared<BoostMulticastReceiver>(*content.service, "0.0.0.0", "239.255.0.1", 12345);
+    Context context{content.service};
+    _receiver = MulticastFactory::createReceiver(context, "239.255.0.1", 12345);
 
     _receiver->receive([](std::string_view message, const SenderAddress &address) {
-        auto res = from_json<MulticastMessage>(message);
+        auto res = fromJson<MulticastMessage>(message);
         std::cout << "recv from: " << address.getHost() << ":" << address.getPort() << std::endl;
         std::cout << "data: " << message << std::endl;
         std::cout << "----" << std::endl;
@@ -44,7 +45,8 @@ ModuleStatus RegistryService::getStatus() {
 
 
 std::error_code RegistryServiceClient::create(Content &content) {
-    _sender = std::make_shared<BoostMulticastSender>(*content.service, "239.255.0.1", 12345);
+    Context context{content.service};
+    _sender = MulticastFactory::createSender(context, "239.255.0.1", 12345);
 
     _thread = std::make_unique<std::thread>([content, this]() {
         Transport::Ptr client = std::make_shared<AsyncUdp>(
@@ -63,7 +65,7 @@ std::error_code RegistryServiceClient::create(Content &content) {
 
             MulticastMessage message{"1", "raspberry", "monitor"};
 
-            _sender->multicast(to_json<MulticastMessage>(message));
+            _sender->multicast(toJson<MulticastMessage>(message));
             sleep(1);
         }
     });

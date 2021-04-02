@@ -8,12 +8,14 @@
 #include <string>
 #include <future>
 #include <functional>
+#include <utility>
+#include "MulticastMessage.h"
 
 class SenderAddress {
     std::string host;
     int port;
 public:
-    SenderAddress(std::string_view host, int port) : host(host), port(port) {}
+    SenderAddress(std::string host, int port) : host(std::move(host)), port(port) {}
 
     [[nodiscard]] const std::string &getHost() const {
         return host;
@@ -26,12 +28,12 @@ public:
 
 class MulticastSender {
 public:
-    virtual std::future<void> multicast(std::string_view message) = 0;
+    virtual std::future<void> multicast(const std::string& message) = 0;
 };
 
 class MulticastReceiver {
 public:
-    virtual void receive(std::function<void(std::string_view, const SenderAddress& address)> func) = 0;
+    virtual void receive(std::function<void(const std::string&, const SenderAddress& address)> func) = 0;
 };
 
 #endif //ROVER_MULTICAST_H

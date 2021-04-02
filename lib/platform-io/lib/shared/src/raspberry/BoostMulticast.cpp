@@ -4,19 +4,22 @@
 
 #include "BoostMulticast.h"
 #include <iostream>
+#include "BoostMulticastMessage.h"
+
+#ifdef PROFILE_RASPBERRY
 
 using namespace boost;
 
-BoostMulticastSender::BoostMulticastSender(boost::asio::io_service &service, std::string_view group, int port)
-        : _endpoint(asio::ip::address::from_string(group.data()), port),
+BoostMulticastSender::BoostMulticastSender(boost::asio::io_service &service, const char* group, int port)
+        : _endpoint(asio::ip::address::from_string(group), port),
           _socket(service) {
     _socket.open(_endpoint.protocol());
 }
 
-std::future<void> BoostMulticastSender::multicast(std::string_view message) {
+std::future<void> BoostMulticastSender::multicast(const std::string &message) {
     auto promise = std::make_shared<std::promise<void>>();
     _socket.async_send_to(
-            asio::buffer(message.data(), message.size()),
+            asio::buffer(message),
             _endpoint,
             [promise](system::error_code ec, std::size_t size) {
                 if (!ec) {
@@ -31,19 +34,18 @@ std::future<void> BoostMulticastSender::multicast(std::string_view message) {
     return promise->get_future();
 }
 
-BoostMulticastReceiver::BoostMulticastReceiver(asio::io_service &service, std::string_view listen,
-                                               std::string_view group, int port)
+BoostMulticastReceiver::BoostMulticastReceiver(asio::io_service &service, const char* group, int port)
         : _socket(service) {
-    asio::ip::udp::endpoint endpoint(asio::ip::address::from_string(listen.data()), port);
+    asio::ip::udp::endpoint endpoint(asio::ip::address::from_string("0.0.0.0"), port);
     _socket.open(endpoint.protocol());
     _socket.set_option(asio::ip::udp::socket::reuse_address(true));
     _socket.bind(endpoint);
 
     // Join the multicast group.
-    _socket.set_option(asio::ip::multicast::join_group(asio::ip::address::from_string(group.data())));
+    _socket.set_option(asio::ip::multicast::join_group(asio::ip::address::from_string(group)));
 }
 
-void BoostMulticastReceiver::receive(std::function<void(std::string_view, const SenderAddress &address)> func) {
+void BoostMulticastReceiver::receive(std::function<void(const std::string &, const SenderAddress &address)> func) {
     _socket.async_receive_from(
             boost::asio::buffer(_data),
             _senderEndpoint,
@@ -59,3 +61,5 @@ void BoostMulticastReceiver::receive(std::function<void(std::string_view, const 
             }
     );
 }
+
+#endif
