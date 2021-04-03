@@ -3,8 +3,12 @@
 //
 
 #include "RegistryService.h"
+#include "MulticastMessage.h"
+
+#include "MulticastFactory.h"
 
 #include <iostream>
+#include <raspberry/BoostMulticastMessage.h>
 
 std::error_code RegistryService::create(Content &content) {
     auto server = std::make_shared<AsyncUdp>(content.service);
@@ -16,10 +20,21 @@ std::error_code RegistryService::create(Content &content) {
         server->send(packet.handler, packet.data, packet.size);
     });
 
+    Context context{content.service};
+    _receiver = MulticastFactory::createReceiver(context, "239.255.0.1", 12345);
+
+    _receiver->receive([](std::string_view message, const SenderAddress &address) {
+        auto res = fromJson<MulticastMessage>(message);
+        std::cout << "recv from: " << address.getHost() << ":" << address.getPort() << std::endl;
+        std::cout << "data: " << message << std::endl;
+        std::cout << "----" << std::endl;
+    });
+
     return std::error_code();
 }
 
 std::error_code RegistryService::destroy() {
+    _receiver.reset();
     return std::error_code();
 }
 
@@ -29,7 +44,10 @@ ModuleStatus RegistryService::getStatus() {
 
 
 std::error_code RegistryServiceClient::create(Content &content) {
-    _thread = std::make_unique<std::thread>([content]() {
+    Context context{content.service};
+    _sender = MulticastFactory::createSender(context, "239.255.0.1", 12345);
+
+    _thread = std::make_unique<std::thread>([content, this]() {
         auto client = std::make_shared<AsyncUdp>(content.service);
 
         auto handler = client->connect(
@@ -37,12 +55,17 @@ std::error_code RegistryServiceClient::create(Content &content) {
                 content.config.network.registryPort
         );
 
-        while (true) {
-            client->onPacket([](const Packet &packet) {
-                std::cout << "cln: " << std::string((const char *) packet.data, packet.size) << std::endl;
-            });
-            const char* msg = "Hello World";
-            client->send(handler, (const uint8_t* )msg, strlen(msg));
+        auto handler = client->connect();
+
+        for (int i = 0; i < 100; i++) {
+//            client->onPacket([](const Packet &packet) {
+//                std::cout << "cln: " << std::string((const char *) packet.data, packet.size) << std::endl;
+//            });
+//            client->send(handler, "Hello World");
+
+            MulticastMessage message{"1", "raspberry", "monitor"};
+
+            _sender->multicast(toJson<MulticastMessage>(message));
             sleep(1);
         }
     });

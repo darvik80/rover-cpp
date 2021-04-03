@@ -5,9 +5,10 @@
 #ifndef ROVER_REGISTRYSERVICE_H
 #define ROVER_REGISTRYSERVICE_H
 
-#include <module/raspberry/AsyncUdp.h>
+#include "module/raspberry/AsyncUdp.h"
 #include "Module.h"
 #include "Transport.h"
+#include "Multicast.h"
 
 class RegistryService : public Module {
 public:
@@ -23,6 +24,8 @@ public:
 
 private:
     Transport::Ptr _server;
+
+    std::shared_ptr<MulticastReceiver> _receiver;
 };
 
 class RegistryServiceClient : public Module {
@@ -39,6 +42,8 @@ public:
 
 private:
     std::unique_ptr<std::thread> _thread;
+
+    std::shared_ptr<MulticastSender> _sender;
 };
 
 
