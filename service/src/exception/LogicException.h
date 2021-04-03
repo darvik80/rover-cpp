@@ -24,9 +24,9 @@ public:
 
 class NotFoundException : public std::logic_error {
 public:
-    NotFoundException(const std::string &string) : logic_error(string) {}
+    explicit NotFoundException(const std::string &string) : logic_error(string) {}
 
-    NotFoundException(const char *string) : logic_error(string) {}
+    explicit NotFoundException(const char *string) : logic_error(string) {}
 };
 
 #endif //ROVER_LOGICEXCEPTION_H
