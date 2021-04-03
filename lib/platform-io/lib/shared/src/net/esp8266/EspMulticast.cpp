@@ -1,9 +1,9 @@
 //
 // Created by Kishchenko, Ivan on 4/2/21.
 //
-#ifdef ARDUINO_ARCH_ESP8266
-
 #include "EspMulticast.h"
+
+#ifdef ARDUINO_ARCH_ESP8266
 
 EspMulticastReceiver::EspMulticastReceiver(const char* group, int port)
         : _port(port) {
