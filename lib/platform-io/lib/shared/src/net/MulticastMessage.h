@@ -11,6 +11,7 @@ struct MulticastMessage {
     std::string id{};
     std::string name{};
     std::string type{};
+    std::string macAddress{};
 };
 
 #endif //ROVER_MULTICASTMESSAGE_H

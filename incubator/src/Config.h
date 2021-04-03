@@ -6,7 +6,7 @@
 #define ROVER_CONFIG_H
 
 
-#ifdef PROFILE_RASPBERRY
+#ifdef RASPBERRY_ARCH
 #include <boost/asio.hpp>
 
 typedef boost::asio::io_service IoService;
@@ -25,7 +25,7 @@ struct Configuration {
 };
 
 struct Content {
-#ifdef PROFILE_RASPBERRY
+#ifdef RASPBERRY_ARCH
     IoServicePtr service;
 #endif
 

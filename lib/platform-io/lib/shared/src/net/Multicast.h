@@ -5,17 +5,19 @@
 #ifndef ROVER_MULTICAST_H
 #define ROVER_MULTICAST_H
 
+#ifdef SUPPORT_ETHERNET
+
 #include <string>
 #include <future>
 #include <functional>
 #include <utility>
-#include "MulticastMessage.h"
+#include "net/MulticastMessage.h"
 
 class SenderAddress {
     std::string host;
     int port;
 public:
-    SenderAddress(std::string host, int port) : host(std::move(host)), port(port) {}
+    SenderAddress(const std::string& host, int port) : host(host), port(port) {}
 
     [[nodiscard]] const std::string &getHost() const {
         return host;
@@ -35,5 +37,7 @@ class MulticastReceiver {
 public:
     virtual void receive(std::function<void(const std::string&, const SenderAddress& address)> func) = 0;
 };
+
+#endif
 
 #endif //ROVER_MULTICAST_H

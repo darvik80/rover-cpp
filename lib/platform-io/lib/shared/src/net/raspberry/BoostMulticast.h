@@ -5,11 +5,11 @@
 #ifndef ROVER_BOOSTMULTICAST_H
 #define ROVER_BOOSTMULTICAST_H
 
-#ifdef PROFILE_RASPBERRY
+#ifdef RASPBERRY_ARCH
 
 #include "Config.h"
 #include "BoostMulticastMessage.h"
-#include <Multicast.h>
+#include <net/Multicast.h>
 
 class BoostMulticastSender : public MulticastSender {
     boost::asio::ip::udp::socket _socket;

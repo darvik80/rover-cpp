@@ -2,10 +2,11 @@
 // Created by Kishchenko, Ivan on 4/1/21.
 //
 
-#ifndef ROVER_BOOSTMULTICASTMESSAGE_H
-#define ROVER_BOOSTMULTICASTMESSAGE_H
+#pragma once
 
-#include <Multicast.h>
+#ifdef SUPPORT_ETHERNET
+
+#include <net/Multicast.h>
 #undef ARDUINOJSON_ENABLE_STD_STRING
 #define ARDUINOJSON_ENABLE_STD_STRING 1
 #include <ArduinoJson.h>
@@ -32,4 +33,4 @@ bool fromJson(const char* json, C& res) {
     return true;
 }
 
-#endif //ROVER_BOOSTMULTICASTMESSAGE_H
+#endif

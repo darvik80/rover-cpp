@@ -1,6 +1,7 @@
 //
 // Created by Kishchenko, Ivan on 4/2/21.
 //
+#ifdef ARDUINO_ARCH_ESP8266
 
 #include "EspMulticast.h"
 
@@ -17,3 +18,5 @@ void EspMulticastReceiver::receive(std::function<void(const std::string &, const
     });
     _udp.listenMulticast(_group, _port);
 }
+
+#endif

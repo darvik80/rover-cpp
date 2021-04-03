@@ -4,6 +4,8 @@
 
 #include "ArduinoMulticastMessage.h"
 
+#ifdef SUPPORT_ETHERNET
+
 void to_json(JsonDocument& doc, const MulticastMessage& message) {
     doc["id"] = message.id.c_str();
     doc["name"] = message.name.c_str();
@@ -15,3 +17,5 @@ void from_json(const JsonDocument& doc, MulticastMessage& message) {
     message.name = (const char*)doc["name"];
     message.type = (const char*)doc["type"];
 }
+
+#endif

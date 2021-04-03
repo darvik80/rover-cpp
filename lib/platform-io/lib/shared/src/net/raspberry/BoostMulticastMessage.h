@@ -5,10 +5,11 @@
 #ifndef ROVER_BOOSTMULTICASTMESSAGE_H
 #define ROVER_BOOSTMULTICASTMESSAGE_H
 
-#ifdef PROFILE_RASPBERRY
+#ifdef RASPBERRY_ARCH
 
 #include <nlohmann/json.hpp>
-#include <Multicast.h>
+#include "net/Multicast.h"
+#include "net/MulticastMessage.h"
 
 void to_json(nlohmann::json& j, const MulticastMessage& message);
 void from_json(const nlohmann::json& j, MulticastMessage& message);

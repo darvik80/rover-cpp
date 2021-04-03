@@ -1,14 +1,43 @@
 
-add_definitions(-DPROFILE_ARDUINO -DPROFILE_ESP8266 -DARDUINOJSON_ENABLE_STD_STRING=1)
+add_definitions(-DARDUINOJSON_ENABLE_STD_STRING=1)
 
-file(GLOB SHARED_SRC
-    ${PROJECT_SOURCE_DIR}/lib/shared/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/lib/shared/src/arduino/*.cpp
-    ${PROJECT_SOURCE_DIR}/lib/shared/src/esp8266/*.cpp
-)
+if (CMAKE_BUILD_TYPE MATCHES "esp32")
+    file(GLOB PLATFORM_SRC
+        ${PROJECT_SOURCE_DIR}/src/esp32/*.cpp
+    )
+
+    file(GLOB SHARED_SRC
+        ${PROJECT_SOURCE_DIR}/lib/shared/src/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/arduino/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/esp8266/*.cpp
+    )
+endif()
+
+if (CMAKE_BUILD_TYPE MATCHES "esp8266")
+    file(GLOB PLATFORM_SRC
+        ${PROJECT_SOURCE_DIR}/src/esp8266/*.cpp
+    )
+
+    file(GLOB SHARED_SRC
+        ${PROJECT_SOURCE_DIR}/lib/shared/src/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/arduino/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/esp8266/*.cpp
+    )
+endif()
+
+if (CMAKE_BUILD_TYPE MATCHES "arduino")
+    file(GLOB PLATFORM_SRC
+        ${PROJECT_SOURCE_DIR}/src/arduino/*.cpp
+    )
+
+    file(GLOB SHARED_SRC
+        ${PROJECT_SOURCE_DIR}/lib/shared/src/*.cpp
+    )
+endif()
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/lib/shared/src
 )
 
+list(APPEND SRC_LIST ${PLATFORM_SRC})
 list(APPEND SRC_LIST ${SHARED_SRC})

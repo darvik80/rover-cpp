@@ -3,12 +3,12 @@
 //
 
 #include "RegistryService.h"
-#include "MulticastMessage.h"
+#include "net/MulticastMessage.h"
 
-#include "MulticastFactory.h"
+#include "net/MulticastFactory.h"
 
 #include <iostream>
-#include <raspberry/BoostMulticastMessage.h>
+#include <net/raspberry/BoostMulticastMessage.h>
 
 std::error_code RegistryService::create(Content &content) {
     auto server = std::make_shared<AsyncUdp>(content.service);
@@ -55,7 +55,7 @@ std::error_code RegistryServiceClient::create(Content &content) {
                 content.config.network.registryPort
         );
 
-        auto handler = client->connect();
+        //auto handler = client->connect();
 
         for (int i = 0; i < 100; i++) {
 //            client->onPacket([](const Packet &packet) {

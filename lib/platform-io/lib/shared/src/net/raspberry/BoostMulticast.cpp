@@ -1,12 +1,12 @@
 //
 // Created by Kishchenko, Ivan on 4/1/21.
 //
+#ifdef RASPBERRY_ARCH
 
 #include "BoostMulticast.h"
 #include <iostream>
 #include "BoostMulticastMessage.h"
 
-#ifdef PROFILE_RASPBERRY
 
 using namespace boost;
 

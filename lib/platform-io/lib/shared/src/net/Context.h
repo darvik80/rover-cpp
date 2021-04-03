@@ -5,18 +5,18 @@
 #ifndef ROVER_CONTEXT_H
 #define ROVER_CONTEXT_H
 
-#ifdef PROFILE_RASPBERRY
+#ifdef RASPBERRY_ARCH
 #include <boost/asio.hpp>
 
 typedef boost::asio::io_service IoService;
 typedef std::shared_ptr<IoService> IoServicePtr;
-
 #endif
 
 struct Context {
-#ifdef PROFILE_RASPBERRY
+#ifdef RASPBERRY_ARCH
     IoServicePtr service;
 #endif
+    std::string macAddress;
 };
 
 

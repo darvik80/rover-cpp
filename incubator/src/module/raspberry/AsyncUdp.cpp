@@ -38,7 +38,8 @@ SocketHandler::Ptr AsyncUdp::broadcast(std::string_view host, uint16_t port) {
     _socket.set_option(UdpSocket::reuse_address(true));
     _socket.set_option(UdpSocket::broadcast(true));
 
-    udp::resolver::query query(udp::v, host.data(), std::to_string(port));
+    udp::resolver::query query(udp::v4(), host.data(), std::to_string(port));
+    udp::resolver resolver(_socket.get_executor());
 
     return std::make_shared<UdpSocketHandler>(*resolver.resolve(query));
 }

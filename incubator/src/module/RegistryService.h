@@ -8,7 +8,7 @@
 #include "module/raspberry/AsyncUdp.h"
 #include "Module.h"
 #include "Transport.h"
-#include "Multicast.h"
+#include "net/Multicast.h"
 
 class RegistryService : public Module {
 public:
