@@ -6,19 +6,39 @@
 
 using boost::asio::ip::udp;
 
-AsyncUdp::AsyncUdp(IoServicePtr service, uint16_t port)
-        : _socket(*service, udp::endpoint(udp::v4(), port)) {
-    startReceive();
+AsyncUdp::AsyncUdp(const IoServicePtr& service) : _socket(*service) {
 }
 
-AsyncUdp::AsyncUdp(IoServicePtr service, std::string_view host, uint16_t port)
-        : _socket(*service, udp::endpoint(udp::v4(), 0))
-        , _serverHost(host), _serverPort(port) {
+void AsyncUdp::listen(uint16_t port) {
+    boost::system::error_code ec;
+    _socket.open(udp::v4(), ec);
+    boost::asio::detail::throw_error(ec, "open");
+
+    UdpEndpoint endpoint(udp::v4(), port);
+    _socket.bind(endpoint, ec);
+    boost::asio::detail::throw_error(ec, "bind");
 }
 
-SocketHandler::Ptr AsyncUdp::connect() {
+SocketHandler::Ptr AsyncUdp::connect(std::string_view host, uint16_t port) {
+    boost::system::error_code ec;
+    _socket.open(udp::v4(), ec);
+    boost::asio::detail::throw_error(ec, "open");
+
     udp::resolver resolver(_socket.get_executor());
-    udp::resolver::query query(udp::v4(), _serverHost, std::to_string(_serverPort));
+    udp::resolver::query query(udp::v4(), host.data(), std::to_string(port));
+
+    return std::make_shared<UdpSocketHandler>(*resolver.resolve(query));
+}
+
+SocketHandler::Ptr AsyncUdp::broadcast(std::string_view host, uint16_t port) {
+    boost::system::error_code ec;
+    _socket.open(udp::v4(), ec);
+    boost::asio::detail::throw_error(ec, "open");
+
+    _socket.set_option(UdpSocket::reuse_address(true));
+    _socket.set_option(UdpSocket::broadcast(true));
+
+    udp::resolver::query query(udp::v, host.data(), std::to_string(port));
 
     return std::make_shared<UdpSocketHandler>(*resolver.resolve(query));
 }

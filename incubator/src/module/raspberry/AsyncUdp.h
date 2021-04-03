@@ -32,10 +32,11 @@ public:
 
 class AsyncUdp : public Transport {
 public:
-    AsyncUdp(IoServicePtr service, uint16_t port);
-    AsyncUdp(IoServicePtr service, std::string_view host, uint16_t port);
+    explicit AsyncUdp(const IoServicePtr& service);
 
-    SocketHandler::Ptr connect() override;
+    void listen(uint16_t port);
+    SocketHandler::Ptr connect(std::string_view host, uint16_t port);
+    SocketHandler::Ptr broadcast(std::string_view host, uint16_t port);
 
     void onPacket(const HandlerFunction &handler) override {
         _handler = handler;
@@ -48,11 +49,7 @@ private:
     UdpEndpoint _endpoint;
 
     HandlerFunction _handler;
-
-    std::string _serverHost;
-    uint16_t _serverPort{0};
-
-    std::array<uint8_t, 2048> _recvBuffer;
+    std::array<uint8_t, 2048> _recvBuffer{};
 private:
     void startReceive();
 

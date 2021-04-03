@@ -33,7 +33,6 @@ public:
     typedef std::weak_ptr<Transport> WeakPtr;
 public:
 
-    virtual SocketHandler::Ptr connect() = 0;
     virtual void onPacket(const HandlerFunction &handler) = 0;
 
     virtual FutureError send(const SocketHandler::Ptr& handler, const uint8_t* data, size_t size) = 0;

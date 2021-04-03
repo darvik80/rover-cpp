@@ -7,14 +7,13 @@
 #include <iostream>
 
 std::error_code RegistryService::create(Content &content) {
-    _server = std::make_shared<AsyncUdp>(
-            content.service,
-            content.config.network.registryPort
-    );
+    auto server = std::make_shared<AsyncUdp>(content.service);
 
-    _server->onPacket([this](const Packet &packet) {
-        std::cout << "srv: " << std::string((char*)packet.data, packet.size) << std::endl;
-       _server->send(packet.handler, packet.data, packet.size);
+    server->listen(content.config.network.registryPort);
+
+    server->onPacket([server](const Packet &packet) {
+        std::cout << "srv: " << std::string((char *) packet.data, packet.size) << std::endl;
+        server->send(packet.handler, packet.data, packet.size);
     });
 
     return std::error_code();
@@ -31,19 +30,19 @@ ModuleStatus RegistryService::getStatus() {
 
 std::error_code RegistryServiceClient::create(Content &content) {
     _thread = std::make_unique<std::thread>([content]() {
-        Transport::Ptr client = std::make_shared<AsyncUdp>(
-                content.service,
+        auto client = std::make_shared<AsyncUdp>(content.service);
+
+        auto handler = client->connect(
                 content.config.network.registryHost,
                 content.config.network.registryPort
         );
-
-        auto handler = client->connect();
 
         while (true) {
             client->onPacket([](const Packet &packet) {
                 std::cout << "cln: " << std::string((const char *) packet.data, packet.size) << std::endl;
             });
-            client->send(handler, "Hello World");
+            const char* msg = "Hello World";
+            client->send(handler, (const uint8_t* )msg, strlen(msg));
             sleep(1);
         }
     });
