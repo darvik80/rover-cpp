@@ -7,9 +7,9 @@ if (CMAKE_BUILD_TYPE MATCHES "esp32")
     )
 
     file(GLOB SHARED_SRC
-        ${PROJECT_SOURCE_DIR}/lib/shared/src/*.cpp
-        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/arduino/*.cpp
-        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/esp8266/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/core/src/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/core/src/net/arduino/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/core/src/net/esp8266/*.cpp
     )
 endif()
 
@@ -19,9 +19,9 @@ if (CMAKE_BUILD_TYPE MATCHES "esp8266")
     )
 
     file(GLOB SHARED_SRC
-        ${PROJECT_SOURCE_DIR}/lib/shared/src/*.cpp
-        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/arduino/*.cpp
-        ${PROJECT_SOURCE_DIR}/lib/shared/src/net/esp8266/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/core/src/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/core/src/net/arduino/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/core/src/net/esp8266/*.cpp
     )
 endif()
 
@@ -31,12 +31,12 @@ if (CMAKE_BUILD_TYPE MATCHES "arduino")
     )
 
     file(GLOB SHARED_SRC
-        ${PROJECT_SOURCE_DIR}/lib/shared/src/*.cpp
+        ${PROJECT_SOURCE_DIR}/lib/core/src/*.cpp
     )
 endif()
 
 include_directories(
-        ${PROJECT_SOURCE_DIR}/lib/shared/src
+        ${PROJECT_SOURCE_DIR}/lib/core/src
 )
 
 list(APPEND SRC_LIST ${PLATFORM_SRC})

@@ -10,8 +10,8 @@ file(GLOB
         src/*.cpp
         src/module/*.cpp
         src/module/raspberry/*.cpp
-        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/shared/src/net/*.cpp
-        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/shared/src/net/raspberry/*.cpp
+        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src/net/*.cpp
+        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src/net/raspberry/*.cpp
 )
 
 include_directories(
@@ -19,7 +19,7 @@ include_directories(
         /usr/include
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
-        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/shared/src
+        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
 )
 
 add_executable(incubator ${SRCS_G})
