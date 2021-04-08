@@ -6,7 +6,6 @@
 #define PLATFORM_IO_SERIALTRANSPORT_H
 
 #include "net/Transport.h"
-#include <Arduino.h>
 #include <Service.h>
 
 enum SerialState {
@@ -18,11 +17,6 @@ enum SerialState {
 };
 
 class SerialTransport : public Transport, public Service {
-private:
-    const char* connMsg[] = {
-            "SYNC",
-            ""
-    };
 private:
     HardwareSerial& _serial;
     SerialState _state{SERIAL_IDLE};

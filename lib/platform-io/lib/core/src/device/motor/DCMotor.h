@@ -5,7 +5,7 @@
 #ifndef PLATFORM_IO_DCMOTOR_H
 #define PLATFORM_IO_DCMOTOR_H
 
-#include "../Device.h"
+#include "device/Device.h"
 
 class DCMotor : public Device {
 public:
@@ -19,9 +19,9 @@ public:
     };
 
     enum Engine {
-        ENGINE_BOTH,
         ENGINE_LEFT,
         ENGINE_RIGHT,
+        ENGINE_BOTH,
     };
 
 public:

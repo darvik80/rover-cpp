@@ -5,6 +5,7 @@
 #ifndef PLATFORM_IO_SERVICE_H
 #define PLATFORM_IO_SERVICE_H
 
+#include "CoreConfig.h"
 
 class Service {
 public:

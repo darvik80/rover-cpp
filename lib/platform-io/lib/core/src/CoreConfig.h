@@ -7,14 +7,45 @@
 
 #ifdef ARDUINO_ARCH_AVR
 
-#include <etl/string.h>
+#define ETL_NO_STL
+#define ETL_NO_CPP_NAN_SUPPORT 1
+#define ETL_NO_HUGE_VAL_SUPPORT
 
-using string = etl::string;
+#include <etl/profiles/arduino_arm.h>
+
+#include <Arduino.h>
+
+#undef max
+#undef min
+
+#include <etl/string.h>
+#include <etl/memory.h>
+#include <etl/vector.h>
+
+using string = etl::istring;
+
+template<typename T>
+using unique_ptr = etl::unique_ptr<T>;
+
+template<typename T>
+using vector = etl::ivector<T>;
+
 #else
 
+#include <Arduino.h>
+
 #include <string>
+#include <memory>
+#include <vector>
 
 using string = std::string;
+
+template<typename T>
+using unique_ptr = std::unique_ptr<T>;
+
+template<typename T>
+using vector = std::vector<T>;
+
 #endif
 
 #endif //PLATFORM_IO_CORECONFIG_H

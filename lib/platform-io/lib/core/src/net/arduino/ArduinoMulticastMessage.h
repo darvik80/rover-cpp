@@ -7,8 +7,6 @@
 #ifdef SUPPORT_ETHERNET
 
 #include <net/Multicast.h>
-#undef ARDUINOJSON_ENABLE_STD_STRING
-#define ARDUINOJSON_ENABLE_STD_STRING 1
 #include <ArduinoJson.h>
 
 void to_json(JsonDocument& doc, const MulticastMessage& message);
