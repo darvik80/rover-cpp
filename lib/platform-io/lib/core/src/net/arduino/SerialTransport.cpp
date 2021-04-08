@@ -4,9 +4,9 @@
 
 #include "SerialTransport.h"
 
-SerialTransport::SerialTransport(HardwareSerial &serial, unsigned long baud, uint8_t config)
+SerialTransport::SerialTransport(HardwareSerial &serial, unsigned long baud)
         : _serial(serial) {
-    serial.begin(baud, config);
+    serial.begin(baud);
 }
 
 void SerialTransport::onMessage(const uint8_t *data, size_t size) {

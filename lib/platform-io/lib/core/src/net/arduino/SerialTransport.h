@@ -9,11 +9,25 @@
 #include <Arduino.h>
 #include <Service.h>
 
+enum SerialState {
+    SERIAL_IDLE,
+    SERIAL_READY_SYNC,
+    SERIAL_WAIT_CONF,
+    SERIAL_WAIT_CONN,
+    SERIAL_CONN,
+};
+
 class SerialTransport : public Transport, public Service {
 private:
+    const char* connMsg[] = {
+            "SYNC",
+            ""
+    };
+private:
     HardwareSerial& _serial;
+    SerialState _state{SERIAL_IDLE};
 public:
-    SerialTransport(HardwareSerial &serial, unsigned long baud, uint8_t config = SERIAL_8N1);
+    SerialTransport(HardwareSerial &serial, unsigned long baud);
 
     int setup() override;
 
