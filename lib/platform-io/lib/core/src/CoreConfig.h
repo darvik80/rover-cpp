@@ -32,7 +32,9 @@ using vector = etl::ivector<T>;
 
 #else
 
+#if defined(ARDUINO)
 #include <Arduino.h>
+#endif
 
 #include <string>
 #include <memory>

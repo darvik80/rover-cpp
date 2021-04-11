@@ -23,7 +23,7 @@ __DECLARE_DTO_FIELD(std::string, message)
 
 END_DECLARE_DTO
 
-BEGIN_DECLARE_DTO(Config)
+BEGIN_DECLARE_DTO(Properties)
 __DECLARE_DTO_FIELD(int, id)
 __DECLARE_DTO_FIELD(std::string, message)
 
@@ -41,7 +41,7 @@ END_DECLARE_DTO
 
 BEGIN_DECLARE_DTO(Controller)
 __DECLARE_DTO_FIELD(int, id)
-__DECLARE_DTO_FIELD(Config, config)
+__DECLARE_DTO_FIELD(Properties, config)
 
     BEGIN_JSON_UNMARSHAL
             ITEM_JSON_UNMARSHAL(id)

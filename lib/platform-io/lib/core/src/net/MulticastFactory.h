@@ -8,13 +8,12 @@
 #ifdef SUPPORT_ETHERNET
 
 #include "net/Multicast.h"
-#include "net/Context.h"
 #include <memory>
 
 class MulticastFactory {
 public:
-    static std::shared_ptr<MulticastReceiver> createReceiver(const Context& context, const char* group, int port);
-    static std::shared_ptr<MulticastSender> createSender(const Context& context, const char* group, int port);
+    virtual std::shared_ptr<MulticastReceiver> createReceiver(const char* group, int port) = 0;
+    virtual std::shared_ptr<MulticastSender> createSender(const char* group, int port) = 0;
 };
 
 #endif

@@ -9,7 +9,7 @@
 #include <boost/array.hpp>
 #include <utility>
 #include <module/Transport.h>
-#include "Module.h"
+#include <Application.h>
 
 typedef boost::asio::ip::udp::socket UdpSocket;
 typedef boost::asio::ip::udp::endpoint UdpEndpoint;
@@ -32,7 +32,7 @@ public:
 
 class AsyncUdp : public Transport {
 public:
-    explicit AsyncUdp(const IoServicePtr& service);
+    explicit AsyncUdp(boost::asio::io_service& service);
 
     void listen(uint16_t port);
     SocketHandler::Ptr connect(std::string_view host, uint16_t port);

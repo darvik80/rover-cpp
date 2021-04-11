@@ -8,22 +8,21 @@ if (CMAKE_BUILD_TYPE MATCHES "esp32")
     file(
             GLOB SHARED_SRC
             ${PROJECT_SOURCE_DIR}/lib/core/src/*.cpp
-            ${PROJECT_SOURCE_DIR}/lib/core/src/net/arduino/*.cpp
-            ${PROJECT_SOURCE_DIR}/lib/core/src/net/esp8266/*.cpp
+            src/net/arduino/*.cpp
+            src/net/esp8266/*.cpp
     )
 endif ()
 
 if (CMAKE_BUILD_TYPE MATCHES "esp8266")
     file(
             GLOB PLATFORM_SRC
-            ${PROJECT_SOURCE_DIR}/src/esp8266/*.cpp
+            ${PROJECT_SOURCE_DIR}/src/net/*.cpp
+            ${PROJECT_SOURCE_DIR}/src/esp8266/net/*.cpp
     )
 
     file(
             GLOB SHARED_SRC
             ${PROJECT_SOURCE_DIR}/lib/core/src/*.cpp
-            ${PROJECT_SOURCE_DIR}/lib/core/src/net/arduino/*.cpp
-            ${PROJECT_SOURCE_DIR}/lib/core/src/net/esp8266/*.cpp
     )
 endif ()
 

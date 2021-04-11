@@ -1,0 +1,46 @@
+#include "resource_files_manager.h"
+
+${POINTERS_FOR_EMBED_FILES}
+
+namespace resource_files {
+
+    void ResourceFilesGetter::setFilePointers() {
+        ${FILL_IN_POINTERS}
+    }
+
+    ResourceFilesGetter::ResourceFilesGetter() {
+        setFilePointers();
+    }
+
+    std::vector<std::string> ResourceFilesGetter::getFileNames() {
+        std::vector<std::string> v;
+        for (const auto &elem : file_pointers) {
+            v.push_back(elem.first);
+        }
+
+        return v;
+    }
+
+    bool ResourceFilesGetter::getFilePtr(const std::string &file_name, FilePtr &file) {
+        auto it = file_pointers.find(file_name);
+        if (it == file_pointers.end())
+            return false;
+
+        file.start = it->second.start;
+        file.end = it->second.end;
+
+        return true;
+    }
+
+    std::shared_ptr<ResourceFilesGetter> ResourceFilesGetter::getInstance() {
+        static std::shared_ptr<ResourceFilesGetter> ptr(new ResourceFilesGetter());
+        return ptr;
+    }
+
+    FilePtr::FilePtr(char *_start, char *_end)
+            : start(_start)
+            , end(_end) {
+
+    }
+
+}

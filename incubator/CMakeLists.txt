@@ -5,13 +5,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
 
 add_definitions(-DRASPBERRY_ARCH -DSUPPORT_ETHERNET)
 
-file(GLOB
-        SRCS_G
+file(GLOB  SRCS_G
         src/*.cpp
         src/module/*.cpp
+        src/properties/*.cpp
+        src/properties/source/*.cpp
         src/module/raspberry/*.cpp
         ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src/net/*.cpp
-        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src/net/raspberry/*.cpp
+        src/net/*.cpp
+        src/serial/*.cpp
+        src/serial/os/*.cc
 )
 
 include_directories(
@@ -20,10 +23,17 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
         ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
+        resources_manager/src
 )
 
+set(RESOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources)
+
+#set(TARGET_FORMAT "mach-o-x86-64")
+#set(TARGET_ARCHITECTURE "i386:mach-o-x86-64")
+
+add_subdirectory(resources_manager)
 add_executable(incubator ${SRCS_G})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 
-target_link_libraries(incubator ${MAIN_LIBS})
+target_link_libraries(incubator ${MAIN_LIBS} resources_manager)

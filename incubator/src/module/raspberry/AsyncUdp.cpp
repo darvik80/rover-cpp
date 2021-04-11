@@ -6,7 +6,7 @@
 
 using boost::asio::ip::udp;
 
-AsyncUdp::AsyncUdp(const IoServicePtr& service) : _socket(*service) {
+AsyncUdp::AsyncUdp(boost::asio::io_service& service) : _socket(service) {
 }
 
 void AsyncUdp::listen(uint16_t port) {
