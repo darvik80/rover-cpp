@@ -9,31 +9,36 @@ using namespace std;
 
 #include <iostream>
 #include "serial/SerialPortManager.h"
-#include <resource_files_manager.h>
 
-using namespace resource_files;
+#include <CoreFoundation/CFBundle.h>
+
+std::string get_resources_dir() {
+
+    CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+    char resourcePath[PATH_MAX];
+
+    if (CFURLGetFileSystemRepresentation(resourceURL, true,
+                                         (UInt8 *) resourcePath,
+                                         PATH_MAX)) {
+        if (resourceURL != nullptr) {
+            CFRelease(resourceURL);
+        }
+
+        return resourcePath;
+    }
+}
+
+#include <fstream>
 
 int main(int argc, char *argv[]) {
-    std::shared_ptr<ResourceFilesGetter> resource_manager =
-            ResourceFilesGetter::getInstance();
-
-    std::vector<std::string> file_names = resource_manager->getFileNames();
-
-    FilePtr file_data_ptr{};
-
-    for(const auto& elem : file_names){
-        if(!resource_manager->getFilePtr(elem, file_data_ptr))
-            std::cout << "Can`t find file: " << elem << std::endl;
-
-        std::cout << "File " << elem << std::endl;
-        std::cout << "_______________________________________\\n";
-        while(file_data_ptr.start != file_data_ptr.end){ std::cout << *file_data_ptr.start++;}
-        std::cout << "=======================================\\n";
-    }
+    std:ifstream file(get_resources_dir() + "/settings.json");
+    std::string str((std::istreambuf_iterator<char>(file)),
+                    std::istreambuf_iterator<char>());
+    std::cout << str << std::endl;
 
     SerialPortManager manager;
     auto ports = manager.listPorts();
-    for (auto & port : ports) {
+    for (auto &port : ports) {
         std::cout << "Port: " << port.port << std::endl;
         std::cout << "Descr: " << port.description << std::endl;
         std::cout << "Id: " << port.hardwareId << std::endl;

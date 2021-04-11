@@ -26,7 +26,7 @@ std::future<void> BoostMulticastSender::multicast(const std::string &message) {
                     std::cout << "message sent" << std::endl;
                     promise->set_value();
                 } else {
-                    promise->set_exception(std::make_exception_ptr(std::system_error(ec)));
+                    promise->set_exception(std::make_exception_ptr(boost::system::system_error(ec)));
                 }
             }
     );

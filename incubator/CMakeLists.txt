@@ -28,12 +28,18 @@ include_directories(
 
 set(RESOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 
-#set(TARGET_FORMAT "mach-o-x86-64")
-#set(TARGET_ARCHITECTURE "i386:mach-o-x86-64")
+set(TARGET_FORMAT "elf64-x86-64")
+set(TARGET_ARCHITECTURE "i386:x86-64")
 
 add_subdirectory(resources_manager)
-add_executable(incubator ${SRCS_G})
+add_executable(${PROJECT_NAME} ${SRCS_G} ${RESOURCE_DIRECTORY}/settings.json)
+
+set(RESOURCE_FILES ${RESOURCE_DIRECTORY}/settings.json)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE
+        MACOSX_FRAMEWORK_IDENTIFIER org.cmake.ExecutableTarget
+        RESOURCE "${RESOURCE_FILES}")
+
+target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS})
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
-
-target_link_libraries(incubator ${MAIN_LIBS} resources_manager)

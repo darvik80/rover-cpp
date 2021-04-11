@@ -24,8 +24,8 @@ struct Packet {
 };
 
 typedef std::function<void(const Packet &packet)> HandlerFunction;
-typedef std::future<std::error_code> FutureError;
-typedef std::promise<std::error_code> PromiseError;
+typedef std::future<boost::system::error_code> FutureError;
+typedef std::promise<boost::system::error_code> PromiseError;
 
 class Transport {
 public:

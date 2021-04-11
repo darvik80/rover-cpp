@@ -35,7 +35,10 @@ namespace resource_files {
 
     public:
 
-        static std::shared_ptr<ResourceFilesGetter> getInstance();
+        static std::shared_ptr<ResourceFilesGetter> getInstance() {
+            static std::shared_ptr<ResourceFilesGetter> ptr(new ResourceFilesGetter());
+            return ptr;
+        }
 
         std::vector<std::string> getFileNames();
 

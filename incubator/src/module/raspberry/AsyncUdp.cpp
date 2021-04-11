@@ -71,7 +71,7 @@ void AsyncUdp::startReceive() {
     );
 }
 
-void AsyncUdp::handleReceive(const UdpEndpoint &endpoint, const std::error_code &error, const uint8_t *data,
+void AsyncUdp::handleReceive(const UdpEndpoint &endpoint, const boost::system::error_code &error, const uint8_t *data,
                              size_t size) {
     if (!error) {
         if (_handler) {
@@ -81,6 +81,6 @@ void AsyncUdp::handleReceive(const UdpEndpoint &endpoint, const std::error_code 
     }
 }
 
-void AsyncUdp::handleSend(const std::error_code &error, std::size_t size) {
+void AsyncUdp::handleSend(const boost::system::error_code &error, std::size_t size) {
     startReceive();
 }

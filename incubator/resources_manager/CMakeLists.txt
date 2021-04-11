@@ -47,7 +47,7 @@ file(GLOB EMBED_FILE_LIST ${RESOURCE_DIRECTORY}/*)
 set(LINK_TYPE "extern char ")
 
 If(NOT DEFINED TARGET_FORMAT)
-    set(TARGET_FORMAT "mach-o-x86-64")
+    set(TARGET_FORMAT "elf64-x86-64")
 endif(NOT DEFINED TARGET_FORMAT)
 
 If(NOT DEFINED TARGET_ARCHITECTURE)
@@ -97,6 +97,5 @@ configure_file("src/resource_files_manager.cpp.template"
         ${SOURCE_FILES})
 
 #Create library and alias
-
-add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES} ${PROJECT_EMBED_OBJ_FILES})
-#add_library(lib::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(${PROJECT_NAME} ${SOURCE_FILES} ${PROJECT_EMBED_OBJ_FILES})
+add_library(lib::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

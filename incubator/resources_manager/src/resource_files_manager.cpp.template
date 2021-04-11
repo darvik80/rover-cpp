@@ -32,11 +32,6 @@ namespace resource_files {
         return true;
     }
 
-    std::shared_ptr<ResourceFilesGetter> ResourceFilesGetter::getInstance() {
-        static std::shared_ptr<ResourceFilesGetter> ptr(new ResourceFilesGetter());
-        return ptr;
-    }
-
     FilePtr::FilePtr(char *_start, char *_end)
             : start(_start)
             , end(_end) {
