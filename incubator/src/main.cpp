@@ -26,6 +26,8 @@ std::string get_resources_dir() {
 
         return resourcePath;
     }
+
+    return std::string();
 }
 
 #include <fstream>
