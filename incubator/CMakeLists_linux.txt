@@ -1,12 +1,3 @@
-cmake_minimum_required(VERSION 3.12)
-
-project(resources_manager)
-
-set(CMAKE_CXX_STANDARD 11)
-
-include_directories(
-        /usr/local/include
-)
 #==================================================================
 # Check
 #==================================================================
@@ -67,7 +58,7 @@ foreach (FILENAME ${EMBED_FILE_LIST})
             ARGS -I binary -O ${TARGET_FORMAT} -B ${TARGET_ARCHITECTURE} ${FILENAME_ONLY} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME_ONLY}.o)
 
     # Add path to new object resource file to the objective resource files list
-    list(APPEND PROJECT_EMBED_OBJ_FILES ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME_ONLY}.o)
+    list(APPEND RES_EMBED_FILES ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME_ONLY}.o)
 
     if (EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME_ONLY}.o)
         message(STATUS "Objcopy'ing ${FILENAME}")
@@ -79,10 +70,10 @@ foreach (FILENAME ${EMBED_FILE_LIST})
     set(START_PTR "_binary_${OBJECTIVE_NAME}_start")
     set(END_PTR "_binary_${OBJECTIVE_NAME}_end")
 
-    set(POINTERS_FOR_EMBED_FILES ${POINTERS_FOR_EMBED_FILES} "\n\n\t${LINK_TYPE} ${START_PTR}")
-    set(POINTERS_FOR_EMBED_FILES ${POINTERS_FOR_EMBED_FILES} "\n\t${LINK_TYPE} ${END_PTR}")
+    set(POINTERS_FOR_EMBED_FILES ${POINTERS_FOR_EMBED_FILES} "\n\n${LINK_TYPE} ${START_PTR}")
+    set(POINTERS_FOR_EMBED_FILES ${POINTERS_FOR_EMBED_FILES} "\n${LINK_TYPE} ${END_PTR}")
 
-    set(FILL_IN_POINTERS ${FILL_IN_POINTERS} "\n\t\tfile_pointers.emplace(\"${FILENAME_ONLY}\",FilePtr(&${START_PTR}, &${END_PTR}))")
+    set(FILL_IN_POINTERS ${FILL_IN_POINTERS} "\n\t\t_resources.emplace(\"${FILENAME_ONLY}\",std::make_shared<ResourceLinux>(&${START_PTR}, &${END_PTR}))")
 
 endforeach (FILENAME)
 
@@ -90,12 +81,7 @@ set(POINTERS_FOR_EMBED_FILES "${POINTERS_FOR_EMBED_FILES};")
 set(FILL_IN_POINTERS "${FILL_IN_POINTERS};")
 
 # Set path to the source file
-set(SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/src/resource_files_manager.cpp")
-
+set(RES_SRC_FILE "${CMAKE_CURRENT_BINARY_DIR}/src/resources/ResourceManager_linux.cpp")
 # configure source file
-configure_file("src/resource_files_manager.cpp.template"
-        ${SOURCE_FILES})
+configure_file("src/resources/ResourceManager_linux.cpp.template" ${RES_SRC_FILE})
 
-#Create library and alias
-add_library(${PROJECT_NAME} ${SOURCE_FILES} ${PROJECT_EMBED_OBJ_FILES})
-add_library(lib::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

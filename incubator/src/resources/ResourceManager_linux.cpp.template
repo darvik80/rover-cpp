@@ -1,0 +1,59 @@
+//
+// Created by Ivan Kishchenko on 21.04.2021.
+//
+
+#include "resources/ResourceManager.h"
+#include <map>
+#include <string>
+#include <vector>
+#include <boost/serialization/singleton.hpp>
+
+class ResourceLinux : public Resource {
+    const void* _start;
+    const void* _end;
+public:
+    explicit ResourceLinux(const void* start, const void* end)
+    : _start(start), _end(end)
+    {
+    }
+
+    const void *getOffset() override {
+        return _start;
+    }
+
+    size_t getSize() override {
+        return (unsigned long)_end - (unsigned long)_start;
+    }
+};
+
+${POINTERS_FOR_EMBED_FILES}
+
+class ResourceManagerLinux : public ResourceManager {
+    std::map<std::string, Resource::Ptr> _resources;
+public:
+    ResourceManagerLinux() {
+        ${FILL_IN_POINTERS}
+    }
+
+    std::vector<std::string> getResourceNames() override {
+        std::vector<std::string> result;
+        for (const auto &elem : _resources) {
+            result.push_back(elem.first);
+        }
+
+        return result;
+    }
+
+    Resource::Ptr getResource(std::string_view name) override {
+        auto it = _resources.find(name.data());
+        if (it == _resources.end()) {
+            return Resource::Ptr{};
+        }
+
+        return it->second;
+    }
+};
+
+ResourceManager& ResourceManager::instance() {
+    return boost::serialization::singleton<ResourceManagerLinux>::get_mutable_instance();
+}
