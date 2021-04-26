@@ -5,23 +5,30 @@
 #include "RegistryService.h"
 #include "net/MulticastMessage.h"
 
-#include "net/MulticastFactory.h"
+#include "net/BoostMulticastFactory.h"
 
 #include <iostream>
-#include <net/raspberry/BoostMulticastMessage.h>
+#include <net/BoostMulticastMessage.h>
+#include <properties/NetworkProperties.h>
 
-std::error_code RegistryService::create(Content &content) {
-    auto server = std::make_shared<AsyncUdp>(content.service);
+const char *RegistryService::name() {
+    return "net_registry";
+}
 
-    server->listen(content.config.network.registryPort);
+void RegistryService::postConstruct(Registry &registry) {
+    auto server = std::make_shared<AsyncUdp>(registry.getIoService());
+
+    auto &props = registry.getProperties<NetworkProperties>();
+
+    server->listen(props.registryPort);
 
     server->onPacket([server](const Packet &packet) {
         std::cout << "srv: " << std::string((char *) packet.data, packet.size) << std::endl;
         server->send(packet.handler, packet.data, packet.size);
     });
 
-    Context context{content.service};
-    _receiver = MulticastFactory::createReceiver(context, "239.255.0.1", 12345);
+    BoostMulticastFactory factory(registry.getIoService());
+    _receiver = factory.createReceiver("239.255.0.1", 12345);
 
     _receiver->receive([](std::string_view message, const SenderAddress &address) {
         auto res = fromJson<MulticastMessage>(message);
@@ -29,54 +36,39 @@ std::error_code RegistryService::create(Content &content) {
         std::cout << "data: " << message << std::endl;
         std::cout << "----" << std::endl;
     });
-
-    return std::error_code();
 }
 
-std::error_code RegistryService::destroy() {
+void RegistryService::preDestroy(Registry& registry) {
     _receiver.reset();
-    return std::error_code();
 }
 
-ModuleStatus RegistryService::getStatus() {
-    return DOWN;
+const char *RegistryServiceClient::name() {
+    return "registry_client";
 }
 
+void RegistryServiceClient::postConstruct(Registry &registry) {
+    BoostMulticastFactory factory(registry.getIoService());
+    _sender = factory.createSender("239.255.0.1", 12345);
 
-std::error_code RegistryServiceClient::create(Content &content) {
-    Context context{content.service};
-    _sender = MulticastFactory::createSender(context, "239.255.0.1", 12345);
-
-    _thread = std::make_unique<std::thread>([content, this]() {
-        auto client = std::make_shared<AsyncUdp>(content.service);
+    _thread = std::make_unique<std::thread>([&registry, this]() {
+        auto client = std::make_shared<AsyncUdp>(registry.getIoService());
+        auto &props = registry.getProperties<NetworkProperties>();
 
         auto handler = client->connect(
-                content.config.network.registryHost,
-                content.config.network.registryPort
+                props.registryHost,
+                props.registryPort
         );
 
-        //auto handler = client->connect();
-
         for (int i = 0; i < 100; i++) {
-//            client->onPacket([](const Packet &packet) {
-//                std::cout << "cln: " << std::string((const char *) packet.data, packet.size) << std::endl;
-//            });
-//            client->send(handler, "Hello World");
-
             MulticastMessage message{"1", "raspberry", "monitor"};
 
             _sender->multicast(toJson<MulticastMessage>(message));
             sleep(1);
         }
     });
-
-    return std::error_code();
 }
 
-std::error_code RegistryServiceClient::destroy() {
-    return std::error_code();
-}
 
-ModuleStatus RegistryServiceClient::getStatus() {
-    return DOWN;
+void RegistryServiceClient::preDestroy(Registry& registry) {
+
 }

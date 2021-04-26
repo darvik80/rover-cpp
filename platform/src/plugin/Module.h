@@ -15,7 +15,7 @@
 
 #define FN_CREATE_MODULE "createModule"
 
-class BOOST_SYMBOL_VISIBLE Module : public Logger {
+class /*BOOST_SYMBOL_VISIBLE*/ Module : public Logger {
 public:
     typedef std::shared_ptr<Module> Ptr;
     typedef std::vector<Ptr> PtrVec;

@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include "CoreConfig.h"
 #include "Kernel.h"
 
 Kernel kernel;

@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko (Lazada Group) on 2019-07-18.
 //
 
-#ifndef ROVER_CONFIG_H
+#ifndef ROVER_PROPERTIES_H
 #define ROVER_CONFIG_H
 
 #if defined(__APPLE__)
@@ -14,4 +14,4 @@
 # define CFG_OS_POSIX 1
 #endif
 
-#endif //ROVER_CONFIG_H
+#endif //ROVER_PROPERTIES_H

@@ -6,21 +6,17 @@
 #define ROVER_REGISTRYSERVICE_H
 
 #include "module/raspberry/AsyncUdp.h"
-#include "Module.h"
+#include "Service.h"
 #include "Transport.h"
 #include "net/Multicast.h"
 
-class RegistryService : public Module {
+class RegistryService : public Service {
 public:
-    std::error_code create(Content &content) override;
+    const char *name() override;
 
-    std::error_code destroy() override;
+    void postConstruct(Registry &registry) override;
 
-    const char *getName() override {
-        return "registry";
-    }
-
-    ModuleStatus getStatus() override;
+    void preDestroy(Registry& registry) override;
 
 private:
     Transport::Ptr _server;
@@ -28,17 +24,13 @@ private:
     std::shared_ptr<MulticastReceiver> _receiver;
 };
 
-class RegistryServiceClient : public Module {
+class RegistryServiceClient : public Service {
 public:
-    std::error_code create(Content &content) override;
+    const char *name() override;
 
-    std::error_code destroy() override;
+    void postConstruct(Registry &registry) override;
 
-    const char *getName() override {
-        return "registry_client";
-    }
-
-    ModuleStatus getStatus() override;
+    void preDestroy(Registry& registry) override;
 
 private:
     std::unique_ptr<std::thread> _thread;
