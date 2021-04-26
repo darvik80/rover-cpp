@@ -18,6 +18,8 @@ public:
     }
 
     void getProperties(NetworkProperties& props) override;
+    void getProperties(LoggingProperties &props) override;
+    void getProperties(HttpProperties &props) override;
 };
 
 

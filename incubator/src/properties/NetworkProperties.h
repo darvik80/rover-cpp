@@ -7,7 +7,7 @@
 
 #include <Properties.h>
 
-struct NetworkProperties : public Properties {
+struct NetworkProperties : Properties {
     std::string registryHost = "127.0.0.1";
     uint16_t registryPort = 54545;
 };

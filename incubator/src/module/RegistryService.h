@@ -16,9 +16,7 @@ public:
 
     void postConstruct(Registry &registry) override;
 
-    void run() override;
-
-    void preDestroy() override;
+    void preDestroy(Registry& registry) override;
 
 private:
     Transport::Ptr _server;
@@ -32,9 +30,7 @@ public:
 
     void postConstruct(Registry &registry) override;
 
-    void run() override;
-
-    void preDestroy() override;
+    void preDestroy(Registry& registry) override;
 
 private:
     std::unique_ptr<std::thread> _thread;

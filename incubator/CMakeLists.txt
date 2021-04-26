@@ -7,12 +7,16 @@ add_definitions(-DRASPBERRY_ARCH -DSUPPORT_ETHERNET)
 
 file(GLOB SRCS_G
         src/*.cpp
+        src/logging/*.cpp
         src/module/*.cpp
         src/properties/*.cpp
         src/properties/source/*.cpp
         src/module/raspberry/*.cpp
         ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src/net/*.cpp
         src/net/*.cpp
+        src/net/http/*.cpp
+        src/net/http/rpc/*.cpp
+        src/net/http/rpc/json/*.cpp
         src/serial/*.cpp
         src/serial/os/*.cc
         )
@@ -27,6 +31,7 @@ include_directories(
 
 set(RESOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 
+add_definitions(-DBOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED -DDBOOST_STACKTRACE_USE_ADDR2LINE)
 if (APPLE)
     message("Apple incubator build")
     file(GLOB SRCS_OS

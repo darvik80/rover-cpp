@@ -9,12 +9,16 @@
 #include <string_view>
 #include <memory>
 #include <properties/NetworkProperties.h>
+#include <properties/LoggingProperties.h>
+#include <properties/HttpProperties.h>
 
 class PropertySource {
 public:
     typedef std::shared_ptr<PropertySource> Ptr;
 public:
     virtual void getProperties(NetworkProperties& props) = 0;
+    virtual void getProperties(LoggingProperties& props) = 0;
+    virtual void getProperties(HttpProperties& props) = 0;
 };
 
 

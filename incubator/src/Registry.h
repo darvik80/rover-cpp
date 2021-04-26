@@ -12,16 +12,47 @@
 #include <boost/asio.hpp>
 #include <unordered_map>
 #include <properties/source/PropertySource.h>
+#include <logging/DevNullLogger.h>
 
 class Registry {
+    friend class LoggingService;
+
     boost::asio::io_service _service;
     Service::VecPtr _services;
     Properties::VecPtr _properties;
-    PropertySource::Ptr propsSource;
+
+    PropertySource::Ptr _propsSource;
+
+    Logger::Ptr _logger = std::make_shared<DevNullLogger>();
+protected:
+    void addService(const Service::Ptr &service) {
+        _services.emplace_back(service);
+    }
+
+    void setLogger(const Logger::Ptr &logger) {
+        _logger = logger;
+    }
+
 public:
-    boost::asio::io_service& getIoService() {
+    explicit Registry(PropertySource::Ptr propsSource)
+            : _propsSource(std::move(propsSource)) {
+    }
+
+
+    boost::asio::io_service &getIoService() {
         return _service;
     }
+
+    Logger::Ptr getLogger() {
+        return _logger;
+    }
+
+    void visitService(std::function<void(Service& service)> visitor) {
+        for (auto &ptr : _services) {
+            visitor(*ptr);
+        }
+    }
+
 
     template<class C>
     C &getService() {
@@ -45,17 +76,14 @@ public:
         }
 
         auto ptr = std::make_shared<C>();
-        propsSource->getProperties(*ptr);
+        _propsSource->getProperties(*ptr);
         _properties.emplace_back(ptr);
 
         return *ptr;
     }
+
 private:
     friend class Application;
-
-    void addService(const Service::Ptr& service) {
-        _services.emplace_back(service);
-    }
 };
 
 

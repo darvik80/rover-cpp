@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <optional>
 
 class Resource {
 public:
@@ -26,6 +27,13 @@ public:
 public:
     virtual std::vector<std::string> getResourceNames() = 0;
     virtual Resource::Ptr getResource(std::string_view name) = 0;
+    virtual std::optional<std::string> getResourceAsString(std::string_view name) {
+        if (auto resource = getResource(name); resource) {
+            return std::string((const char*)resource->getOffset(), resource->getSize());
+        }
+
+        return {};
+    }
 
     static ResourceManager& instance();
 };

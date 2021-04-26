@@ -8,8 +8,10 @@
 #include "Service.h"
 #include "Registry.h"
 #include "Properties.h"
+#include "event/ApplicationEvent.h"
 
-class Application : public Service, public Registry {
+class Application : public Service {
+private:
 public:
     const char* name() override {
         return "application";
@@ -19,8 +21,8 @@ public:
 
     void postConstruct(Registry &registry) override;
 
-    void run() override;
-    void preDestroy() override;
+    void run(Registry &registry);
+    void preDestroy(Registry &registry) override;
 
 };
 

@@ -2,12 +2,13 @@
 // Created by Ivan Kishchenko on 11.04.2021.
 //
 
-#ifndef ROVER_SYSTEMLOGGER_H
-#define ROVER_SYSTEMLOGGER_H
+#ifndef ROVER_LOGGINGSERVICE_H
+#define ROVER_LOGGINGSERVICE_H
 
 #include "Logger.h"
+#include "Service.h"
 
-class SystemLogger : public Logger {
+class LoggingService : public Logger, public Service, public std::enable_shared_from_this<LoggingService> {
 public:
     void trace(std::string_view message) override;
 
@@ -21,7 +22,15 @@ public:
 
     void fatal(std::string_view message) override;
 
+public:
+    const char *name() override {
+        return "log";
+    }
+
+    void postConstruct(Registry &registry) override;
+
+    void preDestroy(Registry& registry) override;
 };
 
 
-#endif //ROVER_SYSTEMLOGGER_H
+#endif //ROVER_LOGGINGSERVICE_H

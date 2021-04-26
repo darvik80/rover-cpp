@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
 struct Properties {
     typedef std::shared_ptr<Properties> Ptr;

@@ -19,8 +19,7 @@ public:
 
 public:
     virtual void postConstruct(Registry& registry) = 0;
-    virtual void run() = 0;
-    virtual void preDestroy() = 0;
+    virtual void preDestroy(Registry& registry) = 0;
 
 };
 

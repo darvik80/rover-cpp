@@ -38,10 +38,7 @@ void RegistryService::postConstruct(Registry &registry) {
     });
 }
 
-void RegistryService::run() {
-}
-
-void RegistryService::preDestroy() {
+void RegistryService::preDestroy(Registry& registry) {
     _receiver.reset();
 }
 
@@ -71,10 +68,7 @@ void RegistryServiceClient::postConstruct(Registry &registry) {
     });
 }
 
-void RegistryServiceClient::run() {
 
-}
-
-void RegistryServiceClient::preDestroy() {
+void RegistryServiceClient::preDestroy(Registry& registry) {
 
 }

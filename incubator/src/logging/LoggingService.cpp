@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko on 11.04.2021.
 //
 
-#include "SystemLogger.h"
+#include "LoggingService.h"
 
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
@@ -16,6 +16,10 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/log/support/date_time.hpp>
 #include <boost/stacktrace.hpp>
+
+#include "Registry.h"
+
+using namespace boost;
 
 BOOST_LOG_ATTRIBUTE_KEYWORD(timestamp,
                             "TimeStamp", boost::posix_time::ptime)
@@ -75,26 +79,70 @@ void fileFormatter(log::record_view const &rec, log::formatting_ostream &strm) {
     strm << "[ " << rec[threadId] << " ] : " << rec[log::expressions::smessage];
 }
 
-void SystemLogger::trace(std::string_view message) {
-
+void LoggingService::trace(std::string_view message) {
+    BOOST_LOG_TRIVIAL(trace) << message;
 }
 
-void SystemLogger::debug(std::string_view message) {
-
+void LoggingService::debug(std::string_view message) {
+    BOOST_LOG_TRIVIAL(debug) << message;
 }
 
-void SystemLogger::info(std::string_view message) {
-
+void LoggingService::info(std::string_view message) {
+    BOOST_LOG_TRIVIAL(info) << message;
 }
 
-void SystemLogger::warning(std::string_view message) {
-
+void LoggingService::warning(std::string_view message) {
+    BOOST_LOG_TRIVIAL(warning) << message;
 }
 
-void SystemLogger::error(std::string_view message) {
-
+void LoggingService::error(std::string_view message) {
+    BOOST_LOG_TRIVIAL(error) << message;
 }
 
-void SystemLogger::fatal(std::string_view message) {
+void LoggingService::fatal(std::string_view message) {
+    BOOST_LOG_TRIVIAL(fatal) << message;
+}
 
+void LoggingService::postConstruct(Registry &registry) {
+    auto props = registry.getProperties<LoggingProperties>();
+    log::register_simple_formatter_factory<log::trivial::severity_level, char>("Severity");
+
+    if (props.file) {
+        log::add_file_log(
+                log::keywords::file_name = "/dev/null",
+                log::keywords::rotation_size = 10 * 1024 * 1024,
+                log::keywords::time_based_rotation = log::sinks::file::rotation_at_time_point(0, 0, 0),
+                log::keywords::auto_flush = true
+        )->set_formatter(&fileFormatter);
+    }
+
+    if (props.console) {
+        log::add_console_log(std::clog)->set_formatter(&consoleFormatter);
+    }
+
+    auto logLevelValue = log::trivial::trace;
+
+    if (props.level == "trace") {
+        logLevelValue = log::trivial::trace;
+    } else if (props.level == "debug") {
+        logLevelValue = log::trivial::debug;
+    } else if (props.level == "info") {
+        logLevelValue = log::trivial::info;
+    } else if (props.level == "warning") {
+        logLevelValue = log::trivial::warning;
+    } else if (props.level == "error") {
+        logLevelValue = log::trivial::error;
+    } else if (props.level == "fatal") {
+        logLevelValue = log::trivial::fatal;
+    }
+
+    log::core::get()->set_filter(log::trivial::severity >= logLevelValue);
+
+    log::add_common_attributes();
+
+    registry.setLogger(shared_from_this());
+    info("init logging completed");
+}
+
+void LoggingService::preDestroy(Registry& registry) {
 }
