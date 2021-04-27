@@ -33,14 +33,13 @@ void Application::run(int argc, char **argv) {
 }
 
 void Application::postConstruct(Registry &registry) {
-    // TODO: must be first, ordered queue
+    // { System Services
     registry.addService(std::make_shared<LoggingService>());
     registry.addService(std::make_shared<EventManager>());
-    registry.addService(std::make_shared<InfoService>());
-
-    // must be last for subscribe
-    // TODO: ordered queue
     registry.addService(std::make_shared<HttpService>());
+    // } System Services
+
+    registry.addService(std::make_shared<InfoService>());
 
     registry.visitService([&registry](auto &service) {
         service.postConstruct(registry);

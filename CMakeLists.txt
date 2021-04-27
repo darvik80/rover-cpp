@@ -9,6 +9,7 @@ if (APPLE)
     find_library(CORE_LIBRARY CoreFoundation)
 else ()
     message("Unix build")
+    set(CORE_LIBRARY dl)
 endif ()
 
 find_package(Boost REQUIRED COMPONENTS system filesystem thread log log_setup)

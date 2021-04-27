@@ -4,52 +4,18 @@
 
 #include "HttpWorker.h"
 
-#include <boost/beast/version.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
+#include <utility>
 #include <iostream>
 
 using namespace boost;
 
-// Return a reasonable mime type based on the extension of a file.
-std::string mimeType(std::string_view path) {
-    using beast::iequals;
-    auto const ext = [&path] {
-        auto const pos = path.rfind(".");
-        if (std::string_view::npos == pos) {
-            return std::string_view{};
-        }
-
-        return path.substr(pos);
-    }();
-
-    if (algorithm::iequals(ext, ".htm")) return "text/html";
-    if (algorithm::iequals(ext, ".html")) return "text/html";
-    if (algorithm::iequals(ext, ".php")) return "text/html";
-    if (algorithm::iequals(ext, ".css")) return "text/css";
-    if (algorithm::iequals(ext, ".txt")) return "text/plain";
-    if (algorithm::iequals(ext, ".js")) return "application/javascript";
-    if (algorithm::iequals(ext, ".json")) return "application/json";
-    if (algorithm::iequals(ext, ".xml")) return "application/xml";
-    if (algorithm::iequals(ext, ".swf")) return "application/x-shockwave-flash";
-    if (algorithm::iequals(ext, ".flv")) return "video/x-flv";
-    if (algorithm::iequals(ext, ".png")) return "image/png";
-    if (algorithm::iequals(ext, ".jpe")) return "image/jpeg";
-    if (algorithm::iequals(ext, ".jpeg")) return "image/jpeg";
-    if (algorithm::iequals(ext, ".jpg")) return "image/jpeg";
-    if (algorithm::iequals(ext, ".gif")) return "image/gif";
-    if (algorithm::iequals(ext, ".bmp")) return "image/bmp";
-    if (algorithm::iequals(ext, ".ico")) return "image/vnd.microsoft.icon";
-    if (algorithm::iequals(ext, ".tiff")) return "image/tiff";
-    if (algorithm::iequals(ext, ".tif")) return "image/tiff";
-    if (algorithm::iequals(ext, ".svg")) return "image/svg+xml";
-    if (algorithm::iequals(ext, ".svgz")) return "image/svg+xml";
-
-    return "application/text";
-}
-
-HttpWorker::HttpWorker(asio::io_service &service, std::string_view address, uint16_t port, HttpRequestHandlerManager::Ptr handler)
-        : _acceptor(service, {asio::ip::make_address(address), port}), _socket(service), _handler(handler), _requestDeadline(service, (std::chrono::steady_clock::time_point::max) ()) {
+HttpWorker::HttpWorker(asio::io_service &service, std::string_view address, uint16_t port, const HttpRequestHandlerManager::Ptr &handler)
+        : _acceptor(service, {asio::ip::make_address(address), port})
+        , _socket(service)
+        , _handler(handler)
+        , _requestDeadline(service, (std::chrono::steady_clock::time_point::max) ())
+        , _serializer(0)
+{
 }
 
 void HttpWorker::start() {
@@ -103,26 +69,15 @@ void HttpWorker::readRequest() {
                 if (ec) {
                     accept();
                 } else {
-                    processRequest(_parser->get());
+                    process(_parser->get());
                 }
             });
 }
 
-void HttpWorker::processRequest(const HttpRequest &req) {
+void HttpWorker::process(const HttpRequest &req) {
     try {
-        _response.emplace();
-        _handler->process(req, _response.get());
-        _serializer.emplace(*_response);
-        http::async_write(
-                _socket,
-                *_serializer,
-                [this](beast::error_code ec, size_t) {
-                    _socket.shutdown(tcp::socket::shutdown_send, ec);
-                    _serializer.reset();
-                    _response.reset();
-                    accept();
-                }
-        );
+        _handler->process(req, _response);
+        std::visit(*this, _response);
     } catch (std::invalid_argument& ex) {
         sendBadResponse(http::status::not_found, ex.what());
     } catch (std::exception& ex) {
@@ -130,73 +85,55 @@ void HttpWorker::processRequest(const HttpRequest &req) {
     }
 }
 
-void HttpWorker::sendBadResponse(http::status status, std::string_view error) {
-    _response.emplace();
+void HttpWorker::visit(HttpStringResponse& resp) {
+    resp.set(http::field::server, "Beast");
+    resp.keep_alive(false);
+    resp.prepare_payload();
 
-    _response->result(status);
-    _response->keep_alive(false);
-    _response->set(http::field::server, "Beast");
-    _response->set(http::field::content_type, "text/plain");
-    _response->body() = error;
-    _response->prepare_payload();
-
-    _serializer.emplace(*_response);
-
+    auto& serializer = _serializer.emplace<HttpStringSerializer>(resp);
     http::async_write(
             _socket,
-            *_serializer,
+            serializer,
             [this](beast::error_code ec, size_t) {
                 _socket.shutdown(tcp::socket::shutdown_send, ec);
-                _serializer.reset();
-                _response.reset();
                 accept();
             }
     );
 }
 
-void HttpWorker::rpc(const HttpRequest &req) {
-    _response.emplace();
+void HttpWorker::visit(HttpFileResponse& resp) {
+    resp.set(http::field::server, "Beast");
+    resp.keep_alive(false);
+    resp.prepare_payload();
 
-    _response->keep_alive(false);
-    _response->set(http::field::server, "Beast");
-
-    if (req.method() != http::verb::post) {
-        _response->result(http::status::bad_request);
-        _response->set(http::field::content_type, "text/plain");
-        _response->body() = "json-rpc support only post requests";
-    } else if (req.at(http::field::content_type).find("application/json") == std::string::npos) {
-        _response->result(http::status::bad_request);
-        _response->set(http::field::content_type, "text/plain");
-        _response->body() = "json-rpc support only application/json content-type";
-    } else {
-        // TODO:
-//        std::shared_ptr<JsonRpcRequest> request = std::make_shared<JsonRpcRequest>();
-//        std::shared_ptr<JsonRpcResponse> response = std::make_shared<JsonRpcResponse>();
-//        try {
-//            JsonDecoder(request).decode(req.body());
-//
-//            _rpcHandler->handle(*request, *response);
-//
-//        } catch (std::exception &ex) {
-//            JsonRcpError error;
-//            error.code = InternalError;
-//            error.message = ex.what();
-//            response->error = error;
-//        }
-//
-//        _response->body() = JsonEncoder(response).encode();
-    }
-
-    _response->prepare_payload();
-    _serializer.emplace(*_response);
+    auto& serializer = _serializer.emplace<HttpFileSerializer>(resp);
 
     http::async_write(
             _socket,
-            *_serializer,
+            serializer,
             [this](beast::error_code ec, size_t) {
                 _socket.shutdown(tcp::socket::shutdown_send, ec);
-                _serializer.reset();
-                _response.reset();
+                accept();
+            }
+    );
+}
+
+void HttpWorker::sendBadResponse(http::status status, std::string_view error) {
+    auto& resp = _response.emplace<HttpStringResponse>();
+    resp.result(status);
+    resp.keep_alive(false);
+    resp.set(http::field::server, "Beast");
+    resp.set(http::field::content_type, "text/plain");
+    resp.body() = error;
+    resp.prepare_payload();
+
+    auto& serializer = _serializer.emplace<HttpStringSerializer>(resp);
+
+    http::async_write(
+            _socket,
+            serializer,
+            [this](beast::error_code ec, size_t) {
+                _socket.shutdown(tcp::socket::shutdown_send, ec);
                 accept();
             }
     );

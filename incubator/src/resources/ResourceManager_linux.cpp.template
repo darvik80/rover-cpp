@@ -4,9 +4,9 @@
 
 #include "resources/ResourceManager.h"
 #include <map>
-#include <string>
-#include <vector>
 #include <boost/serialization/singleton.hpp>
+#include <boost/serialization/singleton.hpp>
+#include <boost/dll.hpp>
 
 class ResourceLinux : public Resource {
     const void* _start;
@@ -51,6 +51,12 @@ public:
         }
 
         return it->second;
+    }
+
+    std::string getResourcesDir() override {
+        auto appPath = boost::dll::program_location();
+        auto path = boost::dll::program_location().parent_path();
+        return path.parent_path().append("var").string();
     }
 };
 

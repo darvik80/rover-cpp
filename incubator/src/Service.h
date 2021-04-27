@@ -8,9 +8,11 @@
 #include <memory>
 #include <vector>
 
+#include "support/Order.h"
+
 class Registry;
 
-class Service {
+class Service : public Ordered {
 public:
     typedef std::shared_ptr<Service> Ptr;
     typedef std::vector<Ptr> VecPtr;

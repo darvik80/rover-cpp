@@ -8,9 +8,9 @@
 #include <string>
 #include <string_view>
 #include <memory>
-#include <properties/NetworkProperties.h>
-#include <properties/LoggingProperties.h>
-#include <properties/HttpProperties.h>
+#include "properties/NetworkProperties.h"
+#include "properties/LoggingProperties.h"
+#include "properties/HttpProperties.h"
 
 class PropertySource {
 public:

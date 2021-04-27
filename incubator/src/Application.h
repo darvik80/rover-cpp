@@ -13,17 +13,21 @@
 class Application : public Service {
 private:
 public:
-    const char* name() override {
+    const char *name() override {
         return "application";
     }
-public:
+
+    int order() override {
+        return 0;
+    }
+
     void run(int argc, char **argv);
 
     void postConstruct(Registry &registry) override;
 
     void run(Registry &registry);
-    void preDestroy(Registry &registry) override;
 
+    void preDestroy(Registry &registry) override;
 };
 
 

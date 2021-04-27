@@ -36,6 +36,8 @@ public:
     }
 
     static ResourceManager& instance();
+
+    virtual std::string getResourcesDir() = 0;
 };
 
 

@@ -19,7 +19,9 @@ namespace http = boost::beast::http;    // from <boost/beast/http.hpp>
 namespace asio = boost::asio;           // from <boost/beast/http.hpp>
 
 typedef http::request_parser<http::string_body> HttpRequestParser;
-typedef http::response_serializer<http::string_body> HttpSerializer;
+typedef http::response_serializer<http::string_body> HttpStringSerializer;
+typedef http::response_serializer<http::file_body> HttpFileSerializer;
+typedef std::variant<HttpStringSerializer, HttpFileSerializer, int> HttpSerializer;
 
 class HttpWorker {
 public:
@@ -27,11 +29,19 @@ public:
 
     HttpWorker &operator=(HttpWorker const &) = delete;
 
-    HttpWorker(asio::io_service &service, std::string_view address, uint16_t port, HttpRequestHandlerManager::Ptr _handler);
+    HttpWorker(asio::io_service &service, std::string_view address, uint16_t port, const HttpRequestHandlerManager::Ptr& _handler);
 
     void start();
 
     void shutdown();
+
+    void operator()(HttpStringResponse& resp) {
+        visit(resp);
+    }
+
+    void operator()(HttpFileResponse& resp) {
+        visit(resp);
+    }
 private:
     // The acceptor used to listen for incoming connections.
     tcp::acceptor _acceptor;
@@ -46,16 +56,14 @@ private:
     boost::beast::flat_static_buffer<32768> _buffer;
 
     // The parser for reading the requests
-    boost::optional<HttpRequestParser> _parser;
+    std::optional<HttpRequestParser> _parser;
 
     // The timer putting a time limit on requests.
     boost::asio::basic_waitable_timer<std::chrono::steady_clock> _requestDeadline;
 
-    // The string-based response message.
-    boost::optional<HttpResponse> _response;
 
-    // The string-based response serializer.
-    boost::optional<HttpSerializer> _serializer;
+    HttpResponse _response;
+    HttpSerializer _serializer;
 
     HttpRequestHandlerManager::Ptr _handler;
 private:
@@ -63,13 +71,17 @@ private:
 
     void readRequest();
 
-    void processRequest(const HttpRequest &req);
-
     void sendBadResponse(http::status status, std::string_view error);
 
     void checkDeadline();
 
     void rpc(const HttpRequest &req);
+
+    void process(const HttpRequest &req);
+
+    void visit(HttpStringResponse& resp);
+
+    void visit(HttpFileResponse& resp);
 };
 
 #endif //ROVER_HTTPWORKER_H

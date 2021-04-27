@@ -10,7 +10,7 @@
 struct HttpProperties : Properties {
     std::string host;
     uint16_t port;
-    std::string root;
+    std::optional<std::string> root;
 };
 
 

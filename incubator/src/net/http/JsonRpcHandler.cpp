@@ -5,23 +5,20 @@
 #include "JsonRpcHandler.h"
 
 void JsonRpcHandler::handle(const HttpRequest &request, HttpResponse &response) {
-    response.keep_alive(false);
-    response.set(http::field::server, "Beast");
-
+    auto& resp = response.emplace<HttpStringResponse>();
     if (request.method() != http::verb::post) {
-        response.result(http::status::bad_request);
-        response.set(http::field::content_type, "text/plain");
-        response.body() = "json-rpc support only post requests";
+        resp.result(http::status::bad_request);
+        resp.set(http::field::content_type, "text/plain");
+        resp.body() = "json-rpc support only post requests";
     } else if (request.at(http::field::content_type).find("application/json") == std::string::npos) {
-        response.result(http::status::bad_request);
-        response.set(http::field::content_type, "text/plain");
-        response.body() = "json-rpc support only application/json content-type";
+        resp.result(http::status::bad_request);
+        resp.set(http::field::content_type, "text/plain");
+        resp.body() = "json-rpc support only application/json content-type";
     } else {
         std::shared_ptr<JsonRpcRequest> jsonRequest = std::make_shared<JsonRpcRequest>();
         std::shared_ptr<JsonRpcResponse> jsonResponse = std::make_shared<JsonRpcResponse>();
         try {
             JsonDecoder(jsonRequest).decode(request.body());
-
             handle(*jsonRequest, *jsonResponse);
         } catch (std::exception &ex) {
             JsonRcpError error;
@@ -30,10 +27,8 @@ void JsonRpcHandler::handle(const HttpRequest &request, HttpResponse &response) 
             jsonResponse->error = error;
         }
 
-        response.body() = JsonEncoder(jsonResponse).encode();
+        resp.body() = JsonEncoder(jsonResponse).encode();
     }
-
-    response.prepare_payload();
 }
 
 void JsonRpcHandler::handle(const JsonRpcRequest &request, JsonRpcResponse &response) {
