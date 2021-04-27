@@ -6,6 +6,7 @@
 #define ROVER_LOGGER_H
 
 #include <string_view>
+#include <memory>
 
 class Logger {
 public:

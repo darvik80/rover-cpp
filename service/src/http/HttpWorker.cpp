@@ -4,6 +4,8 @@
 
 #include "HttpWorker.h"
 #include "rpc/json/Spec.h"
+#include "../../../incubator/src/net/http/HttpWorker.h"
+
 
 #include <boost/beast/version.hpp>
 #include <boost/algorithm/string.hpp>
@@ -273,6 +275,10 @@ void HttpWorker::rpc(const HttpRequest &req) {
                 accept();
             }
     );
+}
+
+void HttpWorker::process(HttpStringResponse &resp) const {
+
 }
 
 

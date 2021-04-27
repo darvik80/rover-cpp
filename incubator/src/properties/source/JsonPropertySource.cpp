@@ -48,7 +48,9 @@ void JsonPropertySource::getProperties(HttpProperties &props) {
             key->get_to(props.port);
         }
         if (auto key = it->find("root"); key != it->end()) {
-            key->get_to(props.root);
+            std::string root;
+            key->get_to(root);
+            props.root = root;
         }
     } else {
         throw std::invalid_argument(std::string("The properties has not been found ") + typeid(props).name());

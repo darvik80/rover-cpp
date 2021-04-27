@@ -27,6 +27,7 @@ class Registry {
 protected:
     void addService(const Service::Ptr &service) {
         _services.emplace_back(service);
+        std::sort(_services.begin(), _services.end(), OrderedLess<Service>());
     }
 
     void setLogger(const Logger::Ptr &logger) {

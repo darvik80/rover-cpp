@@ -15,12 +15,16 @@ public:
         return "http";
     }
 
+    int order() override {
+        return INT32_MIN;
+    }
+
     void postConstruct(Registry &registry) override;
     void preDestroy(Registry &registry) override;
 
     void process(const HttpRequest& req, HttpResponse& resp) override;
 private:
-    void addHandlers(Registry &registry);
+    void addHandlers(Registry &registry, const HttpProperties& props);
 };
 
 

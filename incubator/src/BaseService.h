@@ -13,6 +13,10 @@ class BaseService : public Service, protected Logger {
 private:
     Logger::Ptr _log;
 public:
+    int order() override {
+        return 0;
+    }
+
     void postConstruct(Registry &registry) override;
 
     void preDestroy(Registry& registry) override;

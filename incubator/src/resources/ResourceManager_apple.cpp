@@ -41,7 +41,7 @@ public:
 class ResourceManagerApple : public ResourceManager {
     std::string resourcesDirectory;
 private:
-    static std::string getResourcesDir() {
+    std::string getResourcesDir() override {
 
         CFURLRef resourceURL = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
         char resourcePath[PATH_MAX];

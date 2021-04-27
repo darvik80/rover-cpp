@@ -6,6 +6,7 @@
 
 #include <boost/signals2.hpp>
 #include <unordered_map>
+#include <typeindex>
 
 #include "Event.h"
 #include "EventHandler.h"
@@ -60,5 +61,9 @@ public:
 public:
     const char *name() override {
         return "event-manager";
+    }
+
+    int order() override {
+        return INT_MAX-1;
     }
 };
