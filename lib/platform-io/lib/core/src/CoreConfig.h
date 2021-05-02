@@ -22,14 +22,15 @@
 #include <etl/memory.h>
 #include <etl/vector.h>
 
-using string = etl::istring;
+namespace std {
+    using string = etl::istring;
 
-template<typename T>
-using unique_ptr = etl::unique_ptr<T>;
+    template<typename T>
+    using unique_ptr = etl::unique_ptr<T>;
 
-template<typename T>
-using vector = etl::ivector<T>;
-
+    template<typename T>
+    using vector = etl::ivector<T>;
+}
 #else
 
 #if defined(ARDUINO)

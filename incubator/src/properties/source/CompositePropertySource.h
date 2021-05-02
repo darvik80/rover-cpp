@@ -32,6 +32,10 @@ public:
     void getProperties(HttpProperties &props) override {
         merge(props);
     }
+
+    void getProperties(SerialProperties &props) override {
+        merge(props);
+    }
 };
 
 

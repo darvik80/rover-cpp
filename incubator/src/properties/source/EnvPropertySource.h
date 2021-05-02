@@ -24,6 +24,10 @@
 #define PROP_HTTP_PORT          "HTTP_PORT"             // HttpProperties.port
 #define PROP_HTTP_ROOT          "HTTP_ROOT"             // HttpProperties.root
 
+// props: SerialProperties
+#define PROP_SERIAL_PORT        "SERIAL_PORT"           // SerialProperties.port
+#define PROP_SERIAL_BAUD_RATE   "SERIAL_BAUD_RATE"      // SerialProperties.baudRate
+
 class EnvPropertySource : public PropertySource {
 public:
     void getProperties(NetworkProperties &props) override {
@@ -51,6 +55,16 @@ public:
         if (auto val = getenv(PROP_HTTP_ROOT); val != nullptr) {
             props.root = val;
         }
+    }
+
+    void getProperties(SerialProperties &props) override {
+        if (auto val = getenv(PROP_SERIAL_PORT); val != nullptr) {
+            props.port = val;
+        }
+        if (auto val = getenv(PROP_SERIAL_BAUD_RATE); val != nullptr) {
+            props.baudRate = boost::lexical_cast<int>(val);;
+        }
+
     }
 };
 

@@ -6,10 +6,6 @@
 
 #include "Kernel.h"
 #include "CoreConfig.h"
-#include <net/SerialTransport.h>
-
-SerialTransport transport(Serial, 115200);
-
 
 void Kernel::setup() {
     //Serial.begin(115200);
@@ -19,7 +15,7 @@ void Kernel::setup() {
 }
 
 void Kernel::loop() {
-    transport.loop();
+    //transport.loop();
 }
 
 #endif
