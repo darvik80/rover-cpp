@@ -14,7 +14,6 @@ namespace serial {
 
     enum ConnState {
         IDLE,
-        WAIT_RECV,
         WAIT_SYNC,
         CONN
     };
@@ -22,6 +21,8 @@ namespace serial {
     enum SystemMessage {
         MSG_SYNC = 0x01,
         MSG_CONN = 0x02,
+        MSG_PING = 0x03,
+        MSG_PONG = 0x04,
     };
 }
 

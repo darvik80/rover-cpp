@@ -9,6 +9,7 @@
 #include "BoostSerialPort.h"
 
 class SerialService : public BaseService {
+    bool _connected{false};
     std::unique_ptr<BoostSerialPort> _serial;
 public:
     const char *name() override {

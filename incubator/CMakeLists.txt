@@ -18,6 +18,7 @@ file(GLOB SRCS_G
         src/net/http/rpc/json/*.cpp
         src/serial/*.cpp
         src/serial/os/*.cc
+        src/scheduler/*.cpp
         )
 
 include_directories(

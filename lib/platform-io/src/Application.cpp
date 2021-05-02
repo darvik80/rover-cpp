@@ -3,7 +3,6 @@
 //
 
 #include "Application.h"
-#include <u
 #include "serial/SerialService.h"
 
 etl::message_bus<1> appMessageBus;

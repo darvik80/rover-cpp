@@ -12,16 +12,8 @@ SerialService::SerialService(Registry& registry, Stream &stream)
         : BaseService(registry), _stream(stream) {
 }
 
-void Callback() {
-
-}
-
 void SerialService::postConstruct() {
-    _state = serial::WAIT_SYNC;
-
-    etl::function<void, void> fn{[]() -> void {
-       Serial.write(10);
-    }};
+    Serial.println("ARM Device, proto: v1");
 }
 
 void SerialService::run() {
@@ -98,26 +90,30 @@ void SerialService::onReceive(Stream &stream) {
             }
 
             onMessage(_cmd, _buffer);
+            _recvState = IDLE;
             break;
     }
-
 }
 
 void SerialService::onMessage(uint8_t msgId, etl::vector<uint8_t, UINT8_MAX> &data) {
-    if (_state == serial::WAIT_RECV) {
+    if (_state == serial::IDLE) {
         if (msgId == serial::MSG_SYNC) {
             send(serial::MSG_SYNC, nullptr, 0);
             setState(serial::WAIT_SYNC);
         }
     } else if (_state == serial::WAIT_SYNC) {
         if (msgId == serial::MSG_CONN) {
-            send(serial::CONN, nullptr, 0);
+            send(serial::MSG_CONN, nullptr, 0);
             setState(serial::CONN);
         } else {
-            setState(serial::WAIT_RECV);
+            setState(serial::IDLE);
         }
-    } else if (_state == serial::CONN) {
-        etl::send_message(getRegistry().getMessageBus(), SerialDataMessage{*this, msgId, data});
+    } else {
+        if (msgId == serial::MSG_PING) {
+            send(serial::MSG_PONG, nullptr, 0);
+        } else {
+            etl::send_message(getRegistry().getMessageBus(), SerialDataMessage{*this, msgId, data});
+        }
     }
 }
 
