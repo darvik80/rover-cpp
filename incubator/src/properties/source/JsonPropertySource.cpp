@@ -34,8 +34,6 @@ void JsonPropertySource::getProperties(LoggingProperties &props) {
         if (auto key = it->find("file"); key != it->end()) {
             key->get_to(props.file);
         }
-    } else {
-        throw std::invalid_argument(std::string("The properties has not been found ") + typeid(props).name());
     }
 }
 
@@ -52,7 +50,16 @@ void JsonPropertySource::getProperties(HttpProperties &props) {
             key->get_to(root);
             props.root = root;
         }
-    } else {
-        throw std::invalid_argument(std::string("The properties has not been found ") + typeid(props).name());
+    }
+}
+
+void JsonPropertySource::getProperties(SerialProperties &props) {
+    if (auto it = _json.find("serial"); it != _json.end()) {
+        if (auto key = it->find("port"); key != it->end()) {
+            key->get_to(props.port);
+        }
+        if (auto key = it->find("baud-rate"); key != it->end()) {
+            key->get_to(props.baudRate);
+        }
     }
 }

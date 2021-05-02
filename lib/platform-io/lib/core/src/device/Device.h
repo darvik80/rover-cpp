@@ -16,7 +16,7 @@ class DeviceManager {
 public:
 
 public:
-    virtual void registerDevice(unique_ptr<Device> device) = 0;
+    virtual void registerDevice(std::unique_ptr<Device> device) = 0;
 
     virtual Device* getDevice(const char* name) const = 0;
 };

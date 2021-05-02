@@ -1,12 +1,12 @@
 #include "CoreConfig.h"
-#include "Kernel.h"
+#include "Application.h"
 
-Kernel kernel;
+Application app;
 
 void setup() {
-    kernel.setup();
+    app.postConstruct();
 }
 
 void loop() {
-    kernel.loop();
+    app.run();
 }
