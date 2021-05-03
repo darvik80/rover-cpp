@@ -40,8 +40,15 @@ class BoostSerialPort {
 
     std::function<void(uint8_t, const uint8_t *, size_t)> _fnOnMessage{nullptr};
     std::function<void()> _fnOnIdle{nullptr};
+    std::function<void()> _fnOnConnected{nullptr};
+
+    std::function<void()> _fnReopen{nullptr};
 public:
     BoostSerialPort(boost::asio::io_service& service, std::string_view port, unsigned int baudRate);
+
+    void setOnConnected(const std::function<void()>& fn) {
+        _fnOnConnected = fn;
+    }
 
     void setOnMessage(const std::function<void(uint8_t, const uint8_t *, size_t)>& fn) {
         _fnOnMessage = fn;
@@ -54,6 +61,8 @@ private:
     void asyncRead();
     void onMessage(uint8_t msgId, const uint8_t *data, size_t size);
     void onIdle();
+
+
 };
 
 

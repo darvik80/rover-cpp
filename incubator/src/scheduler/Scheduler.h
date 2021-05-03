@@ -52,7 +52,7 @@ public:
         });
     }
 
-    [[nodiscard]] bool cancel() {
+    bool cancel() {
         if (_timer) {
             return _timer->cancel() > 0;
         }

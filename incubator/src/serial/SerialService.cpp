@@ -11,6 +11,10 @@ void SerialService::postConstruct(Registry &registry) {
 
     _serial = std::make_unique<BoostSerialPort>(registry.getIoService(), props.port, props.baudRate);
 
+    _serial->setOnConnected([this]() {
+        _connected = false;
+    });
+
     _serial->setOnIdle([this]() {
         if (!_connected) {
             _serial->send(serial::MSG_SYNC, nullptr, 0);
