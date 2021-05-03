@@ -20,9 +20,9 @@ BoostSerialPort::BoostSerialPort(boost::asio::io_service &service, std::string_v
             _serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
             _serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
             _serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
-            if (_fnOnConnected) {
-                _fnOnConnected();
-            }
+//            if (_fnOnConnected) {
+//                _fnOnConnected();
+//            }
         } catch (std::exception& ex) {}
     };
 
@@ -35,18 +35,18 @@ BoostSerialPort::BoostSerialPort(boost::asio::io_service &service, std::string_v
 }
 
 void BoostSerialPort::onIdle() {
-    if (_fnOnIdle) {
-        _fnOnIdle();
-    }
+//    if (_fnOnIdle) {
+//        _fnOnIdle();
+//    }
     _idleTimer.schedule(boost::posix_time::seconds{5}, [this]() {
         onIdle();
     });
 }
 
 void BoostSerialPort::onMessage(uint8_t msgId, const uint8_t *data, size_t size) {
-    if (_fnOnMessage) {
-        _fnOnMessage(msgId, data, size);
-    }
+//    if (_fnOnMessage) {
+//        _fnOnMessage(msgId, data, size);
+//    }
 }
 
 boost::future<void> BoostSerialPort::send(uint8_t msgId, const uint8_t *data, size_t size) {
@@ -156,4 +156,24 @@ void BoostSerialPort::asyncRead() {
     _idleTimer.schedule(boost::posix_time::seconds{5}, [this]() {
         onIdle();
     });
+}
+
+string BoostSerialPort::id() {
+    return std::string();
+}
+
+void BoostSerialPort::onConnect(SerialPort &port) {
+
+}
+
+void BoostSerialPort::onDisconnect(SerialPort &port, system::error_code &ec) {
+
+}
+
+void BoostSerialPort::onMessage(SerialPort &port, uint8_t msgId, const uint8_t *data, size_t size) {
+
+}
+
+void BoostSerialPort::onError(SerialPort &port, system::error_code &ec) {
+
 }
