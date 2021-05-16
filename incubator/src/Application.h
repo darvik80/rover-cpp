@@ -5,13 +5,12 @@
 #ifndef ROVER_APPLICATION_H
 #define ROVER_APPLICATION_H
 
-#include "Service.h"
+#include "BaseService.h"
 #include "Registry.h"
 #include "Properties.h"
 #include "event/ApplicationEvent.h"
 
-class Application : public Service {
-private:
+class Application : public BaseService {
 public:
     const char *name() override {
         return "application";

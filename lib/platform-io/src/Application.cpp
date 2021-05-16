@@ -34,7 +34,7 @@ void Application::preDestroy() {
 }
 
 void Application::on_receive(etl::imessage_router &source, const SerialConnected &msg) {
-    msg.getService().send(0x03, "Hello World!");
+    //msg.getService().send(0x03, "Hello World!");
 }
 
 void Application::on_receive(etl::imessage_router &source, const SerialDisconnected &msg) {

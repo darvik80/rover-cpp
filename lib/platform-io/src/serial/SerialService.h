@@ -25,9 +25,9 @@ class SerialService : public BaseService {
     };
 
     RecvState _recvState{IDLE};
-    int _cmd{0};
-    int _len{0};
-    etl::vector<uint8_t, UINT8_MAX> _buffer;
+    uint8_t _cmd{0};
+    uint16_t _len{0};
+    etl::vector<uint8_t, 128> _buffer;
 
 public:
     explicit SerialService(Registry& registry, Stream& stream);
@@ -36,12 +36,12 @@ public:
     void run() override;
     void preDestroy() override;
 
-    void send(uint8_t msgId, const uint8_t* data, uint8_t size);
+    void send(uint8_t msgId, const uint8_t* data, uint16_t size);
     void send(uint8_t msgId, const char* data) {
         send(msgId, (const uint8_t*)data, strlen(data));
     }
 private:
-    void onMessage(uint8_t msgId, etl::vector<uint8_t, UINT8_MAX>& data);
+    void onMessage(uint8_t msgId, etl::ivector<uint8_t>& data);
     void onReceive(Stream& stream);
     void setState(serial::ConnState newState);
 };

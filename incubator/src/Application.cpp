@@ -8,7 +8,6 @@
 #include "resources/ResourceManager.h"
 #include "Application.h"
 
-#include <string>
 #include "logging/LoggingService.h"
 #include "net/http/HttpService.h"
 #include "event/EventManager.h"
@@ -59,7 +58,7 @@ void Application::run(Registry &registry) {
     signals.add(SIGQUIT);
 #endif
 
-    auto& eventManager = registry.getService<EventManager>();
+    auto &eventManager = registry.getService<EventManager>();
 
     signals.async_wait(
             [&eventManager](boost::system::error_code ec, int signal) {
@@ -67,7 +66,7 @@ void Application::run(Registry &registry) {
             }
     );
 
-    std::function<bool(const ApplicationCloseEvent &)> fnClose = [&ioc,&registry](const ApplicationCloseEvent &event) -> bool {
+    std::function<bool(const ApplicationCloseEvent &)> fnClose = [&ioc, this](const ApplicationCloseEvent &event) -> bool {
         std::string signal = "unknown";
         switch (event.getSignal()) {
             case SIGTERM:
@@ -84,13 +83,13 @@ void Application::run(Registry &registry) {
             default:
                 break;
         }
-        registry.getService<LoggingService>().info("[application] handle signal: " + signal);
+        info("handle signal: {}", signal);
         ioc.stop();
         return true;
     };
     registry.getService<EventManager>().subscribe<>(fnClose);
-    std::function<bool(const ApplicationShutdownEvent &)> fnShutdown = [&registry](const ApplicationShutdownEvent &event) -> bool {
-        registry.getService<LoggingService>().info("[application] shutdown");
+    std::function<bool(const ApplicationShutdownEvent &)> fnShutdown = [this](const ApplicationShutdownEvent &event) -> bool {
+        info("shutdown");
         return true;
     };
     registry.getService<EventManager>().subscribe<>(fnShutdown);

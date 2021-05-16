@@ -11,6 +11,8 @@
 #include <net/MulticastFactory.h>
 #include "Esp8266Multicast.h"
 
+#ifdef ARDUINO_ARCH_ESP8266
+
 class KernelMulticastFactory : public MulticastFactory {
 private:
     static KernelMulticastFactory _instance;
@@ -22,5 +24,7 @@ public:
     std::shared_ptr<MulticastSender> createSender(const char* group, int port) override;
 
 };
+
+#endif
 
 #endif //PLATFORM_IO_MULTICASTFACTORY_H

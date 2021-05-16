@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 project(incubator VERSION 1.0)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
@@ -27,6 +27,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../platform/src
         ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
+        ${PROJECT_SOURCE_DIR}/../core-utils/logging/src/
 )
 
 set(RESOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources)

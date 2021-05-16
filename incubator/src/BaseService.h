@@ -7,11 +7,8 @@
 
 #include "Service.h"
 #include "Registry.h"
-#include "logging/Logger.h"
 
-class BaseService : public Service, protected Logger {
-private:
-    Logger::Ptr _log;
+class BaseService : public Service {
 public:
     int order() override {
         return 0;
@@ -22,17 +19,35 @@ public:
     void preDestroy(Registry& registry) override;
 
 protected:
-    void trace(std::string_view message) override;
+    template <class... A>
+    void trace(const std::string& fmt, A&&... args) {
+        logging::trace("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+    }
 
-    void debug(std::string_view message) override;
+    template <class... A>
+    void debug(const std::string& fmt, A&&... args) {
+        logging::debug("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+    }
 
-    void info(std::string_view message) override;
+    template <class... A>
+    void info(const std::string& fmt, A&&... args) {
+        logging::info("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+    }
 
-    void warning(std::string_view message) override;
+    template <class... A>
+    void warning(const std::string& fmt, A&&... args) {
+        logging::warning("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+    }
 
-    void error(std::string_view message) override;
+    template <class... A>
+    void error(const std::string& fmt, A&&... args) {
+        logging::error("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+    }
 
-    void fatal(std::string_view message) override;
+    template <class... A>
+    void fatal(const std::string& fmt, A&&... args) {
+        logging::fatal("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+    }
 };
 
 

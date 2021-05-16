@@ -13,5 +13,9 @@
     "level" : "info",
     "file": true,
     "console": true
+  },
+  "serial": {
+    "port": "/dev/tty.usbserial-1410",
+    "baud-rate": 115200
   }
 }

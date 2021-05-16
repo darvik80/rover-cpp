@@ -1,91 +1,71 @@
 //
-// Created by Ivan Kishchenko on 09.04.2021.
+// Created by Ivan Kishchenko on 15.05.2021.
 //
 
-#ifndef ROVER_BOOSTSERIALPORT_H
-#define ROVER_BOOSTSERIALPORT_H
+#ifndef CORE_SERIAL_H
+#define CORE_SERIAL_H
 
 #define BOOST_THREAD_PROVIDES_FUTURE
 #define BOOST_THREAD_PROVIDES_FUTURE_CONTINUATION
 
 #include <set>
+#include <memory>
 
 #include <boost/thread/future.hpp>
-
 #include <boost/asio.hpp>
-#include "net/Transport.h"
-#include <serial/Protocol.h>
-#include <scheduler/Scheduler.h>
+#include <boost/asio/deadline_timer.hpp>
+#include <properties/SerialProperties.h>
 
-#define SERIAL_PORT_READ_BUF_SIZE 1024
+#include "serial/Protocol.h"
+#include "serial/SerialPort.h"
+#include "serial/SerialPortCodec.h"
 
-class SerialPort {
-public:
-    virtual std::string deviceId() = 0;
-    virtual boost::future<void> send(uint8_t msgId, const uint8_t *data, size_t size) = 0;
-    virtual void onMessage(uint8_t msgId, const uint8_t *data, size_t size) = 0;
-};
 
-class SerialPortCallback : public SerialPort {
-public:
-    typedef std::shared_ptr<SerialPortCallback> Ptr;
-    typedef std::set<Ptr> SetPtr;
-public:
-    virtual void onConnect(SerialPort& port) = 0;
-    virtual void onDisconnect(SerialPort& port, boost::system::error_code& ec) = 0;
-    virtual void onMessage(SerialPort& port, uint8_t msgId, const uint8_t *data, size_t size) = 0;
-    virtual void onError(SerialPort& port, boost::system::error_code& ec) = 0;
-};
+#define SERIAL_PORT_READ_BUF_SIZE 256
 
-class BoostSerialPort : public SerialPortCallback {
-    TimerHandler _idleTimer;
-
+class BoostSerialPort : public serial::SerialPort {
+    boost::asio::deadline_timer _timer;
     boost::asio::serial_port _serial;
+    SerialProperties _props;
 
-    char _incBuf[SERIAL_PORT_READ_BUF_SIZE];
-    boost::asio::streambuf _inc;
+    uint8_t _incBuf[SERIAL_PORT_READ_BUF_SIZE];
     boost::asio::streambuf _out;
 
-    enum RecvState {
-        IDLE,
-        HEADER,
-        BODY,
-        FOOTER
-    };
-
-    RecvState _recvState{IDLE};
-    int _cmd{0};
-    int _len{0};
     std::vector<uint8_t> _buffer{UINT8_MAX};
 
-
-    std::function<void()> _fnReopen{nullptr};
-
-    SerialPortCallback::SetPtr _callbacks;
+    serial::SerialPortCodec _codec;
 public:
-    BoostSerialPort(boost::asio::io_service& service, std::string_view port, unsigned int baudRate);
+    BoostSerialPort(boost::asio::io_service &service, const SerialProperties &props);
 
-    boost::future<void> send(uint8_t msgId, const uint8_t *data, size_t size) override;
-    void onMessage(uint8_t msgId, const uint8_t *data, size_t size) override;
-
-    void addCallback(SerialPortCallback::Ptr callback) {
-        _callbacks.emplace(callback);
-    }
-public:
     std::string deviceId() override;
 
-    void onConnect(SerialPort &port) override;
+    int send(const uint8_t *data, size_t size) override;
 
-    void onDisconnect(SerialPort &port, boost::system::error_code &ec) override;
+    void flush() override;
 
-    void onMessage(SerialPort &port, uint8_t msgId, const uint8_t *data, size_t size) override;
+    void onMessage(const uint8_t *data, size_t size) override;
 
-    void onError(SerialPort &port, boost::system::error_code &ec) override;
+    uint16_t crc16(const uint8_t *data, size_t size) override;
+
+private:
+    void open();
+
+    void setTimer(boost::posix_time::time_duration duration, const std::function<void()> &fn);
+
+    void cancelTimer();
 
 private:
     void asyncRead();
+
     void onIdle();
+
+    void onConnect();
+
+    void onDisconnect();
+
+    void onError(const boost::system::error_code &ec);
+
 };
 
 
-#endif //ROVER_BOOSTSERIALPORT_H
+#endif //CORE_SERIAL_H

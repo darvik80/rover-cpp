@@ -23,6 +23,14 @@ namespace serial {
         MSG_CONN = 0x02,
         MSG_PING = 0x03,
         MSG_PONG = 0x04,
+        MSG_DOWN = 0x05,
+    };
+
+    struct Message {
+        uint8_t msgId;
+        uint16_t len;
+        uint8_t* data;
+        uint16_t crc16;
     };
 }
 

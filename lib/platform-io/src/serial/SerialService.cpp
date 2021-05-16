@@ -28,18 +28,18 @@ void SerialService::preDestroy() {
 
 }
 
-void SerialService::send(uint8_t msgId, const uint8_t *data, uint8_t size) {
+void SerialService::send(uint8_t msgId, const uint8_t *data, uint16_t size) {
     etl::crc16 crc;
     crc.add(data, data + size);
     uint16_t ctrl = crc.value();
 
     _stream.write(serial::MSG_MAGIC);
     _stream.write(msgId);
-    _stream.write(size);
+    _stream.write((const char *)&size, sizeof(uint16_t));
     if (size) {
         _stream.write(data, size);
     }
-    _stream.write((const char *) &ctrl, 2);
+    _stream.write((const char *) &ctrl, sizeof(uint16_t));
     _stream.write(serial::MSG_MAGIC);
 }
 
@@ -58,12 +58,15 @@ void SerialService::onReceive(Stream &stream) {
             }
         }
         case HEADER:
-            if (stream.available() < 2) {
+            if (stream.available() < 3) {
                 return;
             }
-
             _cmd = stream.read();
-            _len = stream.read();
+            while (_cmd == serial::MSG_MAGIC) {
+                _cmd = stream.read();
+            }
+
+            stream.readBytes((char*)&_len, sizeof (uint16_t));
             _recvState = BODY;
         case BODY:
             if (stream.available() < _len) {
@@ -86,6 +89,7 @@ void SerialService::onReceive(Stream &stream) {
             if (crc.value() != ctrl || magic != serial::MSG_MAGIC) {
                 _recvState = IDLE;
                 setState(serial::IDLE);
+                send(serial::MSG_DOWN, nullptr, 0);
                 return;
             }
 
@@ -95,11 +99,13 @@ void SerialService::onReceive(Stream &stream) {
     }
 }
 
-void SerialService::onMessage(uint8_t msgId, etl::vector<uint8_t, UINT8_MAX> &data) {
+void SerialService::onMessage(uint8_t msgId, etl::ivector<uint8_t> &data) {
     if (_state == serial::IDLE) {
         if (msgId == serial::MSG_SYNC) {
             send(serial::MSG_SYNC, nullptr, 0);
             setState(serial::WAIT_SYNC);
+        } else {
+            Serial.print("Wrong state");
         }
     } else if (_state == serial::WAIT_SYNC) {
         if (msgId == serial::MSG_CONN) {

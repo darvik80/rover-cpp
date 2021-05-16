@@ -8,20 +8,7 @@
 #include "Logger.h"
 #include "Service.h"
 
-class LoggingService : public Logger, public Service, public std::enable_shared_from_this<LoggingService> {
-public:
-    void trace(std::string_view message) override;
-
-    void debug(std::string_view message) override;
-
-    void info(std::string_view message) override;
-
-    void warning(std::string_view message) override;
-
-    void error(std::string_view message) override;
-
-    void fatal(std::string_view message) override;
-
+class LoggingService : public Service, public std::enable_shared_from_this<LoggingService> {
 public:
     const char *name() override {
         return "log";
