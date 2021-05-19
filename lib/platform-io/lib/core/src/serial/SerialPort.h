@@ -6,6 +6,7 @@
 #define ROVER_SERIALPORT_H
 
 #include <stdint.h>
+#include "Protocol.h"
 
 namespace serial {
 
@@ -26,7 +27,18 @@ namespace serial {
         virtual int send(const char* data)  {
             return send((const uint8_t *)&data, strlen(data));
         }
-        virtual void flush() { }
+        virtual int send(const Message& msg) {
+            int res = send(MSG_MAGIC);
+            res += send(msg.msgId);
+            res += send(crc16(msg.data, msg.len));
+            res += send(msg.len);
+            if (msg.len > 0) {
+                res += send(msg.data, msg.len);
+            }
+            res += send(MSG_MAGIC);
+
+            return res;
+        }
 
         virtual void onMessage(const uint8_t *data, size_t size) = 0;
         virtual uint16_t crc16(const uint8_t *data, size_t size) = 0;

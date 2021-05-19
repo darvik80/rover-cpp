@@ -18,18 +18,37 @@ BoostSerialPort::BoostSerialPort(asio::io_service &service, const SerialProperti
 }
 
 int BoostSerialPort::send(const uint8_t *data, size_t size) {
-    _out.sputn((const char *) data, (int) size);
-    return size;
-}
-
-void BoostSerialPort::flush() {
-    asio::async_write(_serial, _out, [this](const boost::system::error_code &ec, std::size_t sent) {
+    auto buf = std::make_unique<asio::streambuf>();
+    buf->sputn((const char*)data, size);
+    asio::async_write(_serial, *buf, [this, b = std::move(buf)](const boost::system::error_code &ec, std::size_t sent) {
         if (ec) {
             onError(ec);
         } else {
             logging::debug("[serial-port] sent: {}", sent);
         }
     });
+
+    return 0;
+}
+
+int BoostSerialPort::send(const Message &msg) {
+    auto buf = std::make_unique<asio::streambuf>();
+    buf->sputc(serial::MSG_MAGIC);
+    buf->sputn((const char*)&msg.msgId, sizeof(uint8_t));
+    buf->sputn((const char*)&msg.crc16, sizeof(uint16_t));
+    buf->sputn((const char*)&msg.len, sizeof(uint16_t));
+    buf->sputn((const char*)msg.data, msg.len);
+    buf->sputc(serial::MSG_MAGIC);
+
+    asio::async_write(_serial, *buf, [this, b = std::move(buf)](const boost::system::error_code &ec, std::size_t sent) {
+        if (ec) {
+            onError(ec);
+        } else {
+            logging::debug("[serial-port] sent: {}", sent);
+        }
+    });
+
+    return 0;
 }
 
 uint16_t BoostSerialPort::crc16(const uint8_t *data, size_t size) {
@@ -38,7 +57,6 @@ uint16_t BoostSerialPort::crc16(const uint8_t *data, size_t size) {
 
     return crc16.checksum();
 }
-
 
 void BoostSerialPort::asyncRead() {
     if (!_serial.is_open()) {
@@ -78,7 +96,6 @@ void BoostSerialPort::onConnect() {
 
 void BoostSerialPort::onDisconnect() {
     _codec.onDisconnect(*this);
-    _out.consume(_out.size());
 }
 
 void BoostSerialPort::onIdle() {

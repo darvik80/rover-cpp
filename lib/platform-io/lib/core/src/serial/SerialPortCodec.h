@@ -157,15 +157,7 @@ namespace serial {
         }
 
         void sendMessage(SerialPort &port, const Message &message) {
-            port.send(MSG_MAGIC);
-            port.send(message.msgId);
-            port.send(port.crc16(message.data, message.len));
-            port.send(message.len);
-            if (message.len > 0) {
-                port.send(message.data, message.len);
-            }
-            port.send(MSG_MAGIC);
-            port.flush();
+            port.send(message);
         }
     private:
         void onMessage(SerialPort &port, Message &message) {

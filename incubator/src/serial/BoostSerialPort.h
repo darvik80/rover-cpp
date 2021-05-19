@@ -29,7 +29,6 @@ class BoostSerialPort : public serial::SerialPort {
     SerialProperties _props;
 
     uint8_t _incBuf[SERIAL_PORT_READ_BUF_SIZE];
-    boost::asio::streambuf _out;
 
     std::vector<uint8_t> _buffer{UINT8_MAX};
 
@@ -41,7 +40,7 @@ public:
 
     int send(const uint8_t *data, size_t size) override;
 
-    void flush() override;
+    int send(const serial::Message& msg) override;
 
     void onMessage(const uint8_t *data, size_t size) override;
 
