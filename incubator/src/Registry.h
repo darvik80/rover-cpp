@@ -12,7 +12,6 @@
 #include <boost/asio.hpp>
 #include <unordered_map>
 #include <properties/source/PropertySource.h>
-#include <logging/DevNullLogger.h>
 
 class Registry {
     friend class LoggingService;
@@ -23,15 +22,10 @@ class Registry {
 
     PropertySource::Ptr _propsSource;
 
-    Logger::Ptr _logger = std::make_shared<DevNullLogger>();
 protected:
     void addService(const Service::Ptr &service) {
         _services.emplace_back(service);
         std::sort(_services.begin(), _services.end(), OrderedLess<Service>());
-    }
-
-    void setLogger(const Logger::Ptr &logger) {
-        _logger = logger;
     }
 
 public:
@@ -42,10 +36,6 @@ public:
 
     boost::asio::io_service &getIoService() {
         return _service;
-    }
-
-    Logger::Ptr getLogger() {
-        return _logger;
     }
 
     void visitService(std::function<void(Service& service)> visitor) {

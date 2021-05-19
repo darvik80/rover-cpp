@@ -1,143 +1,145 @@
 //
-// Created by Ivan Kishchenko on 09.04.2021.
+// Created by Ivan Kishchenko on 15.05.2021.
 //
 
 #include "BoostSerialPort.h"
-#include <boost/crc.hpp>
+#include "logging/Logging.h"
 
-#include <iostream>
+#include <boost/crc.hpp>
+#include <cstdint>
 
 using namespace boost;
 
-BoostSerialPort::BoostSerialPort(boost::asio::io_service& service, std::string_view port, unsigned int baudRate)
-: _serial(service), _idleTimer(service)
-{
-    _serial.open(port.data());
-    _serial.set_option(boost::asio::serial_port_base::baud_rate(baudRate));
-    _serial.set_option(boost::asio::serial_port_base::character_size(8));
-    _serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
-    _serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
-    _serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
+BoostSerialPort::BoostSerialPort(asio::io_service &service, const SerialProperties &props)
+        : _serial(service), _timer(service), _props(props) {
 
-    _idleTimer.schedule(boost::posix_time::seconds{5}, [this]() {
-        onIdle();
-    });
+    open();
 
     asyncRead();
 }
 
-void BoostSerialPort::onIdle() {
-    if (_fnOnIdle) {
-        _fnOnIdle();
+int BoostSerialPort::send(const uint8_t *data, size_t size) {
+    _out.sputn((const char *) data, (int) size);
+
+    for (size_t idx = 0; idx < size; idx++) {
+        fmt::print("{} ", (int) ((const char *) data)[idx]);
     }
-    _idleTimer.schedule(boost::posix_time::seconds{5}, [this]() {
-        onIdle();
-    });
+    fmt::print("\r\n");
+    return 0;
 }
 
-void BoostSerialPort::onMessage(uint8_t msgId, const uint8_t *data, size_t size) {
-    if (_fnOnMessage) {
-        _fnOnMessage(msgId, data, size);
-    }
-}
-
-boost::future<void> BoostSerialPort::send(uint8_t msgId, const uint8_t *data, size_t size) {
-    auto promise = std::make_shared<boost::promise<void>>();
-    _out.sputc(serial::MSG_MAGIC);
-    _out.sputc((char)msgId);
-    _out.sputc((char)size);
-
-    if (size) {
-        _out.sputn((const char *) data, (int)size);
-    }
-    boost::crc_16_type crc16;
-    crc16.process_block(data, data + size);
-    uint16_t ctrl = crc16.checksum();
-    _out.sputn((const char *)&ctrl, 2);
-    _out.sputc(serial::MSG_MAGIC);
-
-    asio::async_write(_serial, _out, [promise, this](const boost::system::error_code& ec, std::size_t size) {
+void BoostSerialPort::flush() {
+    asio::async_write(_serial, _out, [this](const boost::system::error_code &ec, std::size_t sent) {
         if (ec) {
-            promise->set_exception(system::system_error(ec));
-        }  else {
-            promise->set_value();
-            asyncRead();
+            onError(ec);
+        } else {
+            logging::info("[serial-port] sent: {}", sent);
         }
     });
-
-    return promise->get_future();
 }
 
+uint16_t BoostSerialPort::crc16(const uint8_t *data, size_t size) {
+    boost::crc_16_type crc16;
+    crc16.process_block(data, data + size);
+
+    return crc16.checksum();
+}
+
+
 void BoostSerialPort::asyncRead() {
-    if ( !_serial.is_open()) {
+    if (!_serial.is_open()) {
         return;
     }
 
-    _idleTimer.schedule(boost::posix_time::seconds{5}, [this]() {
-        onIdle();
-    });
-
     _serial.async_read_some(
             boost::asio::buffer(_incBuf, SERIAL_PORT_READ_BUF_SIZE),
-            [this](const boost::system::error_code& ec, size_t size) {
+            [this](const boost::system::error_code &ec, size_t size) {
+                cancelTimer();
+
                 if (!_serial.is_open()) {
                     return;
                 }
 
                 if (ec) {
-                    asyncRead();
+                    onError(ec);
+                    setTimer(posix_time::seconds{5}, [this]() {
+                        try {
+                            open();
+                            asyncRead();
+                        } catch (std::exception &ex) {
+                            logging::warning("can't reopen port: {}", ex.what());
+                        }
+                    });
                     return;
                 }
-                _inc.sputn(_incBuf, (int)size);
-
-                std::istream inc(&_inc);
-
-                while (!inc.eof()) {
-                    switch(_recvState) {
-                        case IDLE:
-                            if (serial::MSG_MAGIC !=  inc.get()) {
-                                continue;
-                            }
-                            _recvState = HEADER;
-                        case HEADER:
-                            if (inc.rdbuf()->in_avail() < 2) {
-                                break;
-                            }
-                            _cmd = inc.get();
-                            _len = inc.get();
-                            _buffer.resize(_len);
-                            _recvState = BODY;
-                        case BODY:
-                            if (_len > 0) {
-                                if (inc.rdbuf()->in_avail() < _len) {
-                                    break;
-                                }
-                                inc.read((char *) _buffer.data(), _len);
-                            }
-                            _recvState = FOOTER;
-                        case FOOTER:
-                        default:
-                            if (inc.rdbuf()->in_avail() < 3) {
-                                break;
-                            }
-
-                            uint16_t ctrl{0};
-                            inc.read((char *) &ctrl, 2);
-                            int magic = inc.get();
-
-                            boost::crc_16_type crc16;
-                            crc16.process_block(_buffer.data(), _buffer.data() + _buffer.size());
-                            if (crc16.checksum() != ctrl || magic != serial::MSG_MAGIC) {
-                                _recvState = IDLE;
-                                break;
-                            }
-
-                            onMessage(_cmd, _buffer.data(), _buffer.size());
-                            _recvState = IDLE;
-                            break;
-                    }
-                }
+                logging::info("[serial-port] recv: {}", size);
+                onMessage((const uint8_t*)&_incBuf, size);
                 asyncRead();
             }
     );
+
+    setTimer(boost::posix_time::seconds{5}, [this]() { onIdle(); });
+}
+
+std::string BoostSerialPort::deviceId() {
+    return _props.port;
+}
+
+void BoostSerialPort::onConnect() {
+    _codec.onConnect(*this);
+}
+
+void BoostSerialPort::onDisconnect() {
+    _codec.onDisconnect(*this);
+    _out.consume(_out.size());
+}
+
+void BoostSerialPort::onIdle() {
+    _codec.onIdle(*this);
+
+    setTimer(posix_time::seconds{5}, [this]() {
+        onIdle();
+    });
+}
+
+void BoostSerialPort::onError(const system::error_code &ec) {
+    _codec.onError(*this, ec.value());
+}
+
+void BoostSerialPort::onMessage(const uint8_t *data, size_t size) {
+    _codec.onMessage(*this, data, size);
+}
+
+void BoostSerialPort::open() {
+    if (_serial.is_open()) {
+        try {
+            _serial.cancel();
+            _serial.close();
+        } catch (std::exception &ex) {
+            logging::warning("can't close port {}, {}", _props.port, ex.what());
+        }
+
+        onDisconnect();
+    }
+
+    _serial.open(_props.port);
+    _serial.set_option(boost::asio::serial_port_base::baud_rate(_props.baudRate));
+    _serial.set_option(boost::asio::serial_port_base::character_size(8));
+    _serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
+    _serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
+    _serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
+    onConnect();
+}
+
+void BoostSerialPort::setTimer(posix_time::time_duration duration, const std::function<void()> &fn) {
+    _timer.expires_from_now(duration);
+    _timer.async_wait([fn](const boost::system::error_code &ec) {
+        if (!ec) {
+            fn();
+        }
+    });
+}
+
+void BoostSerialPort::cancelTimer() {
+    _timer.cancel();
 }

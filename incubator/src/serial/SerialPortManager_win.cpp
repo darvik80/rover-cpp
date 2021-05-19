@@ -7,7 +7,7 @@
  * http://opensource.org/licenses/MIT
  */
 
-#include "serial/SerialPortManager.h"
+#include "SerialPortManager.h"
 #include <tchar.h>
 #include <windows.h>
 #include <setupapi.h>

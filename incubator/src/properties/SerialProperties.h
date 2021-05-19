@@ -5,6 +5,7 @@
 #ifndef ROVER_SERIALPROPERTIES_H
 #define ROVER_SERIALPROPERTIES_H
 
+#include <Properties.h>
 
 struct SerialProperties : Properties {
     std::string port;

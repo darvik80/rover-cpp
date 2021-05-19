@@ -1,7 +1,7 @@
 #if defined(__APPLE__)
 
 #include <sys/param.h>
-#include <stdint.h>
+#include <cstdint>
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "serial/SerialPortManager.h"
+#include "SerialPortManager.h"
 
 using std::string;
 using std::vector;
@@ -35,9 +35,9 @@ cfstring_to_string( CFStringRef cfstring )
     if( cfstring )
     {
         Boolean success = CFStringGetCString( cfstring,
-            cstring,
-            sizeof(cstring),
-            kCFStringEncodingASCII );
+                                              cstring,
+                                              sizeof(cstring),
+                                              kCFStringEncodingASCII );
 
         if( success )
             result = cstring;
@@ -53,9 +53,9 @@ get_device_path( io_object_t& serial_port )
     string device_path;
 
     callout_path = IORegistryEntryCreateCFProperty( serial_port,
-        CFSTR(kIOCalloutDeviceKey),
-        kCFAllocatorDefault,
-        0 );
+                                                    CFSTR(kIOCalloutDeviceKey),
+                                                    kCFAllocatorDefault,
+                                                    0 );
 
     if (callout_path)
     {
@@ -96,8 +96,8 @@ get_parent_iousb_device( io_object_t& serial_port )
     while( name != "IOUSBDevice" )
     {
         kern_result = IORegistryEntryGetParentEntry( device,
-        kIOServicePlane,
-        &parent );
+                                                     kIOServicePlane,
+                                                     &parent );
 
         if(kern_result != KERN_SUCCESS)
         {
@@ -124,15 +124,15 @@ get_string_property( io_object_t& device, const char* property )
     if( device )
     {
         CFStringRef property_as_cfstring = CFStringCreateWithCString (
-            kCFAllocatorDefault,
-            property,
-            kCFStringEncodingASCII );
+                kCFAllocatorDefault,
+                property,
+                kCFStringEncodingASCII );
 
         CFTypeRef name_as_cfstring = IORegistryEntryCreateCFProperty(
-            device,
-            property_as_cfstring,
-            kCFAllocatorDefault,
-            0 );
+                device,
+                property_as_cfstring,
+                kCFAllocatorDefault,
+                0 );
 
         if( name_as_cfstring )
         {
@@ -157,14 +157,14 @@ get_int_property( io_object_t& device, const char* property )
     if( device )
     {
         CFStringRef property_as_cfstring = CFStringCreateWithCString (
-            kCFAllocatorDefault,
-            property,
-            kCFStringEncodingASCII );
+                kCFAllocatorDefault,
+                property,
+                kCFStringEncodingASCII );
 
         CFTypeRef number = IORegistryEntryCreateCFProperty( device,
-            property_as_cfstring,
-            kCFAllocatorDefault,
-            0 );
+                                                            property_as_cfstring,
+                                                            kCFAllocatorDefault,
+                                                            0 );
 
         if(property_as_cfstring)
             CFRelease(property_as_cfstring);
@@ -174,8 +174,8 @@ get_int_property( io_object_t& device, const char* property )
             if( CFGetTypeID(number) == CFNumberGetTypeID() )
             {
                 bool success = CFNumberGetValue( static_cast<CFNumberRef>(number),
-                    kCFNumberSInt16Type,
-                    &result );
+                                                 kCFNumberSInt16Type,
+                                                 &result );
 
                 if( !success )
                     result = 0;
@@ -226,8 +226,8 @@ SerialPortManager::listPorts()
         return devices_found;
 
     CFDictionarySetValue( classes_to_match,
-        CFSTR(kIOSerialBSDTypeKey),
-        CFSTR(kIOSerialBSDAllTypes) );
+                          CFSTR(kIOSerialBSDTypeKey),
+                          CFSTR(kIOSerialBSDAllTypes) );
 
     kern_result = IOServiceGetMatchingServices(master_port, classes_to_match, &serial_port_iterator);
 
@@ -266,9 +266,9 @@ SerialPortManager::listPorts()
                 serial_number = "None";
 
             int ret = snprintf( cstring, HARDWARE_ID_STRING_LENGTH, "USB VID:PID=%04x:%04x SNR=%s",
-                vendor_id,
-                product_id,
-                serial_number.c_str() );
+                                vendor_id,
+                                product_id,
+                                serial_number.c_str() );
 
             if( (ret >= 0) && (ret < HARDWARE_ID_STRING_LENGTH) )
                 port_info.hardwareId = cstring;

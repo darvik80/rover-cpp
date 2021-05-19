@@ -15,7 +15,7 @@ endif ()
 find_package(Boost REQUIRED COMPONENTS system filesystem thread log log_setup)
 find_package(Threads)
 
-set(MAIN_LIBS ${Boost_LIBRARIES} ${IOKIT_LIBRARY} ${CORE_LIBRARY})
+set(MAIN_LIBS ${Boost_LIBRARIES} ${IOKIT_LIBRARY} ${CORE_LIBRARY} logging)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
 
 if (CMAKE_CXX_COMPILER_ID MATCHES GNU)
@@ -27,6 +27,14 @@ if (CMAKE_CXX_COMPILER_ID MATCHES GNU)
     )
 endif ()
 
+include_directories(
+        /usr/local/include
+)
+
+link_directories(
+        /usr/local/lib
+)
+
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_INSTALL_NAME_DIR "")
 
@@ -35,6 +43,7 @@ enable_testing()
 #add_subdirectory(lib/arduino)
 #add_subdirectory(lib/json)
 #add_subdirectory(lib/serial)
+add_subdirectory(core-utils)
 add_subdirectory(lib/mqtt)
 add_subdirectory(platform)
 add_subdirectory(plugins/system)

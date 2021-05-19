@@ -8,7 +8,6 @@
 #include <unordered_map>
 #include <boost/beast/http.hpp>
 #include "HttpRequestHandler.h"
-#include "logging/Logger.h"
 
 namespace http = boost::beast::http;
 

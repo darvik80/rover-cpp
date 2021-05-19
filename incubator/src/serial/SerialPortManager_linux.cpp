@@ -22,7 +22,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "serial/SerialPortManager.h"
+#include "SerialPortManager.h"
 
 using std::istringstream;
 using std::ifstream;

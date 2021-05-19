@@ -1,22 +1,26 @@
 //
-// Created by Ivan Kishchenko on 02.05.2021.
+// Created by Ivan Kishchenko on 16.05.2021.
 //
 
 #ifndef ROVER_SERIALSERVICE_H
 #define ROVER_SERIALSERVICE_H
 
-#include "BaseService.h"
-#include "BoostSerialPort.h"
+#include <BaseService.h>
+
+#include <serial/SerialPort.h>
 
 class SerialService : public BaseService {
-    bool _connected{false};
-    std::unique_ptr<BoostSerialPort> _serial;
+    std::unique_ptr<serial::SerialPort> _serial;
 public:
     const char *name() override {
         return "serial";
     }
 
     void postConstruct(Registry &registry) override;
+
+    void preDestroy(Registry &registry) override {
+        BaseService::preDestroy(registry);
+    }
 };
 
 

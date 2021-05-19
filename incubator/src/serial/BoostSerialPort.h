@@ -1,60 +1,71 @@
 //
-// Created by Ivan Kishchenko on 09.04.2021.
+// Created by Ivan Kishchenko on 15.05.2021.
 //
 
-#ifndef ROVER_BOOSTSERIALPORT_H
-#define ROVER_BOOSTSERIALPORT_H
+#ifndef CORE_SERIAL_H
+#define CORE_SERIAL_H
 
 #define BOOST_THREAD_PROVIDES_FUTURE
 #define BOOST_THREAD_PROVIDES_FUTURE_CONTINUATION
 
+#include <set>
+#include <memory>
+
 #include <boost/thread/future.hpp>
-
 #include <boost/asio.hpp>
-#include "net/Transport.h"
-#include <serial/Protocol.h>
-#include <scheduler/Scheduler.h>
+#include <boost/asio/deadline_timer.hpp>
+#include <properties/SerialProperties.h>
 
-#define SERIAL_PORT_READ_BUF_SIZE 1024
+#include "serial/Protocol.h"
+#include "serial/SerialPort.h"
+#include "serial/SerialPortCodec.h"
 
-class BoostSerialPort {
-    TimerHandler _idleTimer;
 
+#define SERIAL_PORT_READ_BUF_SIZE 256
+
+class BoostSerialPort : public serial::SerialPort {
+    boost::asio::deadline_timer _timer;
     boost::asio::serial_port _serial;
+    SerialProperties _props;
 
-    char _incBuf[SERIAL_PORT_READ_BUF_SIZE];
-    boost::asio::streambuf _inc;
+    uint8_t _incBuf[SERIAL_PORT_READ_BUF_SIZE];
     boost::asio::streambuf _out;
 
-    enum RecvState {
-        IDLE,
-        HEADER,
-        BODY,
-        FOOTER
-    };
-
-    RecvState _recvState{IDLE};
-    int _cmd{0};
-    int _len{0};
     std::vector<uint8_t> _buffer{UINT8_MAX};
 
-    std::function<void(uint8_t, const uint8_t *, size_t)> _fnOnMessage{nullptr};
-    std::function<void()> _fnOnIdle{nullptr};
+    serial::SerialPortCodec _codec;
 public:
-    BoostSerialPort(boost::asio::io_service& service, std::string_view port, unsigned int baudRate);
+    BoostSerialPort(boost::asio::io_service &service, const SerialProperties &props);
 
-    void setOnMessage(const std::function<void(uint8_t, const uint8_t *, size_t)>& fn) {
-        _fnOnMessage = fn;
-    }
-    void setOnIdle(const std::function<void()>& fn) {
-        _fnOnIdle = fn;
-    }
-    boost::future<void> send(uint8_t msgId, const uint8_t *data, size_t size);
+    std::string deviceId() override;
+
+    int send(const uint8_t *data, size_t size) override;
+
+    void flush() override;
+
+    void onMessage(const uint8_t *data, size_t size) override;
+
+    uint16_t crc16(const uint8_t *data, size_t size) override;
+
+private:
+    void open();
+
+    void setTimer(boost::posix_time::time_duration duration, const std::function<void()> &fn);
+
+    void cancelTimer();
+
 private:
     void asyncRead();
-    void onMessage(uint8_t msgId, const uint8_t *data, size_t size);
+
     void onIdle();
+
+    void onConnect();
+
+    void onDisconnect();
+
+    void onError(const boost::system::error_code &ec);
+
 };
 
 
-#endif //ROVER_BOOSTSERIALPORT_H
+#endif //CORE_SERIAL_H

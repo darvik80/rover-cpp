@@ -5,11 +5,9 @@
 #ifndef ROVER_LOGGINGPROPERTIES_H
 #define ROVER_LOGGINGPROPERTIES_H
 
+#include <logging/Logging.h>
 
-struct LoggingProperties : Properties {
-    std::string level{"debug"};
-    bool console{false};
-    bool file{false};
+struct LoggingProperties : Properties, logging::LoggingProperties {
 };
 
 
