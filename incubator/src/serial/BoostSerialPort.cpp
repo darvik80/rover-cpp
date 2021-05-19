@@ -9,23 +9,17 @@
 #include <cstdint>
 
 using namespace boost;
+using namespace serial;
 
-BoostSerialPort::BoostSerialPort(asio::io_service &service, const SerialProperties &props)
-        : _serial(service), _timer(service), _props(props) {
+BoostSerialPort::BoostSerialPort(asio::io_service &service, const SerialProperties &props, serial::SerialPortCodecCallback& callback)
+        : _serial(service), _timer(service), _props(props), _codec(SerialPortCodec::MODE_MASTER, callback) {
 
     open();
-
-    asyncRead();
 }
 
 int BoostSerialPort::send(const uint8_t *data, size_t size) {
     _out.sputn((const char *) data, (int) size);
-
-    for (size_t idx = 0; idx < size; idx++) {
-        fmt::print("{} ", (int) ((const char *) data)[idx]);
-    }
-    fmt::print("\r\n");
-    return 0;
+    return size;
 }
 
 void BoostSerialPort::flush() {
@@ -62,14 +56,7 @@ void BoostSerialPort::asyncRead() {
 
                 if (ec) {
                     onError(ec);
-                    setTimer(posix_time::seconds{5}, [this]() {
-                        try {
-                            open();
-                            asyncRead();
-                        } catch (std::exception &ex) {
-                            logging::warning("can't reopen port: {}", ex.what());
-                        }
-                    });
+                    open();
                     return;
                 }
                 logging::info("[serial-port] recv: {}", size);
@@ -81,8 +68,8 @@ void BoostSerialPort::asyncRead() {
     setTimer(boost::posix_time::seconds{5}, [this]() { onIdle(); });
 }
 
-std::string BoostSerialPort::deviceId() {
-    return _props.port;
+const char* BoostSerialPort::deviceId() {
+    return _props.port.c_str();
 }
 
 void BoostSerialPort::onConnect() {
@@ -122,13 +109,22 @@ void BoostSerialPort::open() {
         onDisconnect();
     }
 
-    _serial.open(_props.port);
-    _serial.set_option(boost::asio::serial_port_base::baud_rate(_props.baudRate));
-    _serial.set_option(boost::asio::serial_port_base::character_size(8));
-    _serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
-    _serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
-    _serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
-    onConnect();
+    try {
+        _serial.open(_props.port);
+        _serial.set_option(boost::asio::serial_port_base::baud_rate(_props.baudRate));
+        _serial.set_option(boost::asio::serial_port_base::character_size(8));
+        _serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
+        _serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
+        _serial.set_option(
+                boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none));
+        onConnect();
+        asyncRead();
+    } catch (std::exception& ex) {
+        logging::warning("can't reopen port: {}", ex.what());
+        setTimer(posix_time::seconds{5}, [this]() {
+            open();
+        });
+    }
 }
 
 void BoostSerialPort::setTimer(posix_time::time_duration duration, const std::function<void()> &fn) {

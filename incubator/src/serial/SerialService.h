@@ -8,8 +8,9 @@
 #include <BaseService.h>
 
 #include <serial/SerialPort.h>
+#include <serial/SerialPortCodec.h>
 
-class SerialService : public BaseService {
+class SerialService : public BaseService, public serial::SerialPortCodecCallback {
     std::unique_ptr<serial::SerialPort> _serial;
 public:
     const char *name() override {
@@ -21,7 +22,12 @@ public:
     void preDestroy(Registry &registry) override {
         BaseService::preDestroy(registry);
     }
-};
 
+    void onMessage(serial::SerialPort &port, serial::Message &message) override;
+
+    void onConnect(serial::SerialPort &port) override;
+
+    void onDisconnect(serial::SerialPort &port) override;
+};
 
 #endif //ROVER_SERIALSERVICE_H

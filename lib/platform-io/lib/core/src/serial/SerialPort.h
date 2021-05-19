@@ -11,7 +11,7 @@ namespace serial {
 
     class SerialPort {
     public:
-        virtual std::string deviceId() = 0;
+        virtual const char* deviceId() = 0;
 
         virtual int send(const uint8_t *data, size_t size) = 0;
         virtual int send(const uint8_t data) {
@@ -23,10 +23,15 @@ namespace serial {
         virtual int send(const uint32_t data)  {
             return send((const uint8_t *)&data, sizeof(uint32_t));
         }
+        virtual int send(const char* data)  {
+            return send((const uint8_t *)&data, strlen(data));
+        }
         virtual void flush() { }
 
         virtual void onMessage(const uint8_t *data, size_t size) = 0;
         virtual uint16_t crc16(const uint8_t *data, size_t size) = 0;
+
+        virtual ~SerialPort() = default;
     };
 
     class SerialPortHandler {

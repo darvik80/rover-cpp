@@ -21,6 +21,7 @@ public:
     virtual void getProperties(LoggingProperties& props) = 0;
     virtual void getProperties(HttpProperties& props) = 0;
     virtual void getProperties(SerialProperties& props) = 0;
+    ~PropertySource() = default;
 };
 
 

@@ -9,7 +9,7 @@
 #include "serial/SerialMessage.h"
 
 SerialService::SerialService(Registry& registry, Stream &stream)
-        : BaseService(registry), _stream(stream) {
+        : BaseService(registry), _stream(stream), _codec(serial::SerialPortCodec::MODE_SLAVE, *this) {
 }
 
 void SerialService::postConstruct() {
@@ -21,7 +21,13 @@ void SerialService::run() {
         return;
     }
 
-    onReceive(_stream);
+    uint8_t data[32];
+    while (_stream.available()) {
+        size_t size = etl::min(_stream.available(), 32);
+        size = _stream.readBytes((uint8_t*)(&data), size);
+        _codec.onMessage(*this, (uint8_t*)(&data), size);
+    }
+
 }
 
 void SerialService::preDestroy() {
@@ -29,105 +35,42 @@ void SerialService::preDestroy() {
 }
 
 void SerialService::send(uint8_t msgId, const uint8_t *data, uint16_t size) {
+    _codec.sendMessage(*this, serial::Message{msgId, size, data, crc16(data, size)});
+}
+
+void SerialService::onMessage(serial::SerialPort &port, serial::Message &message) {
+
+}
+
+const char* SerialService::deviceId() {
+    return "serial";
+}
+
+int SerialService::send(const uint8_t *data, size_t size) {
+    _stream.write(data, size);
+    _stream.flush();
+    return size;
+}
+
+uint16_t SerialService::crc16(const uint8_t *data, size_t size) {
+    if (data == nullptr) {
+        return 0;
+    }
+
     etl::crc16 crc;
     crc.add(data, data + size);
-    uint16_t ctrl = crc.value();
-
-    _stream.write(serial::MSG_MAGIC);
-    _stream.write(msgId);
-    _stream.write((const char *)&size, sizeof(uint16_t));
-    if (size) {
-        _stream.write(data, size);
-    }
-    _stream.write((const char *) &ctrl, sizeof(uint16_t));
-    _stream.write(serial::MSG_MAGIC);
+    return crc.value();
 }
 
-void SerialService::onReceive(Stream &stream) {
-    switch (_recvState) {
-        case IDLE: {
-            while (stream.available()) {
-                int ch = stream.read();
-                if (ch == serial::MSG_MAGIC) {
-                    _recvState = HEADER;
-                    break;
-                }
-            }
-            if (!stream.available()) {
-                return;
-            }
-        }
-        case HEADER:
-            if (stream.available() < 3) {
-                return;
-            }
-            _cmd = stream.read();
-            while (_cmd == serial::MSG_MAGIC) {
-                _cmd = stream.read();
-            }
-
-            stream.readBytes((char*)&_len, sizeof (uint16_t));
-            _recvState = BODY;
-        case BODY:
-            if (stream.available() < _len) {
-                return;
-            }
-            _buffer.resize(_len);
-            stream.readBytes(_buffer.data(), _len);
-            _recvState = FOOTER;
-        case FOOTER:
-            if (stream.available() < 3) {
-                return;
-            }
-
-            uint16_t ctrl{0};
-            stream.readBytes((char *) &ctrl, 2);
-            int magic = stream.read();
-
-            etl::crc16 crc;
-            crc.add(_buffer.data(), _buffer.data() + _len);
-            if (crc.value() != ctrl || magic != serial::MSG_MAGIC) {
-                _recvState = IDLE;
-                setState(serial::IDLE);
-                send(serial::MSG_DOWN, nullptr, 0);
-                return;
-            }
-
-            onMessage(_cmd, _buffer);
-            _recvState = IDLE;
-            break;
-    }
+void SerialService::onMessage(const uint8_t *data, size_t size) {
+    _codec.onMessage(*this, data, size);
 }
 
-void SerialService::onMessage(uint8_t msgId, etl::ivector<uint8_t> &data) {
-    if (_state == serial::IDLE) {
-        if (msgId == serial::MSG_SYNC) {
-            send(serial::MSG_SYNC, nullptr, 0);
-            setState(serial::WAIT_SYNC);
-        } else {
-            Serial.print("Wrong state");
-        }
-    } else if (_state == serial::WAIT_SYNC) {
-        if (msgId == serial::MSG_CONN) {
-            send(serial::MSG_CONN, nullptr, 0);
-            setState(serial::CONN);
-        } else {
-            setState(serial::IDLE);
-        }
-    } else {
-        if (msgId == serial::MSG_PING) {
-            send(serial::MSG_PONG, nullptr, 0);
-        } else {
-            etl::send_message(getRegistry().getMessageBus(), SerialDataMessage{*this, msgId, data});
-        }
-    }
+void SerialService::onConnect(serial::SerialPort &port) {
+    send(serial::MSG_LOG, "Hello World");
+    send(serial::MSG_LOG, "test");
 }
 
-void SerialService::setState(serial::ConnState newState) {
-    if (_state == serial::CONN && newState == serial::IDLE) {
-        etl::send_message(getRegistry().getMessageBus(), SerialDisconnected{*this});
-    } else if (newState == serial::CONN) {
-        etl::send_message(getRegistry().getMessageBus(), SerialConnected{*this});
-    }
-    _state = newState;
+void SerialService::onDisconnect(serial::SerialPort &port) {
+
 }

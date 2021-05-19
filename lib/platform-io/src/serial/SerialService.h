@@ -8,27 +8,15 @@
 #include "Service.h"
 #include "CoreConfig.h"
 #include <serial/Protocol.h>
+#include <serial/SerialPortCodec.h>
 #include <etl/function.h>
 #include <etl/optional.h>
 
 typedef void(*callback)();
 
-class SerialService : public BaseService {
-    serial::ConnState _state{serial::IDLE};
+class SerialService : public BaseService, public serial::SerialPort, public serial::SerialPortCodecCallback {
     Stream& _stream;
-
-    enum RecvState {
-        IDLE,
-        HEADER,
-        BODY,
-        FOOTER
-    };
-
-    RecvState _recvState{IDLE};
-    uint8_t _cmd{0};
-    uint16_t _len{0};
-    etl::vector<uint8_t, 128> _buffer;
-
+    serial::SerialPortCodec _codec;
 public:
     explicit SerialService(Registry& registry, Stream& stream);
     void postConstruct() override;
@@ -40,10 +28,21 @@ public:
     void send(uint8_t msgId, const char* data) {
         send(msgId, (const uint8_t*)data, strlen(data));
     }
-private:
-    void onMessage(uint8_t msgId, etl::ivector<uint8_t>& data);
-    void onReceive(Stream& stream);
-    void setState(serial::ConnState newState);
+
+    const char* deviceId() override;
+
+    int send(const uint8_t *data, size_t size) override;
+
+    void onMessage(const uint8_t *data, size_t size) override;
+
+    uint16_t crc16(const uint8_t *data, size_t size) override;
+
+public:
+    void onMessage(serial::SerialPort &port, serial::Message &message) override;
+
+    void onConnect(SerialPort &port) override;
+
+    void onDisconnect(SerialPort &port) override;
 };
 
 

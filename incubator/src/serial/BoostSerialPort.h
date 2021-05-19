@@ -35,9 +35,9 @@ class BoostSerialPort : public serial::SerialPort {
 
     serial::SerialPortCodec _codec;
 public:
-    BoostSerialPort(boost::asio::io_service &service, const SerialProperties &props);
+    BoostSerialPort(boost::asio::io_service &service, const SerialProperties &props, serial::SerialPortCodecCallback& callback);
 
-    std::string deviceId() override;
+    const char* deviceId() override;
 
     int send(const uint8_t *data, size_t size) override;
 
