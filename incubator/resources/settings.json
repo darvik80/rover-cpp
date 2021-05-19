@@ -14,7 +14,7 @@
     "root": "www"
   },
   "serial": {
-    "port": "/dev/tty.usbmodem143301",
+    "port": "/dev/cu.usbserial-1410",
     "baud-rate": 115200
   }
 }

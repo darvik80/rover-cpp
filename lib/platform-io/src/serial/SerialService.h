@@ -38,7 +38,7 @@ public:
     uint16_t crc16(const uint8_t *data, size_t size) override;
 
 public:
-    void onMessage(serial::SerialPort &port, serial::Message &message) override;
+    void onMessage(serial::SerialPort &port, serial::Message &msg) override;
 
     void onConnect(SerialPort &port) override;
 

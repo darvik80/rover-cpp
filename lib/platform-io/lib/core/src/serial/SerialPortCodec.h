@@ -96,7 +96,7 @@ namespace serial {
         }
 
         void onMessage(SerialPort &port, const uint8_t *data, size_t size) override {
-            for (int idx = 0; idx < size; idx++) {
+            for (size_t idx = 0; idx < size; idx++) {
                 switch (_state) {
                     case STATE_IDLE:
                         if (data[idx] == MSG_MAGIC) {

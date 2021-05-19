@@ -9,9 +9,11 @@
 
 #include <serial/SerialPort.h>
 #include <serial/SerialPortCodec.h>
+#include "event/EventManager.h"
 
-class SerialService : public BaseService, public serial::SerialPortCodecCallback {
+class SerialService : public BaseServiceShared<SerialService>, public serial::SerialPortCodecCallback {
     std::unique_ptr<serial::SerialPort> _serial;
+    EventManager::Ptr _eventManager;
 public:
     const char *name() override {
         return "serial";
@@ -23,7 +25,7 @@ public:
         BaseService::preDestroy(registry);
     }
 
-    void onMessage(serial::SerialPort &port, serial::Message &message) override;
+    void onMessage(serial::SerialPort &port, serial::Message &msg) override;
 
     void onConnect(serial::SerialPort &port) override;
 

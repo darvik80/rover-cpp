@@ -12,7 +12,7 @@
 #include "EventHandler.h"
 #include "BaseService.h"
 
-class EventManager : public BaseService {
+class EventManager : public BaseServiceShared<EventManager> {
 public:
     typedef std::shared_ptr<EventManager> Ptr;
     typedef boost::signals2::signal<void(const Event &)> Signal;

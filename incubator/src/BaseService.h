@@ -50,5 +50,7 @@ protected:
     }
 };
 
+template<typename T>
+class BaseServiceShared : public BaseService, public std::enable_shared_from_this<T> {};
 
 #endif //ROVER_BASESERVICE_H
