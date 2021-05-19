@@ -184,11 +184,9 @@ namespace serial {
                     }
                 }
             } else {
-                if (_connStatus == DISCONNECTED) {
-                    if (message.msgId == MSG_SYNC) {
-                        sendMessage(port, Message{MSG_SYNC, 0, nullptr});
-                        _connStatus = PROCESS;
-                    }
+                if (message.msgId == MSG_SYNC) {
+                    sendMessage(port, Message{MSG_SYNC, 0, nullptr});
+                    _connStatus = PROCESS;
                 } else if (_connStatus == PROCESS) {
                     if (message.msgId == MSG_CONN) {
                         sendMessage(port, Message{MSG_CONN, 0, nullptr});
