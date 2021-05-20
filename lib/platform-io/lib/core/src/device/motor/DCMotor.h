@@ -25,6 +25,8 @@ public:
     };
 
 public:
+    DCMotor() : Device(DEVICE_MOTOR) {}
+
     virtual void move(Engine engine, Direction direction, int pulse) = 0;
 };
 

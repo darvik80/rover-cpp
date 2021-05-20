@@ -7,8 +7,16 @@
 
 #include "CoreConfig.h"
 
+enum DeviceType {
+    DEVICE_MOTOR,
+    DEVICE_DISPLAY,
+};
+
 class Device {
+    DeviceType _type;
 public:
+    explicit Device(DeviceType type) : _type(type) {}
+
     virtual const char* name() = 0;
 };
 

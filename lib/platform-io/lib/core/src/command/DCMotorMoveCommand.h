@@ -14,9 +14,14 @@ class DCMotorMoveCommand : public Command {
     DCMotor::Direction _direction;
     int pulse;
 public:
-    DCMotorMoveCommand(DCMotor &motor, DCMotor::Engine engine, DCMotor::Direction direction, int pulse);
+    DCMotorMoveCommand(DCMotor &motor, DCMotor::Engine engine, DCMotor::Direction direction, int pulse)
+            : _motor(motor), _engine(engine), _direction(direction), pulse(pulse) {}
 
-    int execute() override;
+    int execute() override {
+        _motor.move(_engine, _direction, pulse);
+
+        return 0;
+    }
 };
 
 
