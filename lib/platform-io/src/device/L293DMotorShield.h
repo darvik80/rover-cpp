@@ -1,11 +1,11 @@
 //
-// Created by Ivan Kishchenko on 03.04.2021.
+// Created by Ivan Kishchenko on 21.06.2021.
 //
 
-#ifndef PLATFORM_IO_L298NDCMOTOR_H
-#define PLATFORM_IO_L298NDCMOTOR_H
+#ifndef PLATFORM_IO_L293DMOTORSHIELD_H
+#define PLATFORM_IO_L293DMOTORSHIELD_H
 
-#ifdef L298N_DC_MOTOR
+#ifdef L293D_DC_MOTOR_SHIELD
 
 #ifndef DC_MOTOR
 #define DC_MOTOR
@@ -13,7 +13,7 @@
 
 #include "device/motor/DCMotor.h"
 
-class L298nDCMotor : public DCMotor {
+class L293DMotorShield : public DCMotor {
 public:
     struct Pins {
         Pins(int pinEn, int pintIn1, int pintIn2)
@@ -29,9 +29,9 @@ public:
     };
 
 private:
-    Pins _pins[2];
+    Pins _pins[4];
 public:
-    L298nDCMotor(const Pins &left, const Pins &right);
+    L293DMotorShield();
 
     const char *name() override;
 
@@ -41,8 +41,9 @@ private:
     static void setup(Pins &pins);
 
     static void move(Pins &pins, Direction direction, int pulse);
+
 };
 
 #endif
 
-#endif //PLATFORM_IO_L298NDCMOTOR_H
+#endif //PLATFORM_IO_L293DMOTORSHIELD_H

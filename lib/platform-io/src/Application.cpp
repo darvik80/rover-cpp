@@ -2,23 +2,26 @@
 // Created by Ivan Kishchenko on 01.05.2021.
 //
 
-#define MG90S_SERVO_MOTOR
-
 #include "Application.h"
 #include "serial/SerialService.h"
+
 #include "device/MG90sServoMotor.h"
+#include <MotorDriver.h>
+#include <device/L293DMotorShield.h>
 
 etl::message_bus<1> appMessageBus;
 
-//Servo motor;
-ServoMotor* motor;
+std::unique_ptr<ServoMotor> servoMotor;
+
+MotorDriver m;
+L293DMotorShield motorShield;
 
 Application::Application()
         : message_router(ROUTER_APP) {
 }
 
 void Application::postConstruct() {
-    motor = new SG90ServoMotor(9);
+    servoMotor.reset(new SG90ServoMotor(10));
     Serial.begin(115200);
     _services.emplace_back(new SerialService(getRegistry(), Serial));
     appMessageBus.subscribe(*this);
@@ -29,10 +32,6 @@ void Application::postConstruct() {
 //    motor.move(90);
 //    delay(5000);
 //    motor.moveMicroseconds(544);
-    int angle = motor->status();
-    if (angle > 0) {
-        motor->move(-angle);
-    }
 }
 
 void Application::run() {
@@ -42,13 +41,14 @@ void Application::run() {
 
 
     //motor.moveMicroseconds(544);
-    motor->move(45);
+    servoMotor->move(45);
     //Serial.println(motor.read());
     delay(2000);
     //motor.moveMicroseconds(2400);
-    motor->move(135);
+    servoMotor->move(135);
     //Serial.println(motor.status());
     delay(2000);
+    m.motor(4, FORWARD,1024);
 
 //    for (int pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
 //        // in steps of 1 degree

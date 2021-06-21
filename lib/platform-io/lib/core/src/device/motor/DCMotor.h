@@ -21,9 +21,11 @@ public:
     };
 
     enum Engine {
-        ENGINE_LEFT,
-        ENGINE_RIGHT,
-        ENGINE_BOTH,
+        ENGINE_ONE,
+        ENGINE_TWO,
+        ENGINE_THREE,
+        ENGINE_FOUR,
+        ENGINE_ALL
     };
 
 public:

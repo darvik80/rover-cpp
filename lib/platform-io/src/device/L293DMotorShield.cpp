@@ -1,23 +1,23 @@
 //
-// Created by Ivan Kishchenko on 03.04.2021.
+// Created by Ivan Kishchenko on 21.06.2021.
 //
 
-#include "L298nDCMotor.h"
+#include "L293DMotorShield.h"
 
-#ifdef L298N_DC_MOTOR
+#ifdef L293D_DC_MOTOR_SHIELD
 
-const char *L298nDCMotor::name() {
-    return "l298n";
+const char *L293DMotorShield::name() {
+    return "l293D";
 }
 
-L298nDCMotor::L298nDCMotor(const L298nDCMotor::Pins &left, const L298nDCMotor::Pins &right) {
-    _pins[ENGINE_ONE] = left;
-    _pins[ENGINE_TWO] = right;
+L293DMotorShield::L293DMotorShield() {
+    //_pins[ENGINE_ONE] = left;
+    //_pins[ENGINE_TWO] = right;
     setup(_pins[ENGINE_ONE]);
     setup(_pins[ENGINE_TWO]);
 }
 
-void L298nDCMotor::move(Engine engine, DCMotor::Direction direction, int pulse) {
+void L293DMotorShield::move(Engine engine, DCMotor::Direction direction, int pulse) {
     if (engine == ENGINE_ALL) {
         move(_pins[ENGINE_ONE], direction, pulse);
         move(_pins[ENGINE_TWO], direction, pulse);
@@ -26,13 +26,13 @@ void L298nDCMotor::move(Engine engine, DCMotor::Direction direction, int pulse) 
     }
 }
 
-void L298nDCMotor::setup(Pins &pins) {
+void L293DMotorShield::setup(Pins &pins) {
     pinMode(pins.pinEn, OUTPUT);
     pinMode(pins.pintIn1, OUTPUT);
     pinMode(pins.pintIn2, OUTPUT);
 }
 
-void L298nDCMotor::move(Pins &pins, Direction direction, int pulse) {
+void L293DMotorShield::move(Pins &pins, Direction direction, int pulse) {
     if (direction == DIR_FORWARD) {
         digitalWrite(pins.pintIn1, HIGH);
         digitalWrite(pins.pintIn2, LOW);
