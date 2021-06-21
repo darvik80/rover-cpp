@@ -8,6 +8,8 @@
 #include "Command.h"
 #include "device/motor/DCMotor.h"
 
+#ifdef DC_MOTOR
+
 class DCMotorMoveCommand : public Command {
     DCMotor& _motor;
     DCMotor::Engine _engine;
@@ -19,5 +21,6 @@ public:
     int execute() override;
 };
 
+#endif
 
 #endif //PLATFORM_IO_DCMOTORMOVECOMMAND_H

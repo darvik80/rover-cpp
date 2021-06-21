@@ -7,8 +7,14 @@
 
 #include "CoreConfig.h"
 
+enum DeviceType {
+    DC_Motor,
+    Servo_Motor,
+};
+
 class Device {
 public:
+    virtual DeviceType type() = 0;
     virtual const char* name() = 0;
 };
 

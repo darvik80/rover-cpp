@@ -5,7 +5,9 @@
 #ifndef PLATFORM_IO_L298NDCMOTOR_H
 #define PLATFORM_IO_L298NDCMOTOR_H
 
-#include "DCMotor.h"
+#include "device/motor/DCMotor.h"
+
+#ifdef L298N_DC_MOTOR
 
 class L298nDCMotor : public DCMotor {
 public:
@@ -33,5 +35,6 @@ private:
     static void move(Pins& pins, Direction direction, int pulse);
 };
 
+#endif
 
 #endif //PLATFORM_IO_L298NDCMOTOR_H

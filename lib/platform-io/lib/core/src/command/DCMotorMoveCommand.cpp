@@ -4,6 +4,8 @@
 
 #include "DCMotorMoveCommand.h"
 
+#ifdef DC_MOTOR
+
 DCMotorMoveCommand::DCMotorMoveCommand(DCMotor &motor, DCMotor::Engine engine, DCMotor::Direction direction, int pulse)
         : _motor(motor), _engine(engine), _direction(direction), pulse(pulse) {}
 
@@ -12,3 +14,5 @@ int DCMotorMoveCommand::execute() {
 
     return 0;
 }
+
+#endif

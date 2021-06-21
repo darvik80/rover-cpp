@@ -4,6 +4,8 @@
 
 #include "L298nDCMotor.h"
 
+#ifdef L298N_DC_MOTOR
+
 const char *L298nDCMotor::name() {
     return "l298n";
 }
@@ -41,3 +43,5 @@ void L298nDCMotor::move(Pins &pins, Direction direction, int pulse) {
 
     digitalWrite(pins.pinEn, pulse);
 }
+
+#endif
