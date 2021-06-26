@@ -9,20 +9,25 @@
 
 class Service {
 public:
-    virtual Registry& getRegistry() = 0;
+    virtual Registry &getRegistry() = 0;
+
     virtual void postConstruct() = 0;
+
     virtual void run() = 0;
+
     virtual void preDestroy() = 0;
 };
 
-class BaseService : public Service{
+class BaseService : public Service {
 private:
-    Registry& _registry;
+    Registry &_registry;
 public:
-    explicit BaseService(Registry& registry) : _registry(registry) {
+    explicit BaseService(Registry &registry)
+            : _registry(registry) {
 
     }
-    Registry& getRegistry() override {
+
+    Registry &getRegistry() override {
         return _registry;
     }
 };

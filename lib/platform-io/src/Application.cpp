@@ -3,62 +3,39 @@
 //
 
 #include "Application.h"
+#include <device/DefaultDeviceManager.h>
 #include "serial/SerialService.h"
+#include "control/IRControllerService.h"
 
 #include "device/MG90sServoMotor.h"
-#include <MotorDriver.h>
+#include <device/HX1838IRRemote.h>
 #include <device/L293DMotorShield.h>
 
 etl::message_bus<1> appMessageBus;
-
-std::unique_ptr<ServoMotor> servoMotor;
-
-MotorDriver m;
-L293DMotorShield motorShield;
 
 Application::Application()
         : message_router(ROUTER_APP) {
 }
 
 void Application::postConstruct() {
-    servoMotor.reset(new SG90ServoMotor(10));
     Serial.begin(115200);
-    _services.emplace_back(new SerialService(getRegistry(), Serial));
     appMessageBus.subscribe(*this);
+
+    _deviceManager = new DefaultDeviceManager();
+    _deviceManager->registerDevice(new SG90ServoMotor(10));
+    _deviceManager->registerDevice(new L293DMotorShield());
+    _services.emplace_back(new SerialService(getRegistry(), Serial));
+    _services.emplace_back(new IRControllerService(getRegistry()));
+
     for (const auto &service : _services) {
         service->postConstruct();
     }
-
-//    motor.move(90);
-//    delay(5000);
-//    motor.moveMicroseconds(544);
 }
 
 void Application::run() {
     for (const auto &service : _services) {
         service->run();
     }
-
-
-    //motor.moveMicroseconds(544);
-    servoMotor->move(45);
-    //Serial.println(motor.read());
-    delay(2000);
-    //motor.moveMicroseconds(2400);
-    servoMotor->move(135);
-    //Serial.println(motor.status());
-    delay(2000);
-    m.motor(4, FORWARD,1024);
-
-//    for (int pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-//        // in steps of 1 degree
-//        motor.move(pos);              // tell servo to go to position in variable 'pos'
-//        delay(15);                       // waits 15 ms for the servo to reach the position
-//    }
-//    for (int pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-//        motor.move(pos);              // tell servo to go to position in variable 'pos'
-//        delay(15);                       // waits 15 ms for the servo to reach the position
-//    }
 }
 
 void Application::preDestroy() {
@@ -69,15 +46,97 @@ void Application::preDestroy() {
 }
 
 void Application::on_receive(etl::imessage_router &source, const SerialConnected &msg) {
-    //msg.getService().send(0x03, "Hello World!");
+    msg.getService().send(serial::MSG_LOG, "Hello World!");
 }
 
 void Application::on_receive(etl::imessage_router &source, const SerialDisconnected &msg) {
 
 }
 
-void Application::on_receive_unknown(etl::imessage_router &source, const etl::imessage &msg) {
+void Application::controlServo(Button code) {
+    auto *motor = (ServoMotor *) _deviceManager->getDevice("mg90s");
+    if (motor != nullptr) {
+        switch (code) {
+            case BTN_LEFT:
+                motor->move(45);
+                break;
+            case BTN_RIGHT:
+                motor->move(135);
+                break;
+            default:
+                break;
+        }
+    }
+}
 
+int pos = 7;
+int speedIndex[] = { -255, -128, -64, -32, -16, -8, -4, 0, 4, 8, 16, 32, 64, 128, 255 };
+int speed, lastSpeed = 0;
+
+void Application::controlMotor(Button code) {
+
+    auto *motor = (DCMotor *) _deviceManager->getDevice("l293D");
+    if (motor != nullptr) {
+        switch (code) {
+            case BTN_ENTER:
+                if (pos < 7) {
+                    pos++;
+                } else if (pos > 7){
+                    pos--;
+                }
+                break;
+            case BTN_UP:
+                pos += 1;
+                if (pos > 14) {
+                    pos = 14;
+                }
+                break;
+            case BTN_DOWN:
+                pos -= 1;
+                if (pos < 0) {
+                    pos = 0;
+                }
+                break;
+            default:
+                break;
+        }
+
+        speed = speedIndex[pos];
+
+        if (lastSpeed != speed) {
+            Serial.print("Move: ");
+            if (speed > 0) {
+                Serial.print("DIR_FORWARD");
+            } else {
+                Serial.print("DIR_BACKWARD");
+            }
+            Serial.print(" ");
+            Serial.println(abs(speed));
+            motor->move(
+                    DCMotor::ENGINE_FOUR,
+                    speed > 0 ? DCMotor::DIR_FORWARD : DCMotor::DIR_BACKWARD,
+                    abs(speed)
+            );
+            lastSpeed = speed;
+        }
+    }
+}
+
+void Application::on_receive(etl::imessage_router &source, const IRControlMessage &msg) {
+    auto code = msg.getCode();
+    if (code != BTN_NONE) {
+        Serial.print("handle remote: ");
+        Serial.println(code);
+    }
+
+    if (code == Button::BTN_LEFT || code == Button::BTN_RIGHT) {
+        controlServo(code);
+    } else {
+        controlMotor(code);
+    }
+}
+
+void Application::on_receive_unknown(etl::imessage_router &source, const etl::imessage &msg) {
 }
 
 etl::imessage_bus &Application::getMessageBus() {

@@ -8,6 +8,18 @@
 #include "CoreConfig.h"
 #include <etl/message_bus.h>
 
+enum {
+    ROUTER_APP = 1
+};
+
+enum {
+    MSG_SERIAL_CONNECTED,
+    MSG_SERIAL_DISCONNECTED,
+    MSG_SERIAL_MESSAGE,
+
+    MSG_IR_CONTROL,
+};
+
 class Registry {
 public:
     virtual etl::imessage_bus& getMessageBus() = 0;

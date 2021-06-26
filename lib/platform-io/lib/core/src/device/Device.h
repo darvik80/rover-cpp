@@ -10,19 +10,22 @@
 enum DeviceType {
     DC_Motor,
     Servo_Motor,
+    Remote,
 };
 
 class Device {
 public:
     virtual DeviceType type() = 0;
     virtual const char* name() = 0;
+
+    virtual ~Device() = default;
 };
 
 class DeviceManager {
 public:
 
 public:
-    virtual void registerDevice(std::unique_ptr<Device> device) = 0;
+    virtual void registerDevice(Device* device) = 0;
 
     virtual Device* getDevice(const char* name) const = 0;
 };

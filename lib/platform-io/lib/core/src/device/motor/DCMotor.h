@@ -12,6 +12,7 @@
 class DCMotor : public Device {
 public:
     enum Direction {
+        DIR_NONE,
         DIR_FORWARD,
         DIR_BACKWARD,
         DIR_LEFT,
@@ -21,6 +22,7 @@ public:
     };
 
     enum Engine {
+        ENGINE_NONE,
         ENGINE_ONE,
         ENGINE_TWO,
         ENGINE_THREE,

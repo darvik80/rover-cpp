@@ -22,7 +22,7 @@
 #include <etl/memory.h>
 #include <etl/vector.h>
 
-namespace std {
+namespace stl {
     using string = etl::istring;
 
     template<typename T>
