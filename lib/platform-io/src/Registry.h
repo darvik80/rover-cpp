@@ -9,7 +9,9 @@
 #include <etl/message_bus.h>
 
 enum {
-    ROUTER_APP = 1
+    ROUTER_APP = 1,
+    DC_MOTOR_SERVICE,
+    SERVO_MOTOR_SERVICE,
 };
 
 enum {

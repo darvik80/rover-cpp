@@ -8,14 +8,13 @@
 #include <CoreConfig.h>
 #include "Service.h"
 #include "serial/SerialMessage.h"
-#include "control/IRControlMessage.h"
 
 #include <etl/message_bus.h>
 #include <etl/vector.h>
 #include <device/Device.h>
 
 class Application : public Service, public Registry
-        , public etl::message_router<Application, SerialConnected, SerialDisconnected, IRControlMessage> {
+        , public etl::message_router<Application, SerialConnected, SerialDisconnected> {
 public:
     explicit Application();
 
@@ -35,17 +34,11 @@ public:
     void on_receive(etl::imessage_router &source, const SerialConnected &msg);
 
     void on_receive(etl::imessage_router &source, const SerialDisconnected &msg);
-    void on_receive(etl::imessage_router &source, const IRControlMessage &msg);
 
     void on_receive_unknown(etl::imessage_router &source, const etl::imessage &msg);
 
 private:
-    etl::vector<Service *, 4> _services{};
-    DeviceManager* _deviceManager{nullptr};
-
-private:
-    void controlServo(Button code);
-    void controlMotor(Button code);
+    etl::vector<Service *, 3> _services{};
 };
 
 

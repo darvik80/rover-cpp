@@ -27,6 +27,13 @@ public:
 
     }
 
+    void postConstruct() override {}
+
+    void run() override {}
+
+    void preDestroy() override {}
+
+
     Registry &getRegistry() override {
         return _registry;
     }

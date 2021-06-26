@@ -11,13 +11,9 @@
 class IRControllerService : public BaseService {
     IRRemote* _remote{nullptr};
 public:
-    explicit IRControllerService(Registry &registry);
-
-    void postConstruct() override;
+    explicit IRControllerService(Registry &registry, IRRemote* remote);
 
     void run() override;
-
-    void preDestroy() override;
 };
 
 
