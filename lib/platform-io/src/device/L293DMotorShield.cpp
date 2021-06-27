@@ -7,11 +7,11 @@
 #ifdef L293D_DC_MOTOR_SHIELD
 
 const char *L293DMotorShield::name() {
-    return "l293D";
+    return "l293d";
 }
 
 void L293DMotorShield::move(Engine engine, Direction direction, int pulse) {
-    _motor.motor(engine, direction == DIR_FORWARD ? FORWARD : BACKWARD, pulse);
+    _motor.motor(engine, direction, pulse);
 }
 
 #endif

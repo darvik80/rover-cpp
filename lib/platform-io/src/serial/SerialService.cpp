@@ -67,11 +67,9 @@ void SerialService::onMessage(const uint8_t *data, size_t size) {
 }
 
 void SerialService::onConnect(serial::SerialPort &port) {
-    //send(serial::MSG_LOG, "Hello World");
-    //send(serial::MSG_LOG, "test");
     etl::send_message(getRegistry().getMessageBus(), SerialConnected(*this));
 }
 
 void SerialService::onDisconnect(serial::SerialPort &port) {
-
+    etl::send_message(getRegistry().getMessageBus(), SerialDisconnected(*this));
 }

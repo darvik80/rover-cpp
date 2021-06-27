@@ -5,7 +5,7 @@
 #ifndef PLATFORM_IO_MG90SSERVOMOTOR_H
 #define PLATFORM_IO_MG90SSERVOMOTOR_H
 
-#ifdef MG90S_SERVO_MOTOR
+#if defined MG90S_SERVO_MOTOR || defined SG90_SERVO_MOTOR
 
 #ifndef SERVO_MOTOR
     #define SERVO_MOTOR
@@ -45,7 +45,16 @@ public:
     }
 };
 
-typedef MG90sServoMotor SG90ServoMotor;
+#ifdef SG90_SERVO_MOTOR
+
+class SG90ServoMotor : public MG90sServoMotor {
+public:
+    const char *name() override {
+        return "sg90";
+    }
+};
+
+#endif
 
 #endif
 
