@@ -13,37 +13,33 @@
     "global": "^4.4.0",
     "node-sass": "^4.12.0",
     "prettier": "^1.18.2",
-    "react": "^16.8.6",
+    "react": "^17.0.2",
     "react-bootstrap": "^1.0.0-beta.10",
     "react-dates": "^20.2.2",
-    "react-dom": "^16.8.6",
+    "react-dom": "^17.0.2",
     "react-jsonrpc-client": "^1.0.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
+    "react-scripts": "^4.0.3",
     "reactstrap": "^8.0.1",
     "use-query-params": "^0.3.3",
     "use-react-router": "^1.0.7"
   },
+  "directories": {
+    "lib": "../../cmake-build-debug/node_modules/lib/",
+    "bin": "../../cmake-build-debug/node_modules/bin/",
+    "man": "../../cmake-build-debug/node_modules/man/",
+    "doc": "../../cmake-build-debug/node_modules/doc/",
+    "example": "../../cmake-build-debug/node_modules/examples/"
+  },
   "scripts": {
-    "styleguide": "styleguidist server",
-    "styleguide:build": "styleguidist build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public",
     "mock-server": "open-rpc-mock-server"
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "devDependencies": {
-    "@storybook/addon-actions": "^5.1.8",
-    "@storybook/addon-links": "^5.1.8",
-    "@storybook/addons": "^5.1.8",
-    "@storybook/react": "^5.1.8",
-    "react-styleguidist": "^9.1.7"
   },
   "browserslist": [
     ">2%",

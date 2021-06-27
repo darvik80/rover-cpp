@@ -2,6 +2,7 @@
   "http": {
     "port": 8080,
     "address": [
+      "127.0.0.1",
       "0.0.0.0"
     ]
   },
@@ -9,9 +10,12 @@
     "name": "rover"
   },
   "log": {
-    "level": "debug",
+    "level" : "info",
     "file": true,
     "console": true
   },
-  "logLevel": 1
+  "serial": {
+    "port": "/dev/tty.usbserial-1410",
+    "baud-rate": 115200
+  }
 }

@@ -21,11 +21,11 @@ public:
     explicit TimerHandler(boost::asio::io_context& service)
             : _timer(std::make_unique<boost::asio::deadline_timer>(service)) {}
 
-    TimerHandler(std::shared_ptr<boost::asio::deadline_timer>& timer)
+    explicit TimerHandler(std::shared_ptr<boost::asio::deadline_timer>& timer)
             : _timer(std::move(timer)) {
     }
 
-    TimerHandler(const std::weak_ptr<boost::asio::deadline_timer>& timer)
+    explicit TimerHandler(const std::weak_ptr<boost::asio::deadline_timer>& timer)
             : _timer(timer) {
     }
 

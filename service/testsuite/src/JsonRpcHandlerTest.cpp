@@ -4,9 +4,9 @@
 
 #include "JsonRpcHandlerTest.h"
 
-#include <rpc/json/Helper.h>
-#include <rpc/RpcMethod.h>
-#include <rpc/json/Spec.h>
+#include <net/http/rpc/json/Helper.h>
+#include <net/http/rpc/RpcMethod.h>
+#include <net/http/rpc/json/Spec.h>
 
 /**
  * hello params

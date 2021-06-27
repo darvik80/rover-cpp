@@ -5,10 +5,10 @@
 #ifndef ROVER_JSONRPCHANDLERTEST_H
 #define ROVER_JSONRPCHANDLERTEST_H
 
-#define BOOST_TEST_MODULE Service
+#define BOOST_TEST_MODULE Incubator
 
 #include <boost/test/unit_test.hpp>
-#include <http/JsonRpcHandler.h>
+#include <net/http/JsonRpcHandler.h>
 
 class JsonRpcHandlerFixture {
 public:

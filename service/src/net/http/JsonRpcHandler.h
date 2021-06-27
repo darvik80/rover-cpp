@@ -13,7 +13,6 @@
 class JsonRpcHandler : public HttpRequestHandler, public RpcRegistry {
 public:
     void handle(const HttpRequest &request, HttpResponse &response) override;
-private:
     void handle(const JsonRpcRequest &request, JsonRpcResponse &response);
 };
 
