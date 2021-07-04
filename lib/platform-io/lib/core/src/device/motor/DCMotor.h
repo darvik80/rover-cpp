@@ -7,8 +7,6 @@
 
 #include "device/Device.h"
 
-#ifdef DC_MOTOR
-
 class DCMotor : public Device {
 public:
     enum Direction {
@@ -36,7 +34,5 @@ public:
     }
     virtual void move(Engine engine, Direction direction, int pulse) = 0;
 };
-
-#endif
 
 #endif //PLATFORM_IO_DCMOTOR_H

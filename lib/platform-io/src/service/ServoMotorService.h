@@ -6,10 +6,10 @@
 #define PLATFORM_IO_SERVOMOTORSERVICE_H
 
 #include <device/controller/IRRemoteButton.h>
-#include <control/IRControlMessage.h>
-#include "Service.h"
+#include <service/IRControlMessage.h>
+#include "service/Service.h"
 
-#include "device/MG90sServoMotor.h"
+#include "device/motor/ServoMotor.h"
 
 #define SERVO_STEP 15
 
@@ -23,9 +23,11 @@ public:
 
     void postConstruct() override;
 
-    void on_receive(etl::imessage_router &source, const IRControlMessage &msg);
+    void on_receive(const IRControlMessage &msg);
 
-    void on_receive_unknown(etl::imessage_router &source, const etl::imessage &msg) {}
+    void on_receive_unknown(const etl::imessage &msg) {}
+
+
 
 };
 

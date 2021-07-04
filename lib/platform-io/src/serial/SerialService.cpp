@@ -23,7 +23,7 @@ void SerialService::run() {
 
     uint8_t data[32];
     while (_stream.available()) {
-        size_t size = etl::min(_stream.available(), 32);
+        size_t size = min(_stream.available(), 32);
         size = _stream.readBytes((uint8_t*)(&data), size);
         _codec.onMessage(*this, (uint8_t*)(&data), size);
     }

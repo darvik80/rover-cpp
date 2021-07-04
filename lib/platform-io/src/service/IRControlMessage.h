@@ -5,8 +5,9 @@
 #ifndef PLATFORM_IO_IRCONTROLMESSAGE_H
 #define PLATFORM_IO_IRCONTROLMESSAGE_H
 
-#include "Registry.h"
+#include "Const.h"
 #include <device/controller/IRRemoteButton.h>
+#include <etl/message.h>
 
 class IRControlMessage : public etl::message<MSG_IR_CONTROL> {
     Button code;

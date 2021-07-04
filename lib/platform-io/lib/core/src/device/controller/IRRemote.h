@@ -5,8 +5,6 @@
 #ifndef PLATFORM_IO_IRREMOTE_H
 #define PLATFORM_IO_IRREMOTE_H
 
-#ifdef IR_REMOTE
-
 #include "device/Device.h"
 #include "IRRemoteButton.h"
 
@@ -18,7 +16,5 @@ public:
 
     virtual Button decode() = 0;
 };
-
-#endif
 
 #endif //PLATFORM_IO_IRREMOTE_H

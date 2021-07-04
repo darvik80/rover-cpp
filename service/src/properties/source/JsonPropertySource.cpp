@@ -53,6 +53,17 @@ void JsonPropertySource::getProperties(HttpProperties &props) {
     }
 }
 
+void JsonPropertySource::getProperties(GrpcProperties &props) {
+    if (auto it = _json.find("grpc"); it != _json.end()) {
+        if (auto key = it->find("host"); key != it->end()) {
+            key->get_to(props.host);
+        }
+        if (auto key = it->find("port"); key != it->end()) {
+            key->get_to(props.port);
+        }
+    }
+}
+
 void JsonPropertySource::getProperties(SerialProperties &props) {
     if (auto it = _json.find("serial"); it != _json.end()) {
         if (auto key = it->find("port"); key != it->end()) {

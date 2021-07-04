@@ -5,6 +5,8 @@
 #ifndef PLATFORM_IO_MG90SSERVOMOTOR_H
 #define PLATFORM_IO_MG90SSERVOMOTOR_H
 
+#ifdef ARDUINO_ARCH_AVR
+
 #if defined MG90S_SERVO_MOTOR || defined SG90_SERVO_MOTOR
 
 #ifndef SERVO_MOTOR
@@ -53,6 +55,8 @@ public:
         return "sg90";
     }
 };
+
+#endif
 
 #endif
 

@@ -6,7 +6,6 @@
 #define PLATFORM_IO_ESP8266_MULTICASTFACTORY_H
 
 
-#include <CoreContext.h>
 #include <net/Multicast.h>
 #include <net/MulticastFactory.h>
 #include "Esp8266Multicast.h"

@@ -5,9 +5,13 @@
 #include "Application.h"
 #include "serial/SerialService.h"
 
-#include "control/IRControllerService.h"
-#include "DCMotorService.h"
-#include "ServoMotorService.h"
+#include "service/IRControllerService.h"
+#include "service/DCMotorService.h"
+#include "service/ServoMotorService.h"
+
+#include "device/HX1838IRRemote.h"
+#include "device/L293DMotorShield.h"
+#include "device/MG90sServoMotor.h"
 
 etl::message_bus<3> appMessageBus;
 
@@ -18,9 +22,11 @@ Application::Application()
 void Application::postConstruct() {
     Serial.begin(115200);
 
+#ifdef ARDUINO_ARCH_AVR
     _services.emplace_back(new IRControllerService(getRegistry(), new HX1838IRRemote(11)));
     _services.emplace_back(new DCMotorService(getRegistry(), new L293DMotorShield()));
     _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(10)));
+#endif
 
     appMessageBus.subscribe(*this);
 
@@ -42,14 +48,14 @@ void Application::preDestroy() {
     appMessageBus.unsubscribe(*this);
 }
 
-void Application::on_receive(etl::imessage_router &source, const SerialConnected &msg) {
+void Application::on_receive(const SerialConnected &msg) {
 }
 
-void Application::on_receive(etl::imessage_router &source, const SerialDisconnected &msg) {
+void Application::on_receive(const SerialDisconnected &msg) {
 
 }
 
-void Application::on_receive_unknown(etl::imessage_router &source, const etl::imessage &msg) {
+void Application::on_receive_unknown(const etl::imessage &msg) {
 
 }
 

@@ -5,8 +5,6 @@
 #ifndef PLATFORM_IO_DEVICE_H
 #define PLATFORM_IO_DEVICE_H
 
-#include "CoreConfig.h"
-
 enum DeviceType {
     DC_Motor,
     Servo_Motor,

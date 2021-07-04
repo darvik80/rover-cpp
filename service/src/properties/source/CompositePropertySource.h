@@ -33,6 +33,10 @@ public:
         merge(props);
     }
 
+    void getProperties(GrpcProperties &props) override {
+        merge(props);
+    }
+
     void getProperties(SerialProperties &props) override {
         merge(props);
     }

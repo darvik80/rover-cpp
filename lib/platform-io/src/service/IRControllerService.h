@@ -5,8 +5,8 @@
 #ifndef PLATFORM_IO_IRCONTROLLERSERVICE_H
 #define PLATFORM_IO_IRCONTROLLERSERVICE_H
 
-#include "Service.h"
-#include "device/HX1838IRRemote.h"
+#include "service/Service.h"
+#include <device/controller/IRRemote.h>
 
 class IRControllerService : public BaseService {
     IRRemote* _remote{nullptr};

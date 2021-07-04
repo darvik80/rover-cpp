@@ -24,6 +24,10 @@
 #define PROP_HTTP_PORT          "HTTP_PORT"             // HttpProperties.port
 #define PROP_HTTP_ROOT          "HTTP_ROOT"             // HttpProperties.root
 
+// props: GrpcProperties
+#define PROP_GRPC_HOST          "GRPC_HOST"             // GrpcProperties.host
+#define PROP_GRPC_PORT          "GRPC_PORT"             // GrpcProperties.port
+
 // props: SerialProperties
 #define PROP_SERIAL_PORT        "SERIAL_PORT"           // SerialProperties.port
 #define PROP_SERIAL_BAUD_RATE   "SERIAL_BAUD_RATE"      // SerialProperties.baudRate
@@ -54,6 +58,15 @@ public:
         }
         if (auto val = getenv(PROP_HTTP_ROOT); val != nullptr) {
             props.root = val;
+        }
+    }
+
+    void getProperties(GrpcProperties &props) override {
+        if (auto val = getenv(PROP_GRPC_HOST); val != nullptr) {
+            props.host = val;
+        }
+        if (auto val = getenv(PROP_GRPC_PORT); val != nullptr) {
+            props.port = boost::lexical_cast<int>(val);;
         }
     }
 

@@ -8,7 +8,7 @@ ServoMotorService::ServoMotorService(Registry &registry, ServoMotor *motor)
         : BaseService(registry), message_router(SERVO_MOTOR_SERVICE), _motor(motor) {
 }
 
-void ServoMotorService::on_receive(etl::imessage_router &source, const IRControlMessage &msg) {
+void ServoMotorService::on_receive(const IRControlMessage &msg) {
     switch (msg.getCode()) {
         case BTN_LEFT:
             _angle -= SERVO_STEP;

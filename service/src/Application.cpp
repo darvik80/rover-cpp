@@ -10,6 +10,7 @@
 
 #include "logging/LoggingService.h"
 #include "net/http/HttpService.h"
+#include "grpc/GrpcService.h"
 #include "event/EventManager.h"
 #include "event/ApplicationEvent.h"
 #include "scheduler/Scheduler.h"
@@ -39,10 +40,11 @@ void Application::postConstruct(Registry &registry) {
     registry.addService(std::make_shared<Scheduler>(registry.getIoService()));
     registry.addService(std::make_shared<EventManager>());
     registry.addService(std::make_shared<HttpService>());
+    registry.addService(std::make_shared<GrpcService>());
     // } System Services
 
     registry.addService(std::make_shared<InfoService>());
-    registry.addService(std::make_shared<SerialService>());
+    //registry.addService(std::make_shared<SerialService>());
 
     registry.visitService([&registry](auto &service) {
         service.postConstruct(registry);

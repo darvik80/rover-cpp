@@ -7,8 +7,6 @@
 
 #include "device/Device.h"
 
-#ifdef SERVO_MOTOR
-
 class ServoMotor : public Device {
 public:
     DeviceType type() override {
@@ -20,7 +18,5 @@ public:
 
     virtual void moveMicroseconds(int microSec) = 0;
 };
-
-#endif
 
 #endif //PLATFORM_IO_SERVOMOTOR_H

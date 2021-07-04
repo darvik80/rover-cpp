@@ -10,7 +10,7 @@ DCMotorService::DCMotorService(Registry &registry, DCMotor *motor)
         : BaseService(registry), message_router(DC_MOTOR_SERVICE), _motor(motor) {
 }
 
-void DCMotorService::on_receive(etl::imessage_router &source, const IRControlMessage &msg) {
+void DCMotorService::on_receive(const IRControlMessage &msg) {
     switch (msg.getCode()) {
         case BTN_ENTER:
             if (_pos < 6) {

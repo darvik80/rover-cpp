@@ -5,7 +5,6 @@
 #ifndef PLATFORM_IO_PROTOCOL_H
 #define PLATFORM_IO_PROTOCOL_H
 
-#include "CoreConfig.h"
 #include <stdint.h>
 
 namespace serial {

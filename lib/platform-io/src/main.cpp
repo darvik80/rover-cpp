@@ -1,4 +1,3 @@
-#include "CoreConfig.h"
 #include "Application.h"
 
 Application app;

@@ -12,6 +12,11 @@
 #endif
 
 #include "device/motor/DCMotor.h"
+#ifdef ARDUINO_ARCH_AVR
+#include <stdint.h>
+#else
+#include <cstdint>
+#endif
 
 class L298nDCMotor : public DCMotor {
 public:

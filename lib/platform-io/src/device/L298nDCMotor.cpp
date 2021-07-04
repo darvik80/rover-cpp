@@ -2,6 +2,7 @@
 // Created by Ivan Kishchenko on 03.04.2021.
 //
 
+#include <Arduino.h>
 #include "L298nDCMotor.h"
 
 #ifdef L298N_DC_MOTOR

@@ -3,15 +3,19 @@
     "registry_host": "127.0.0.1",
     "registry_port": 54545
   },
-  "logging": {
-    "level": "debug",
-    "console": true,
-    "file": false
-  },
   "http": {
     "host": "0.0.0.0",
     "port": 8080,
     "root": "www"
+  },
+  "grpc": {
+    "port": 8081,
+    "host": "0.0.0.0"
+  },
+  "logging": {
+    "level": "debug",
+    "console": true,
+    "file": false
   },
   "serial": {
     "port": "/dev/cu.usbserial-1410",

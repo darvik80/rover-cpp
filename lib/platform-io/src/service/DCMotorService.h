@@ -5,11 +5,11 @@
 #ifndef PLATFORM_IO_DCMOTORSERVICE_H
 #define PLATFORM_IO_DCMOTORSERVICE_H
 
+#include <device/motor/DCMotor.h>
 #include <device/controller/IRRemoteButton.h>
-#include <control/IRControlMessage.h>
-#include "Service.h"
+#include <service/IRControlMessage.h>
+#include "service/Service.h"
 
-#include "device/L293DMotorShield.h"
 
 class DCMotorService : public BaseService, public etl::message_router<DCMotorService, IRControlMessage> {
     int _pos = 6;
@@ -22,9 +22,9 @@ public:
 
     void postConstruct() override;
 
-    void on_receive(etl::imessage_router &source, const IRControlMessage &msg);
+    void on_receive(const IRControlMessage &msg);
 
-    void on_receive_unknown(etl::imessage_router &source, const etl::imessage &msg) {}
+    void on_receive_unknown(const etl::imessage &msg) {}
 };
 
 

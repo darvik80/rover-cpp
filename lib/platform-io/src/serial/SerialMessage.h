@@ -7,7 +7,8 @@
 
 #include <Arduino.h>
 #include <etl/message.h>
-#include "Registry.h"
+#include <etl/vector.h>
+#include "Const.h"
 
 class SerialService;
 
@@ -37,10 +38,10 @@ public:
 
 class SerialDataMessage : public SerialMessage, public etl::message<MSG_SERIAL_MESSAGE> {
     uint8_t msgId;
-    stl::vector<uint8_t> &data;
+    etl::ivector<uint8_t> &data;
 
 public:
-    SerialDataMessage(const SerialService &service, uint8_t msgId, stl::vector<uint8_t> &data)
+    SerialDataMessage(const SerialService &service, uint8_t msgId, etl::ivector<uint8_t> &data)
             : SerialMessage(service), msgId(msgId), data(data) {}
 };
 

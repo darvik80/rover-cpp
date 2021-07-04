@@ -5,8 +5,7 @@
 #ifndef PLATFORM_IO_APPLICATION_H
 #define PLATFORM_IO_APPLICATION_H
 
-#include <CoreConfig.h>
-#include "Service.h"
+#include "service/Service.h"
 #include "serial/SerialMessage.h"
 
 #include <etl/message_bus.h>
@@ -31,11 +30,11 @@ public:
     ~Application() override = default;
 
 public:
-    void on_receive(etl::imessage_router &source, const SerialConnected &msg);
+    void on_receive(const SerialConnected &msg);
 
-    void on_receive(etl::imessage_router &source, const SerialDisconnected &msg);
+    void on_receive(const SerialDisconnected &msg);
 
-    void on_receive_unknown(etl::imessage_router &source, const etl::imessage &msg);
+    void on_receive_unknown(const etl::imessage &msg);
 
 private:
     etl::vector<Service *, 3> _services{};
