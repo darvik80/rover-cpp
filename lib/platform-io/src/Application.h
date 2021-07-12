@@ -6,7 +6,7 @@
 #define PLATFORM_IO_APPLICATION_H
 
 #include "service/Service.h"
-#include "serial/SerialMessage.h"
+#include "service/serial/SerialMessage.h"
 
 #include <etl/message_bus.h>
 #include <etl/vector.h>

@@ -5,7 +5,7 @@
 #ifndef PLATFORM_IO_SERIALSERVICE_H
 #define PLATFORM_IO_SERIALSERVICE_H
 
-#include "Const.h"
+#include "service/Const.h"
 #include "service/Service.h"
 #include <serial/Protocol.h>
 #include <serial/SerialPortCodec.h>

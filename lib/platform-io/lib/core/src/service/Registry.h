@@ -5,7 +5,6 @@
 #ifndef PLATFORM_IO_REGISTRY_H
 #define PLATFORM_IO_REGISTRY_H
 
-#include "Const.h"
 #include <etl/message_bus.h>
 
 class Registry {

@@ -1,9 +1,6 @@
 [submodule "lib/json"]
 	path = lib/json
 	url = git@github.com:nlohmann/json.git
-[submodule "lib/serial"]
-	path = lib/serial
-	url = git@github.com:darvik80/serial.git
 [submodule "lib/arduino"]
 	path = lib/arduino
 	url = git@github.com:darvik80/rover-arduino.git

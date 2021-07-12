@@ -1,41 +1,51 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 project(service VERSION 1.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -fvisibility=hidden")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
 
 add_definitions(-DRASPBERRY_ARCH -DSUPPORT_ETHERNET)
+if(UNIX AND NOT APPLE)
+    add_definitions(-DSUPPORT_XBOXDRV)
+endif()
 
-# OpenSSL
-set(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@1.1/1.1.1k)
+if (APPLE)
+    set(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@1.1/1.1.1k)
+endif ()
+
 find_package(OpenSSL REQUIRED)
 
 ### proto build {
 find_package(Protobuf REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
-include_directories(${Protobuf_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
-get_target_property(gRPC_CPP_PLUGIN_EXECUTABLE gRPC::grpc_cpp_plugin IMPORTED_LOCATION_RELEASE)
-
-
-get_filename_component(PROTO "${PROJECT_SOURCE_DIR}/proto/helloworld.proto" ABSOLUTE)
-get_filename_component(PROTO_PATH "${PROTO}" PATH)
+find_program(GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
 
 # Generated sources
+get_filename_component(PROTO "${PROJECT_SOURCE_DIR}/proto/helloworld.proto" ABSOLUTE)
+get_filename_component(PROTO_PATH "${PROTO}" PATH)
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO})
 set(GRPC_SRCS "${CMAKE_CURRENT_BINARY_DIR}/helloworld.grpc.pb.cc")
 set(GRPC_HDRS "${CMAKE_CURRENT_BINARY_DIR}/helloworld.grpc.pb.h")
+
 add_custom_command(
         OUTPUT "${GRPC_SRCS}" "${GRPC_HDRS}"
-        COMMAND protobuf::protoc
+        COMMAND protoc
         ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}" -I "${PROTO_PATH}"
-        --plugin=protoc-gen-grpc="${gRPC_CPP_PLUGIN_EXECUTABLE}"
+        --plugin=protoc-gen-grpc="${GRPC_CPP_PLUGIN_EXECUTABLE}"
         "${PROTO}"
         DEPENDS "${PROTO}")
-
-include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 ### } proto build
 
+include_directories(
+        /usr/local/include
+        /usr/include
+        ${Protobuf_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_BINARY_DIR}
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/../platform/src
+        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
+        ${PROJECT_SOURCE_DIR}/../core-utils/logging/src/
+)
 
 file(GLOB SRCS_G
         src/*.cpp
@@ -52,16 +62,9 @@ file(GLOB SRCS_G
         src/serial/os/*.cc
         src/scheduler/*.cpp
         src/grpc/*.cpp
+        ${PROTO_SRCS}
+        ${GRPC_SRCS}
         )
-
-include_directories(
-        /usr/local/include
-        /usr/include
-        ${PROJECT_SOURCE_DIR}/src
-        ${PROJECT_SOURCE_DIR}/../platform/src
-        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
-        ${PROJECT_SOURCE_DIR}/../core-utils/logging/src/
-)
 
 set(RESOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 set(WWW_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/www)
@@ -101,7 +104,7 @@ if (APPLE)
             src/resources/ResourceManager_apple.cpp
             )
 
-    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS_G} ${SRCS_OS} ${RESOURCES_G} ${PROTO_SRCS} ${GRPC_SRCS})
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS_G} ${SRCS_OS} ${RESOURCES_G})
 else ()
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
     set(PROPERTIES_DIR ${EXECUTABLE_OUTPUT_PATH}/../etc)
@@ -111,7 +114,7 @@ else ()
     if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES arm)
         set(TARGET_FORMAT "elf32-littlearm")
         set(TARGET_ARCHITECTURE "arm")
-    elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES aarch64)
+    elseif (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES aarch64)
         set(TARGET_FORMAT "elf64-littleaarch64")
         set(TARGET_ARCHITECTURE "aarch64")
     endif ()
@@ -121,9 +124,9 @@ else ()
     add_executable(${PROJECT_NAME} ${SRCS_G} ${RES_SRC_FILE} ${RES_EMBED_FILES})
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 
-    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${VAR_DIR}/www)
+    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${VAR_DIR}/www)
 endif ()
 
 add_subdirectory(testsuite)
 
-target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} protobuf::libprotobuf gRPC::grpc++)
+target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES})

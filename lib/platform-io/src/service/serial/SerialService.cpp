@@ -6,7 +6,7 @@
 #include <serial/Protocol.h>
 #include <etl/crc16.h>
 
-#include "serial/SerialMessage.h"
+#include "SerialMessage.h"
 
 SerialService::SerialService(Registry& registry, Stream &stream)
         : BaseService(registry), _stream(stream), _codec(serial::SerialPortCodec::MODE_SLAVE, *this) {

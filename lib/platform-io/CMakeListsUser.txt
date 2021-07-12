@@ -1,7 +1,5 @@
 add_definitions(-DARDUINOJSON_ENABLE_STD_STRING=1)
 
-add_definitions(-D'MG90S_SERVO_MOTOR')
-
 if (CMAKE_BUILD_TYPE MATCHES "esp32")
     file(GLOB PLATFORM_SRC
             ${PROJECT_SOURCE_DIR}/src/esp32/*.cpp

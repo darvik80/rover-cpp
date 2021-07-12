@@ -3,8 +3,11 @@
 //
 
 #include "Application.h"
-#include "serial/SerialService.h"
+#include "service/wifi/WifiService.h"
+#include "service/mqtt/MqttService.h"
+#include "service/serial/SerialService.h"
 
+#ifdef ARDUINO_ARCH_AVR
 #include "service/IRControllerService.h"
 #include "service/DCMotorService.h"
 #include "service/ServoMotorService.h"
@@ -12,6 +15,8 @@
 #include "device/HX1838IRRemote.h"
 #include "device/L293DMotorShield.h"
 #include "device/MG90sServoMotor.h"
+#endif
+
 
 etl::message_bus<3> appMessageBus;
 
@@ -22,12 +27,13 @@ Application::Application()
 void Application::postConstruct() {
     Serial.begin(115200);
 
+    _services.emplace_back(new MqttService(getRegistry()));
+    _services.emplace_back(new WifiService(getRegistry()));
 #ifdef ARDUINO_ARCH_AVR
     _services.emplace_back(new IRControllerService(getRegistry(), new HX1838IRRemote(11)));
     _services.emplace_back(new DCMotorService(getRegistry(), new L293DMotorShield()));
     _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(10)));
 #endif
-
     appMessageBus.subscribe(*this);
 
     for (const auto &service : _services) {

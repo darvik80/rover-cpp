@@ -16,6 +16,7 @@
 #include "scheduler/Scheduler.h"
 #include "serial/SerialService.h"
 #include "InfoService.h"
+#include "JoystickService.h"
 
 using namespace boost;
 
@@ -44,6 +45,9 @@ void Application::postConstruct(Registry &registry) {
     // } System Services
 
     registry.addService(std::make_shared<InfoService>());
+#if defined SUPPORT_XBOXDRV
+    registry.addService(std::make_shared<JoystickService>());
+#endif
     //registry.addService(std::make_shared<SerialService>());
 
     registry.visitService([&registry](auto &service) {

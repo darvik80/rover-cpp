@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include <etl/message.h>
 #include <etl/vector.h>
-#include "Const.h"
+#include "service/Const.h"
 
 class SerialService;
 

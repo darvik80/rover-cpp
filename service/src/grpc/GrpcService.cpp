@@ -7,22 +7,25 @@
 
 void GrpcService::postConstruct(Registry &registry) {
     BaseService::postConstruct(registry);
-    const auto &props = registry.getProperties<GrpcProperties>();
-    std::string serverAddress(props.host + ":" + std::to_string(props.port));
+    try {
+        const auto &props = registry.getProperties<GrpcProperties>();
+        std::string serverAddress(props.host + ":" + std::to_string(props.port));
 
-    _services.emplace_back(new GreeterService());
+        _services.emplace_back(new GreeterService());
 
-    grpc::EnableDefaultHealthCheckService(true);
-    //grpc::reflection::InitProtoReflectionServerBuilderPlugin();
-    ServerBuilder builder;
-    builder.AddListeningPort(serverAddress, grpc::InsecureServerCredentials());
+        grpc::EnableDefaultHealthCheckService(true);
+        ServerBuilder builder;
+        builder.AddListeningPort(serverAddress, grpc::InsecureServerCredentials());
 
-    for (auto &service : _services) {
-        builder.RegisterService(service.get());
+        for (auto &service : _services) {
+            builder.RegisterService(service.get());
+        }
+        _server = builder.BuildAndStart();
+
+        logging::info("[grpc] server started: {}", serverAddress);
+    } catch (std::exception& ex) {
+        logging::info("[grpc] server failed: {}", ex.what());
     }
-    _server = builder.BuildAndStart();
-
-    logging::info("[grpc] server started: {}", serverAddress);
 }
 
 void GrpcService::preDestroy(Registry &registry) {

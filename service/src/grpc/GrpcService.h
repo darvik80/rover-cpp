@@ -8,7 +8,7 @@
 #include "BaseService.h"
 #include <grpcpp/grpcpp.h>
 
-class GrpcService : public BaseServiceShared<GrpcService> {
+class GrpcService : public BaseService {
 public:
     const char *name() override {
         return "grpc";

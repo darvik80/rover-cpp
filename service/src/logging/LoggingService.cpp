@@ -13,7 +13,6 @@ using namespace boost;
 void LoggingService::postConstruct(Registry &registry) {
     auto props = registry.getProperties<LoggingProperties>();
     logging::setup(props);
-    logging::info("init logging completed");
 }
 
 void LoggingService::preDestroy(Registry& registry) {
