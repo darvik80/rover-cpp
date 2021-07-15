@@ -84,7 +84,7 @@ namespace logging {
 
         if (props.file) {
             log::add_file_log(
-                    log::keywords::file_name = "/dev/null",
+                    log::keywords::file_name = "./application.log",
                     log::keywords::rotation_size = 10 * 1024 * 1024,
                     log::keywords::time_based_rotation = log::sinks::file::rotation_at_time_point(0, 0, 0),
                     log::keywords::auto_flush = true

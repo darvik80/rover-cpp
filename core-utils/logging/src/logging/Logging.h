@@ -12,7 +12,7 @@
 namespace logging {
     struct LoggingProperties {
         std::string level{"debug"};
-        bool console{false};
+        bool console{true};
         bool file{false};
     };
 
