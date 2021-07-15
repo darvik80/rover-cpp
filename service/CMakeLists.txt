@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
 add_definitions(-DRASPBERRY_ARCH -DSUPPORT_ETHERNET)
 if(UNIX AND NOT APPLE)
     add_definitions(-DSUPPORT_XBOXDRV)
+    add_definitions(-DSUPPORT_BARCODE)
 endif()
 
 if (APPLE)
