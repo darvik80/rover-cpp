@@ -105,7 +105,7 @@ if (APPLE)
             src/resources/ResourceManager_apple.cpp
             )
 
-    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS_G} ${SRCS_OS} ${RESOURCES_G})
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SRCS_G} ${SRCS_OS} ${RESOURCES_G} ${PROTO_SRCS} ${GRPC_SRCS})
 else ()
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
     set(PROPERTIES_DIR ${EXECUTABLE_OUTPUT_PATH}/../etc)
@@ -122,7 +122,7 @@ else ()
 
     include(CMakeLists_linux.txt)
 
-    add_executable(${PROJECT_NAME} ${SRCS_G} ${RES_SRC_FILE} ${RES_EMBED_FILES})
+    add_executable(${PROJECT_NAME} ${SRCS_G} ${RES_SRC_FILE} ${RES_EMBED_FILES} ${PROTO_SRCS} ${GRPC_SRCS})
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 
     #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${VAR_DIR}/www)
