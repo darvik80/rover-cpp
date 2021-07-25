@@ -6,11 +6,16 @@ Service based on Boost C++ Libraries (https://boost.org/)
 * Logging (Boost.Log)
 * platform.io like IoT (https://https://platformio.org//) 
 
+## deps
+```bash
+sudo apt install libssl-dev libfmt-dev libboost-all-dev nlohmann-json3-dev cmake clang git mc htop xboxdrv
+```
+
 ## build
 ```bash
 git submodule init
 git submodule update
-cd lib/json && mkdir build && cd build && cmake ../ && make && make install && cd ../..
+mkdir build && cd build && cmake ../ && make && make install
 ```
 
 ## json-rpc
