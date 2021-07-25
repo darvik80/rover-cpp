@@ -62,7 +62,7 @@ void BarcodeReaderService::postConstruct(Registry &registry) {
 
     //Open Device
     if ((fd = open(device, O_RDONLY)) == -1) {
-        error("%s is not a valid device.n", device);
+        warning("{} is not a valid device", device);
         return;
     }
 
