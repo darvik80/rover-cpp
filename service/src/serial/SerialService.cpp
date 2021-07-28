@@ -9,7 +9,7 @@
 void SerialService::postConstruct(Registry &registry) {
     BaseService::postConstruct(registry);
 
-    _eventManager = registry.getService<EventManager>().shared_from_this();
+    _eventManager = registry.getService<EventManagerService>().shared_from_this();
     auto& props = registry.getProperties<SerialProperties>();
 
     _serial = std::make_unique<BoostSerialPort>(registry.getIoService(), props, *this);

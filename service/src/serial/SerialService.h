@@ -9,7 +9,7 @@
 
 #include <serial/SerialPort.h>
 #include <serial/SerialPortCodec.h>
-#include "event/EventManager.h"
+#include "event/EventManagerService.h"
 
 class SerialService : public BaseServiceShared<SerialService>, public serial::SerialPortCodecCallback {
     std::unique_ptr<serial::SerialPort> _serial;

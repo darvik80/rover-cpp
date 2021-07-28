@@ -7,18 +7,20 @@
 
 #include <utility>
 
-#include "Service.h"
+class EventSource {
+public:
+    typedef std::shared_ptr<EventSource> Ptr;
+};
 
 class Event {
-private:
-    Service::Ptr _source;
+    EventSource::Ptr _source;
 public:
     Event() = default;
 
-    explicit Event(Service::Ptr source)
+    explicit Event(EventSource::Ptr source)
             : _source(std::move(source)) {}
 
-    Service::Ptr source() {
+    EventSource::Ptr source() {
         return _source;
     }
 

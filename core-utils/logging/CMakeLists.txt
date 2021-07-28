@@ -8,9 +8,9 @@ file(GLOB SRCS_G src/logging/*.cpp)
 # libs {
 add_definitions(-DBOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED -DBOOST_STACKTRACE_USE_ADDR2LINE)
 find_package(Boost REQUIRED COMPONENTS system filesystem thread log log_setup)
-set(MAIN_LIBS fmt ${Boost_LIBRARIES})
+set(LOG_MAIN_LIBS fmt ${Boost_LIBRARIES})
 # }
 
 add_library(${PROJECT_NAME} ${SRCS_G})
 
-target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS})
+target_link_libraries(${PROJECT_NAME} ${LOG_MAIN_LIBS})

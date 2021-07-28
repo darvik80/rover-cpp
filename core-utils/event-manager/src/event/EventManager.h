@@ -8,11 +8,10 @@
 #include <unordered_map>
 #include <typeindex>
 
-#include "Event.h"
 #include "EventHandler.h"
-#include "BaseService.h"
+#include "logging/Logging.h"
 
-class EventManager : public BaseServiceShared<EventManager> {
+class EventManager {
 public:
     typedef std::shared_ptr<EventManager> Ptr;
     typedef boost::signals2::signal<void(const Event &)> Signal;
@@ -49,21 +48,5 @@ public:
         );
     }
 
-    void raiseEvent(const Event& event) {
-        if (auto iter = _signals.find(typeid(event)); iter != _signals.end()) {
-            iter->second(event);
-        } else {
-            warning(std::string("dropped event ") + typeid(event).name());
-            // TODO: add logs
-        }
-    };
-
-public:
-    const char *name() override {
-        return "event-manager";
-    }
-
-    int order() override {
-        return INT_MAX-1;
-    }
+    void raiseEvent(const Event& event);
 };

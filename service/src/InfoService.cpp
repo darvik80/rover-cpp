@@ -2,7 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#include <event/EventManager.h>
+#include <event/EventManagerService.h>
 #include "InfoService.h"
 
 BEGIN_DECLARE_DTO(HealthResponse)
@@ -26,7 +26,7 @@ public:
 
 void InfoService::postConstruct(Registry &registry) {
     BaseService::postConstruct(registry);
-    registry.getService<EventManager>().subscribe<JsonRpcRegisterEvent>(shared_from_this());
+    registry.getService<EventManagerService>().subscribe<JsonRpcRegisterEvent>(shared_from_this());
 }
 
 void InfoService::onEvent(const JsonRpcRegisterEvent &event) {

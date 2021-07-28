@@ -43,9 +43,10 @@ include_directories(
         ${Protobuf_INCLUDE_DIRS}
         ${CMAKE_CURRENT_BINARY_DIR}
         ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/../core-utils/logging/src
+        ${PROJECT_SOURCE_DIR}/../core-utils/event-manager/src
         ${PROJECT_SOURCE_DIR}/../platform/src
         ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
-        ${PROJECT_SOURCE_DIR}/../core-utils/logging/src/
 )
 
 file(GLOB SRCS_G
@@ -70,7 +71,6 @@ file(GLOB SRCS_G
 set(RESOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 set(WWW_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/www)
 
-add_definitions(-DBOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED -DDBOOST_STACKTRACE_USE_ADDR2LINE)
 if (APPLE)
     message("Apple incubator build")
 
@@ -130,4 +130,4 @@ endif ()
 
 add_subdirectory(testsuite)
 
-target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} logging event-manager gRPC::grpc++ ${Protobuf_LIBRARIES})

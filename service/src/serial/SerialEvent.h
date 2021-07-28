@@ -5,7 +5,7 @@
 #ifndef ROVER_SERIALEVENT_H
 #define ROVER_SERIALEVENT_H
 
-#include "event/Event.h"
+#include <event/Event.h>
 
 #include <utility>
 

@@ -17,6 +17,10 @@
 #include "device/MG90sServoMotor.h"
 #endif
 
+#ifdef ARDUINO_ARCH_ESP8266
+#include "service/ServoMotorService.h"
+#include "device/MG90sServoMotor.h"
+#endif
 
 etl::message_bus<3> appMessageBus;
 
@@ -26,13 +30,20 @@ Application::Application()
 
 void Application::postConstruct() {
     Serial.begin(115200);
-
-    _services.emplace_back(new MqttService(getRegistry()));
+#if defined ESP8266 || ESP32
     _services.emplace_back(new WifiService(getRegistry()));
+    //_services.emplace_back(new MqttService(getRegistry()));
+#endif
+
 #ifdef ARDUINO_ARCH_AVR
     _services.emplace_back(new IRControllerService(getRegistry(), new HX1838IRRemote(11)));
     _services.emplace_back(new DCMotorService(getRegistry(), new L293DMotorShield()));
+#ifdef MG90S_SERVO_MOTOR
     _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(10)));
+#endif
+#endif
+#ifdef MG90S_SERVO_MOTOR
+    _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(D7)));
 #endif
     appMessageBus.subscribe(*this);
 

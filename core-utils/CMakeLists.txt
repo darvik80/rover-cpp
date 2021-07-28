@@ -12,3 +12,4 @@ link_directories(
 )
 
 add_subdirectory(logging)
+add_subdirectory(event-manager)

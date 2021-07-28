@@ -17,9 +17,13 @@ public:
     int order() override {
         return INT32_MAX;
     }
-    void postConstruct(Registry &registry) override;
+    void postConstruct(Registry &registry) override {
 
-    void preDestroy(Registry& registry) override;
+    }
+
+    void preDestroy(Registry& registry) override {
+
+    }
 };
 
 

@@ -11,7 +11,7 @@
 #include "logging/LoggingService.h"
 #include "net/http/HttpService.h"
 #include "grpc/GrpcService.h"
-#include "event/EventManager.h"
+#include "event/EventManagerService.h"
 #include "event/ApplicationEvent.h"
 #include "scheduler/Scheduler.h"
 #include "serial/SerialService.h"
@@ -41,7 +41,7 @@ void Application::postConstruct(Registry &registry) {
     // { System Services
     registry.addService(std::make_shared<LoggingService>());
     registry.addService(std::make_shared<Scheduler>(registry.getIoService()));
-    registry.addService(std::make_shared<EventManager>());
+    registry.addService(std::make_shared<EventManagerService>());
     registry.addService(std::make_shared<HttpService>());
     registry.addService(std::make_shared<GrpcService>());
     // } System Services
@@ -69,7 +69,7 @@ void Application::run(Registry &registry) {
     signals.add(SIGQUIT);
 #endif
 
-    auto &eventManager = registry.getService<EventManager>();
+    auto &eventManager = registry.getService<EventManagerService>();
 
     signals.async_wait(
             [&eventManager](boost::system::error_code ec, int signal) {

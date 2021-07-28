@@ -5,7 +5,7 @@
 #ifndef PLATFORM_IO_MG90SSERVOMOTOR_H
 #define PLATFORM_IO_MG90SSERVOMOTOR_H
 
-#ifdef ARDUINO_ARCH_AVR
+#if defined ARDUINO_ARCH_AVR || ARDUINO_ARCH_ESP8266
 
 #if defined MG90S_SERVO_MOTOR || defined SG90_SERVO_MOTOR
 
@@ -43,7 +43,7 @@ public:
     }
 
     void moveMicroseconds(int microSec) override {
-        return _servo.writeMicroseconds(1000);
+        return _servo.writeMicroseconds(microSec);
     }
 };
 

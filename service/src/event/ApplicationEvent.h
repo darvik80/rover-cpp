@@ -5,7 +5,7 @@
 #ifndef ROVER_APPLICATIONEVENT_H
 #define ROVER_APPLICATIONEVENT_H
 
-#include "Event.h"
+#include <event/Event.h>
 
 class ApplicationStartedEvent : public Event {
 

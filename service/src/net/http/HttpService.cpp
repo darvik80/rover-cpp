@@ -4,7 +4,7 @@
 
 #include "HttpService.h"
 #include "HttpWorker.h"
-#include "event/EventManager.h"
+#include "event/EventManagerService.h"
 #include "event/ApplicationEvent.h"
 #include "JsonRpcHandler.h"
 #include "HttpFileHandler.h"
