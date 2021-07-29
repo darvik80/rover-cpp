@@ -3,7 +3,7 @@ project(event-manager)
 
 set(CMAKE_CXX_STANDARD 17)
 
-file(GLOB SRCS_G src/event/*.cpp)
+file(GLOB SRCS_G src/event/*.cpp src/scheduler/*.cpp)
 
 include_directories(
         ../logging/src

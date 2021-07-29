@@ -9,17 +9,20 @@
 
 #ifdef ARDUINO_ARCH_AVR
 #include "service/IRControllerService.h"
-#include "service/DCMotorService.h"
-#include "service/ServoMotorService.h"
-
-#include "device/HX1838IRRemote.h"
-#include "device/L293DMotorShield.h"
-#include "device/MG90sServoMotor.h"
 #endif
 
-#ifdef ARDUINO_ARCH_ESP8266
-#include "service/ServoMotorService.h"
+#ifdef L293D_DC_MOTOR_SHIELD
+
+#include "service/DCMotorService.h"
+#include "device/L293DMotorShield.h"
+
+#endif
+
+#ifdef MG90S_SERVO_MOTOR
+
 #include "device/MG90sServoMotor.h"
+#include "service/ServoMotorService.h"
+
 #endif
 
 etl::message_bus<3> appMessageBus;
@@ -37,11 +40,12 @@ void Application::postConstruct() {
 
 #ifdef ARDUINO_ARCH_AVR
     _services.emplace_back(new IRControllerService(getRegistry(), new HX1838IRRemote(11)));
+#endif
+
+#ifdef L293D_DC_MOTOR_SHIELD
     _services.emplace_back(new DCMotorService(getRegistry(), new L293DMotorShield()));
-#ifdef MG90S_SERVO_MOTOR
-    _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(10)));
 #endif
-#endif
+
 #ifdef MG90S_SERVO_MOTOR
     _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(D7)));
 #endif

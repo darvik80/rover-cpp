@@ -53,11 +53,6 @@
 #define REFRESH_INTERVAL            20000 // classic default period to refresh servos in microseconds
 #define MAX_SERVOS                      9 // D0-D8
 
-//#define MIN_PULSE_WIDTH       544     // the shortest pulse sent to a servo
-//#define MAX_PULSE_WIDTH      2400     // the longest pulse sent to a servo
-//#define DEFAULT_PULSE_WIDTH  1500     // default pulse width when servo is attached
-
-
 #if !defined(ESP8266)
 
 #error "This library only supports esp8266 boards."

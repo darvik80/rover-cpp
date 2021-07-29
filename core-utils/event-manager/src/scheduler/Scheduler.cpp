@@ -4,7 +4,7 @@
 
 #include "Scheduler.h"
 
-TimerHandler Scheduler::schedule(boost::posix_time::time_duration duration, const std::function<void()>& fn) {
+TimerHandler Scheduler::schedule(const boost::posix_time::time_duration& duration, const std::function<void()>& fn) {
     TimerHandler handler(_service);
     handler.schedule(duration, fn);
 

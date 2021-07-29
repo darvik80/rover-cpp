@@ -4,7 +4,7 @@
 
 #include "DCMotorService.h"
 
-int SPEED_INDEX[] { -255, -224, -192, -128, -96, -64, 0, 64, 96, 128, 192, 224, 255 };
+int SPEED_INDEX[]{-255, -224, -192, -128, -96, -64, 0, 64, 96, 128, 192, 224, 255};
 
 DCMotorService::DCMotorService(Registry &registry, DCMotor *motor)
         : BaseService(registry), message_router(DC_MOTOR_SERVICE), _motor(motor) {
@@ -15,7 +15,7 @@ void DCMotorService::on_receive(const IRControlMessage &msg) {
         case BTN_ENTER:
             if (_pos < 6) {
                 _pos++;
-            } else if (_pos > 6){
+            } else if (_pos > 6) {
                 _pos--;
             }
             break;
@@ -44,4 +44,18 @@ void DCMotorService::on_receive(const IRControlMessage &msg) {
 
 void DCMotorService::postConstruct() {
     getRegistry().getMessageBus().subscribe(*this);
+    Serial.println("Reset");
+    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_FORWARD, 0);
+    delay(5000);
+    Serial.println("Move forward");
+    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_FORWARD, 255);
+    delay(5000);
+    Serial.println("Stop");
+    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_BACKWARD, 0);
+    delay(5000);
+    Serial.println("Move backward");
+    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_BACKWARD, 255);
+    delay(5000);
+    Serial.println("Stop");
+    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_BACKWARD, 0);
 }

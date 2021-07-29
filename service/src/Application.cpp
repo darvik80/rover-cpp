@@ -13,7 +13,7 @@
 #include "grpc/GrpcService.h"
 #include "event/EventManagerService.h"
 #include "event/ApplicationEvent.h"
-#include "scheduler/Scheduler.h"
+#include "scheduler/SchedulerService.h"
 #include "serial/SerialService.h"
 #include "InfoService.h"
 #include "JoystickService.h"
@@ -40,7 +40,7 @@ void Application::postConstruct(Registry &registry) {
 
     // { System Services
     registry.addService(std::make_shared<LoggingService>());
-    registry.addService(std::make_shared<Scheduler>(registry.getIoService()));
+    registry.addService(std::make_shared<SchedulerService>(registry.getIoService()));
     registry.addService(std::make_shared<EventManagerService>());
     registry.addService(std::make_shared<HttpService>());
     registry.addService(std::make_shared<GrpcService>());
