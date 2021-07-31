@@ -7,6 +7,7 @@
 
 #include "Logger.h"
 #include "Service.h"
+#include <logging/Logging.h>
 
 class LoggingService : public Service, public std::enable_shared_from_this<LoggingService> {
 public:
@@ -17,11 +18,12 @@ public:
     int order() override {
         return INT32_MAX;
     }
-    void postConstruct(Registry &registry) override {
 
+    void postConstruct(Registry &registry) override {
+        logging::setup(registry.getProperties<LoggingProperties>());
     }
 
-    void preDestroy(Registry& registry) override {
+    void preDestroy(Registry &registry) override {
 
     }
 };

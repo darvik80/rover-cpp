@@ -45,6 +45,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/../core-utils/logging/src
         ${PROJECT_SOURCE_DIR}/../core-utils/event-manager/src
+        ${PROJECT_SOURCE_DIR}/../mqtt/src
         ${PROJECT_SOURCE_DIR}/../platform/src
         ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
 )
@@ -56,6 +57,7 @@ file(GLOB SRCS_G
         src/properties/*.cpp
         src/properties/source/*.cpp
         src/module/raspberry/*.cpp
+        src/mqtt/*.cpp
         src/net/*.cpp
         src/net/http/*.cpp
         src/net/http/rpc/*.cpp
@@ -130,4 +132,4 @@ endif ()
 
 add_subdirectory(testsuite)
 
-target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} logging event-manager gRPC::grpc++ ${Protobuf_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} logging event-manager mqtt gRPC::grpc++ ${Protobuf_LIBRARIES})

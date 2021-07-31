@@ -74,3 +74,25 @@ void JsonPropertySource::getProperties(SerialProperties &props) {
         }
     }
 }
+
+void JsonPropertySource::getProperties(MqttProperties &props) {
+    if (auto it = _json.find("mqtt"); it != _json.end()) {
+        if (auto key = it->find("address"); key != it->end()) {
+            key->get_to(props.address);
+        }
+        if (auto key = it->find("port"); key != it->end()) {
+            key->get_to(props.port);
+        }
+        if (auto key = it->find("username"); key != it->end()) {
+            key->get_to(props.username);
+        }
+        if (auto key = it->find("password"); key != it->end()) {
+            key->get_to(props.password);
+        }
+        if (auto key = it->find("client-name"); key != it->end()) {
+            key->get_to(props.clientName);
+        }
+    }
+}
+
+

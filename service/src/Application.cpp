@@ -15,6 +15,7 @@
 #include "event/ApplicationEvent.h"
 #include "scheduler/SchedulerService.h"
 #include "serial/SerialService.h"
+#include "mqtt/MqttService.h"
 #include "InfoService.h"
 #include "JoystickService.h"
 #include "BarcodeReaderService.h"
@@ -44,6 +45,7 @@ void Application::postConstruct(Registry &registry) {
     registry.addService(std::make_shared<EventManagerService>());
     registry.addService(std::make_shared<HttpService>());
     registry.addService(std::make_shared<GrpcService>());
+    registry.addService(std::make_shared<MqttService>());
     // } System Services
 
     registry.addService(std::make_shared<InfoService>());

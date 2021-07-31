@@ -90,6 +90,7 @@ namespace logging {
             )->set_formatter(&fileFormatter);
         }
 
+
         if (props.console) {
             log::add_console_log(std::clog)->set_formatter(&consoleFormatter);
         }

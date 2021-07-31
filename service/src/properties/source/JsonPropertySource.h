@@ -21,8 +21,8 @@ public:
     void getProperties(LoggingProperties &props) override;
     void getProperties(HttpProperties &props) override;
     void getProperties(GrpcProperties &props) override;
-
     void getProperties(SerialProperties &props) override;
+    void getProperties(MqttProperties &props) override;
 };
 
 

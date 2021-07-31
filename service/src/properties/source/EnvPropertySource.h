@@ -32,6 +32,13 @@
 #define PROP_SERIAL_PORT        "SERIAL_PORT"           // SerialProperties.port
 #define PROP_SERIAL_BAUD_RATE   "SERIAL_BAUD_RATE"      // SerialProperties.baudRate
 
+// props: MqttProperties
+#define PROP_MQTT_ADDRESS       "MQTT_ADDRESS"          // MqttProperties.address
+#define PROP_MQTT_PORT          "MQTT_PORT"             // MqttProperties.port
+#define PROP_MQTT_USERNAME      "MQTT_USERNAME"         // MqttProperties.username
+#define PROP_MQTT_PASSWORD      "MQTT_PASSWORD"         // MqttProperties.password
+#define PROP_MQTT_CLIENT_NAME   "MQTT_CLIENT_NAME"      // MqttProperties.clientName
+
 class EnvPropertySource : public PropertySource {
 public:
     void getProperties(NetworkProperties &props) override {
@@ -54,7 +61,7 @@ public:
             props.host = val;
         }
         if (auto val = getenv(PROP_HTTP_PORT); val != nullptr) {
-            props.port = boost::lexical_cast<int>(val);;
+            props.port = boost::lexical_cast<int>(val);
         }
         if (auto val = getenv(PROP_HTTP_ROOT); val != nullptr) {
             props.root = val;
@@ -66,7 +73,7 @@ public:
             props.host = val;
         }
         if (auto val = getenv(PROP_GRPC_PORT); val != nullptr) {
-            props.port = boost::lexical_cast<int>(val);;
+            props.port = boost::lexical_cast<int>(val);
         }
     }
 
@@ -75,9 +82,26 @@ public:
             props.port = val;
         }
         if (auto val = getenv(PROP_SERIAL_BAUD_RATE); val != nullptr) {
-            props.baudRate = boost::lexical_cast<int>(val);;
+            props.baudRate = boost::lexical_cast<int>(val);
         }
+    }
 
+    void getProperties(MqttProperties &props) override {
+        if (auto val = getenv(PROP_MQTT_ADDRESS); val != nullptr) {
+            props.address = val;
+        }
+        if (auto val = getenv(PROP_MQTT_PORT); val != nullptr) {
+            props.port = boost::lexical_cast<int>(val);;
+        }
+        if (auto val = getenv(PROP_MQTT_CLIENT_NAME); val != nullptr) {
+            props.clientName = val;
+        }
+        if (auto val = getenv(PROP_MQTT_USERNAME); val != nullptr) {
+            props.username = val;
+        }
+        if (auto val = getenv(PROP_MQTT_PASSWORD); val != nullptr) {
+            props.password = val;
+        }
     }
 };
 

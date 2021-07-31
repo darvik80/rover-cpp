@@ -40,6 +40,10 @@ public:
     void getProperties(SerialProperties &props) override {
         merge(props);
     }
+
+    void getProperties(MqttProperties &props) override {
+        merge(props);
+    }
 };
 
 

@@ -1,3 +1,0 @@
-[submodule "lib/mqtt"]
-	path = lib/mqtt
-	url = git@github.com:darvik80/mqtt.git
