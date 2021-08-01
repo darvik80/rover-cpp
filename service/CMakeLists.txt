@@ -66,6 +66,7 @@ file(GLOB SRCS_G
         src/serial/os/*.cc
         src/scheduler/*.cpp
         src/grpc/*.cpp
+        src/joystick/*.cpp
         ${PROTO_SRCS}
         ${GRPC_SRCS}
         )

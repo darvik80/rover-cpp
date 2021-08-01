@@ -44,6 +44,10 @@ public:
     void getProperties(MqttProperties &props) override {
         merge(props);
     }
+
+    void getProperties(JoystickProperties &props) override {
+        merge(props);
+    }
 };
 
 

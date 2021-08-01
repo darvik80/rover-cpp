@@ -6,6 +6,7 @@
 #define ROVER_EVENT_H
 
 #include <utility>
+#include <memory>
 
 namespace em {
     class EventSource {
@@ -21,7 +22,7 @@ namespace em {
         explicit Event(EventSource::Ptr source)
                 : _source(std::move(source)) {}
 
-        EventSource::Ptr source() const {
+        [[nodiscard]] EventSource::Ptr source() const {
             return _source;
         }
 

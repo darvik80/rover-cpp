@@ -39,6 +39,10 @@
 #define PROP_MQTT_PASSWORD      "MQTT_PASSWORD"         // MqttProperties.password
 #define PROP_MQTT_CLIENT_NAME   "MQTT_CLIENT_NAME"      // MqttProperties.clientName
 
+// props: JoystickProperties
+#define PROP_JOYSTICK_SOURCE        "JOYSTICK_SOURCE"         // JoystickProperties.source
+#define PROP_JOYSTICK_MQTT_TOPIC    "JOYSTICK_MQTT_TOPIC"     // JoystickProperties.mqttTopic
+
 class EnvPropertySource : public PropertySource {
 public:
     void getProperties(NetworkProperties &props) override {
@@ -101,6 +105,15 @@ public:
         }
         if (auto val = getenv(PROP_MQTT_PASSWORD); val != nullptr) {
             props.password = val;
+        }
+    }
+
+    void getProperties(JoystickProperties& props) override {
+        if (auto val = getenv(PROP_JOYSTICK_SOURCE); val != nullptr) {
+            props.source = val;
+        }
+        if (auto val = getenv(PROP_JOYSTICK_MQTT_TOPIC); val != nullptr) {
+            props.mqttTopic = val;
         }
     }
 };

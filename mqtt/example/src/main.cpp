@@ -10,16 +10,16 @@
 namespace po = boost::program_options;
 
 int main(int argc, char *argv[]) {
-    log::LoggingProperties logProps;
+    logger::LoggingProperties logProps;
     logProps.level="info";
-    log::setup(logProps);
+    logger::setup(logProps);
 
     boost::asio::io_service main;
     boost::asio::signal_set signals(main, SIGINT, SIGTERM, SIGQUIT);
     signals.async_wait([](const boost::system::error_code &error, int signalNumber) {
         if (!error) {
             // A signal occurred.
-            log::info("handle: {}", signalNumber);
+            logger::info("handle: {}", signalNumber);
         }
     });
 
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     mqtt::DeadlineTimer timer(main, mqtt::PosixSeconds{10});
     auto sub = client->subscribe("/home/test", mqtt::message::QOS_AT_LEAST_ONCE, [](const mqtt::ByteBuffer &data) {
         std::string msg(data.begin(), data.end());
-        log::info("got msg: {}", msg);
+        logger::info("got msg: {}", msg);
     });
     auto pub = client->publisher("/home/test", mqtt::message::QOS_AT_LEAST_ONCE);
     timer.async_wait([pub, &timer](const mqtt::ErrorCode &err) {

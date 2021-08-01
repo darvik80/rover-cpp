@@ -25,7 +25,7 @@ int BoostSerialPort::send(const uint8_t *data, size_t size) {
         if (ec) {
             onError(ec);
         } else {
-            log::debug("[serial-port] sent: {}", sent);
+            logger::debug("[serial-port] sent: {}", sent);
         }
     });
 
@@ -45,7 +45,7 @@ int BoostSerialPort::send(const Message &msg) {
         if (ec) {
             onError(ec);
         } else {
-            log::debug("[serial-port] sent: {}", sent);
+            logger::debug("[serial-port] sent: {}", sent);
         }
     });
 
@@ -78,7 +78,7 @@ void BoostSerialPort::asyncRead() {
                     open();
                     return;
                 }
-                log::debug("[serial-port] recv: {}", size);
+                logger::debug("[serial-port] recv: {}", size);
                 onMessage((const uint8_t*)&_incBuf, size);
                 asyncRead();
             }
@@ -121,7 +121,7 @@ void BoostSerialPort::open() {
             _serial.cancel();
             _serial.close();
         } catch (std::exception &ex) {
-            log::warning("[serial-port] can't close port {}, {}", _props.port, ex.what());
+            logger::warning("[serial-port] can't close port {}, {}", _props.port, ex.what());
         }
 
         onDisconnect();
@@ -138,7 +138,7 @@ void BoostSerialPort::open() {
         onConnect();
         asyncRead();
     } catch (std::exception& ex) {
-        log::warning("[serial-port] can't open port: {}, {}", _props.port, ex.what());
+        logger::warning("[serial-port] can't open port: {}, {}", _props.port, ex.what());
         setTimer(posix_time::seconds{5}, [this]() {
             open();
         });

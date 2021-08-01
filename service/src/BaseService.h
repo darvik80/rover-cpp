@@ -21,32 +21,32 @@ public:
 protected:
     template <class... A>
     void trace(const std::string& fmt, A&&... args) {
-        log::trace("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+        logger::trace("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
     }
 
     template <class... A>
     void debug(const std::string& fmt, A&&... args) {
-        log::debug("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+        logger::debug("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
     }
 
     template <class... A>
     void info(const std::string& fmt, A&&... args) {
-        log::info("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+        logger::info("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
     }
 
     template <class... A>
     void warning(const std::string& fmt, A&&... args) {
-        log::warning("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+        logger::warning("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
     }
 
     template <class... A>
     void error(const std::string& fmt, A&&... args) {
-        log::error("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+        logger::error("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
     }
 
     template <class... A>
     void fatal(const std::string& fmt, A&&... args) {
-        log::fatal("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
+        logger::fatal("[{}] {}", name(), fmt::format(fmt, std::forward<A>(args)...));
     }
 };
 

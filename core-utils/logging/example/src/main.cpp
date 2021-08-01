@@ -7,12 +7,12 @@
 #include "EMLogger.h"
 
 int main(int argc, char *argv[]) {
-    log::LoggingProperties logProps;
+    logger::LoggingProperties logProps;
     logProps.level="info";
-    log::setup(logProps);
+    logger::setup(logProps);
 
-    log::info("Info");
-    log::warning("Warning");
+    logger::info("Info");
+    logger::warning("Warning");
     //log::error("Error");
 
     mqtt::log::info("mqtt::info");

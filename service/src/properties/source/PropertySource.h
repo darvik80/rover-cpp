@@ -14,6 +14,7 @@
 #include "properties/GrpcProperties.h"
 #include "properties/SerialProperties.h"
 #include "properties/MqttProperties.h"
+#include "properties/JoystickProperties.h"
 
 class PropertySource {
 public:
@@ -25,6 +26,7 @@ public:
     virtual void getProperties(GrpcProperties& props) = 0;
     virtual void getProperties(SerialProperties& props) = 0;
     virtual void getProperties(MqttProperties& props) = 0;
+    virtual void getProperties(JoystickProperties& props) = 0;
     ~PropertySource() = default;
 };
 

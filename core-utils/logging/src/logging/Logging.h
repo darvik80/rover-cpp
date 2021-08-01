@@ -40,7 +40,7 @@ namespace COMPONENT::log {                                                      
     DECLARE_LEVEL(LOGGER, error)                                                                \
 }
 
-namespace log {
+namespace logger {
     struct LoggingProperties {
         std::string level{"debug"};
         bool console{true};

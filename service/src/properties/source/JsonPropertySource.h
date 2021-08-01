@@ -23,6 +23,7 @@ public:
     void getProperties(GrpcProperties &props) override;
     void getProperties(SerialProperties &props) override;
     void getProperties(MqttProperties &props) override;
+    void getProperties(JoystickProperties &props) override;
 };
 
 

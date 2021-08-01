@@ -7,7 +7,7 @@
 
 #include <logging/Logging.h>
 
-struct LoggingProperties : Properties, log::LoggingProperties {
+struct LoggingProperties : Properties, logger::LoggingProperties {
 };
 
 

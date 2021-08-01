@@ -17,7 +17,7 @@
 #include "serial/SerialService.h"
 #include "mqtt/MqttService.h"
 #include "InfoService.h"
-#include "JoystickService.h"
+#include "joystick/JoystickService.h"
 #include "BarcodeReaderService.h"
 
 using namespace boost;
@@ -50,7 +50,7 @@ void Application::postConstruct(Registry &registry) {
 
     registry.addService(std::make_shared<InfoService>());
 #if defined SUPPORT_XBOXDRV
-    registry.addService(std::make_shared<JoystickService>());
+    registry.addService(std::make_shared<xbox::JoystickService>());
 #endif
 #if defined SUPPORT_BARCODE
     registry.addService(std::make_shared<BarcodeReaderService>());

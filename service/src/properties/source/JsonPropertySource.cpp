@@ -95,4 +95,13 @@ void JsonPropertySource::getProperties(MqttProperties &props) {
     }
 }
 
-
+void JsonPropertySource::getProperties(JoystickProperties &props) {
+    if (auto it = _json.find("joystick"); it != _json.end()) {
+        if (auto key = it->find("source"); key != it->end()) {
+            key->get_to(props.source);
+        }
+        if (auto key = it->find("mqtt-topic"); key != it->end()) {
+            key->get_to(props.mqttTopic);
+        }
+    }
+}
