@@ -16,7 +16,7 @@ public:
     void handle(const JsonRpcRequest &request, JsonRpcResponse &response);
 };
 
-class JsonRpcRegisterEvent : public Event {
+class JsonRpcRegisterEvent : public em::Event {
     RpcRegistry& _jsonRpc;
 public:
     explicit JsonRpcRegisterEvent(RpcRegistry &jsonRpc)

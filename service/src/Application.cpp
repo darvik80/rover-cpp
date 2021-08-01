@@ -100,14 +100,14 @@ void Application::run(Registry &registry) {
         ioc.stop();
         return true;
     };
-    registry.getService<EventManager>().subscribe<>(fnClose);
+    registry.getService<EventManagerService>().subscribe<>(fnClose);
     std::function<bool(const ApplicationShutdownEvent &)> fnShutdown = [this](const ApplicationShutdownEvent &event) -> bool {
         info("shutdown");
         return true;
     };
-    registry.getService<EventManager>().subscribe<>(fnShutdown);
+    registry.getService<EventManagerService>().subscribe<>(fnShutdown);
 
-    registry.getService<EventManager>().raiseEvent(ApplicationStartedEvent{});
+    registry.getService<EventManagerService>().raiseEvent(ApplicationStartedEvent{});
     registry.getIoService().run();
 }
 
@@ -115,6 +115,6 @@ void Application::preDestroy(Registry &registry) {
     registry.visitService([&registry](auto &service) {
         service.preDestroy(registry);
     });
-    registry.getService<EventManager>().raiseEvent(ApplicationShutdownEvent{});
+    registry.getService<EventManagerService>().raiseEvent(ApplicationShutdownEvent{});
 }
 

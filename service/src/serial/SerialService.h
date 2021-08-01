@@ -13,7 +13,7 @@
 
 class SerialService : public BaseServiceShared<SerialService>, public serial::SerialPortCodecCallback {
     std::unique_ptr<serial::SerialPort> _serial;
-    EventManager::Ptr _eventManager;
+    em::EventManager::Ptr _eventManager;
 public:
     const char *name() override {
         return "serial";

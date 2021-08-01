@@ -54,7 +54,7 @@ namespace mqtt {
 
         Timer::Ptr _timer;
 
-        EventManager::Ptr _eventManager;
+        em::EventManager::Ptr _eventManager;
 
         PosixTime _lastUpdate;
         bool _shutdown{false};
@@ -90,7 +90,7 @@ namespace mqtt {
 
         void stop();
 
-        void setEventManager(const EventManager::Ptr &eventManager);
+        void setEventManager(const em::EventManager::Ptr &eventManager);
     };
 }
 

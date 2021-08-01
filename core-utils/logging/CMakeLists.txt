@@ -11,6 +11,8 @@ find_package(Boost REQUIRED COMPONENTS system filesystem thread log log_setup)
 set(LOG_MAIN_LIBS fmt ${Boost_LIBRARIES})
 # }
 
+add_subdirectory(example)
+
 add_library(${PROJECT_NAME} ${SRCS_G})
 
 target_link_libraries(${PROJECT_NAME} ${LOG_MAIN_LIBS})

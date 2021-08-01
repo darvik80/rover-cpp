@@ -7,7 +7,7 @@
 #include <event/EventManager.h>
 #include "BaseService.h"
 
-class EventManagerService : public EventManager, public BaseServiceShared<EventManagerService> {
+class EventManagerService : public em::EventManager, public BaseServiceShared<EventManagerService> {
 public:
     const char *name() override {
         return "event-manager";

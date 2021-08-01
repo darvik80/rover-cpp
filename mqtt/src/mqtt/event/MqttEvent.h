@@ -11,18 +11,18 @@
 
 namespace mqtt {
 
-    class MqttEvent : public Event {
+class MqttEvent : public em::Event {
     private:
         const ErrorCode _err;
 
     public:
         MqttEvent() : Event() {}
-        explicit MqttEvent(EventSource::Ptr source) : Event(source) {}
+        explicit MqttEvent(em::EventSource::Ptr source) : Event(source) {}
 
         explicit MqttEvent(const ErrorCode &err)
                 : Event(), _err(err) {}
 
-        MqttEvent(EventSource::Ptr source, const ErrorCode &err)
+        MqttEvent(em::EventSource::Ptr source, const ErrorCode &err)
                 : Event(source), _err(err) {}
 
         [[nodiscard]] const ErrorCode &getErr() const {

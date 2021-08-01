@@ -9,7 +9,7 @@
 
 #include <utility>
 
-class SerialEvent : public Event {
+class SerialEvent : public em::Event {
 private:
     uint8_t _msgId;
     std::vector<uint8_t> _data;

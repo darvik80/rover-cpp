@@ -24,7 +24,7 @@ namespace mqtt {
 
         virtual Publisher publisher(std::string_view topic, uint8_t qos) = 0;
 
-        virtual EventManager::Ptr getEventManager() = 0;
+        virtual em::EventManager::Ptr getEventManager() = 0;
 
         virtual uint16_t getPacketIdentifier() = 0;
 

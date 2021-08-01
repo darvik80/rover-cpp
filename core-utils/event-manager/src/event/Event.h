@@ -7,25 +7,26 @@
 
 #include <utility>
 
-class EventSource {
-public:
-    typedef std::shared_ptr<EventSource> Ptr;
-};
+namespace em {
+    class EventSource {
+    public:
+        typedef std::shared_ptr<EventSource> Ptr;
+    };
 
-class Event {
-    EventSource::Ptr _source;
-public:
-    Event() = default;
+    class Event {
+        EventSource::Ptr _source;
+    public:
+        Event() = default;
 
-    explicit Event(EventSource::Ptr source)
-            : _source(std::move(source)) {}
+        explicit Event(EventSource::Ptr source)
+                : _source(std::move(source)) {}
 
-    EventSource::Ptr source() {
-        return _source;
-    }
+        EventSource::Ptr source() const {
+            return _source;
+        }
 
-    virtual ~Event() = default;
-};
-
+        virtual ~Event() = default;
+    };
+}
 
 #endif //ROVER_EVENT_H

@@ -22,9 +22,9 @@ void GrpcService::postConstruct(Registry &registry) {
         }
         _server = builder.BuildAndStart();
 
-        logging::info("[grpc] server started: {}", serverAddress);
+        log::info("[grpc] server started: {}", serverAddress);
     } catch (std::exception& ex) {
-        logging::info("[grpc] server failed: {}", ex.what());
+        log::info("[grpc] server failed: {}", ex.what());
     }
 }
 
@@ -32,5 +32,5 @@ void GrpcService::preDestroy(Registry &registry) {
     _server->Shutdown();
     BaseService::preDestroy(registry);
 
-    logging::info("[grpc] server stopped");
+    log::info("[grpc] server stopped");
 }

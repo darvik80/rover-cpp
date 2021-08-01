@@ -12,7 +12,7 @@
 
 void HttpService::addHandlers(Registry &registry, const HttpProperties& props) {
     auto jsonRpc = std::make_shared<JsonRpcHandler>();
-    registry.getService<EventManager>().raiseEvent(JsonRpcRegisterEvent{*jsonRpc});
+    registry.getService<EventManagerService>().raiseEvent(JsonRpcRegisterEvent{*jsonRpc});
 
     registerHandler(http::verb::post, "/rpc", jsonRpc);
 
@@ -34,13 +34,13 @@ void HttpService::postConstruct(Registry &registry) {
     addHandlers(registry, props);
     auto worker = std::make_shared<HttpWorker>(registry.getIoService(), props.host, props.port, shared_from_this());
 
-    registry.getService<EventManager>().subscribe<ApplicationStartedEvent>([&props, worker, this](const auto &event) -> bool {
+    registry.getService<EventManagerService>().subscribe<ApplicationStartedEvent>([&props, worker, this](const auto &event) -> bool {
         worker->start();
         info("started: " + props.host + ":" + std::to_string(props.port));
         return true;
     });
 
-    registry.getService<EventManager>().subscribe<ApplicationCloseEvent>([&props, worker, this](const auto &event) -> bool {
+    registry.getService<EventManagerService>().subscribe<ApplicationCloseEvent>([&props, worker, this](const auto &event) -> bool {
         worker->shutdown();
         info("stopped: " + props.host + ":" + std::to_string(props.port));
         return true;

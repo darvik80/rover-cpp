@@ -10,7 +10,7 @@ namespace mqtt {
         return _connection->post(msg);
     }
 
-    EventManager::Ptr DefaultClient::getEventManager() {
+    em::EventManager::Ptr DefaultClient::getEventManager() {
         return _eventManager;
     }
 
@@ -43,14 +43,14 @@ namespace mqtt {
     }
 
 
-    DefaultClient::DefaultClient(const Connection::Ptr &connection, const EventManager::Ptr &eventManager)
+    DefaultClient::DefaultClient(const Connection::Ptr &connection, const em::EventManager::Ptr &eventManager)
             : _connection(connection), _eventManager(eventManager) {
 
     }
 
     Client::Ptr Factory::create(const MqttProperties &props) {
         auto conn = std::make_shared<DefaultConnection>(props);
-        auto eventManager = std::make_shared<EventManager>();
+        auto eventManager = std::make_shared<em::EventManager>();
         conn->setEventManager(eventManager);
         auto client = DefaultClient::create(conn, eventManager);
 

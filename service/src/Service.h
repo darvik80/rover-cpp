@@ -13,7 +13,7 @@
 
 class Registry;
 
-class Service : public EventSource, public Ordered {
+class Service : public em::EventSource, public Ordered {
 public:
     typedef std::shared_ptr<Service> Ptr;
     typedef std::vector<Ptr> VecPtr;

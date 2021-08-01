@@ -8,7 +8,7 @@
 #include "BaseService.h"
 #include "net/http/JsonRpcHandler.h"
 
-class InfoService : public BaseService, public TEventHandler<JsonRpcRegisterEvent>, public std::enable_shared_from_this<InfoService> {
+class InfoService : public BaseService, public em::TEventHandler<JsonRpcRegisterEvent>, public std::enable_shared_from_this<InfoService> {
 public:
     void onEvent(const JsonRpcRegisterEvent &event) override;
 

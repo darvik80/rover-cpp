@@ -5,7 +5,6 @@
 #include "Timer.h"
 #include "logging/MqttLogger.h"
 
-
 namespace mqtt {
     Timer::Timer(const Runnable &callback, const PosixDuration &duration)
             : _timer(IoServiceHolder::get_mutable_instance()), _callback(callback),

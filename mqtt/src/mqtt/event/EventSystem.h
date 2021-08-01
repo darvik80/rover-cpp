@@ -11,7 +11,7 @@ namespace mqtt {
 
     class EventTimeout : public MqttEvent {
     public:
-        explicit EventTimeout(EventSource::Ptr source)
+        explicit EventTimeout(em::EventSource::Ptr source)
                 : MqttEvent(source, ErrorCode{boost::asio::error::timed_out}) {}
     };
 }

@@ -23,11 +23,11 @@ namespace mqtt {
     private:
         std::atomic<uint16_t> _pid{0};
         Connection::Ptr _connection;
-        EventManager::Ptr _eventManager;
+        em::EventManager::Ptr _eventManager;
 
         std::unordered_set<Subscriber::Ptr> _subscribers;
     private:
-        DefaultClient(const Connection::Ptr &connection, const EventManager::Ptr &eventManager);
+        DefaultClient(const Connection::Ptr &connection, const em::EventManager::Ptr &eventManager);
 
     public:
 
@@ -42,7 +42,7 @@ namespace mqtt {
 
         Publisher publisher(std::string_view topic, uint8_t qos) override;
 
-        EventManager::Ptr getEventManager() override;
+        em::EventManager::Ptr getEventManager() override;
 
         void onEvent(const EventTopicUnSubscribe &event) override;
 

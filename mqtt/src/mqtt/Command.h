@@ -50,7 +50,7 @@ namespace mqtt {
                     });
             _client->getEventManager()->subscribe<EventChannelMessage>(msgHandler);
 
-            EventHandler::Ptr netHandler = std::make_shared<EventHandlerWrapper<EventChannelInactive>>(
+            em::EventHandler::Ptr netHandler = std::make_shared<EventHandlerWrapper<EventChannelInactive>>(
                     [req, promise, timer](const EventChannelInactive &event) {
                         if (timer->cancel()) {
                             log::error("[cmd] failed, pid: {}, error: {}", req->getPacketIdentifier(), event.getErr().message());

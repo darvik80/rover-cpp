@@ -7,11 +7,11 @@
 
 #include <event/Event.h>
 
-class ApplicationStartedEvent : public Event {
+class ApplicationStartedEvent : public em::Event {
 
 };
 
-class ApplicationCloseEvent : public Event {
+class ApplicationCloseEvent : public em::Event {
     int _signal;
 public:
     explicit ApplicationCloseEvent(int signal) : _signal(signal) {}
@@ -21,7 +21,7 @@ public:
     }
 };
 
-class ApplicationShutdownEvent : public Event {
+class ApplicationShutdownEvent : public em::Event {
 
 };
 

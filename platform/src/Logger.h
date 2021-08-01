@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko (Lazada Group) on 2019-07-12.
 //
 
-#ifndef ROVER_LOGGER_H
-#define ROVER_LOGGER_H
+#pragma once
 
 
 #include <string>
@@ -45,4 +44,3 @@ class DevNullLogger : public Logger {
     void fatal(std::string_view message) override {}
 };
 
-#endif //ROVER_LOGGER_H

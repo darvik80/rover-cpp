@@ -20,7 +20,7 @@ public:
     }
 
     void postConstruct(Registry &registry) override {
-        logging::setup(registry.getProperties<LoggingProperties>());
+        log::setup(registry.getProperties<LoggingProperties>());
     }
 
     void preDestroy(Registry &registry) override {

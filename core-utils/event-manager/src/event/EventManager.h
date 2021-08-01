@@ -11,6 +11,8 @@
 #include "EventHandler.h"
 #include "logging/Logging.h"
 
+namespace em {
+
 class EventManager {
 public:
     typedef std::shared_ptr<EventManager> Ptr;
@@ -48,5 +50,7 @@ public:
         );
     }
 
-    void raiseEvent(const Event& event);
+    void raiseEvent(const Event &event);
 };
+
+}

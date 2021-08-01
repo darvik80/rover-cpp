@@ -16,14 +16,14 @@ void SerialService::postConstruct(Registry &registry) {
 }
 
 void SerialService::onMessage(serial::SerialPort &port, serial::Message &msg) {
-    logging::debug("[{}][msg] msgId: {}, msgSize: {}", port.deviceId(), msg.msgId, msg.len);
+    log::debug("[{}][msg] msgId: {}, msgSize: {}", port.deviceId(), msg.msgId, msg.len);
     switch (msg.msgId ) {
         case serial::MSG_LOG:
-            logging::info("[{}] {}", port.deviceId(), std::string_view((const char*)msg.data, msg.len));
+            log::info("[{}] {}", port.deviceId(), std::string_view((const char*)msg.data, msg.len));
             break;
         case serial::MSG_PING:
         case serial::MSG_PONG:
-            logging::info("[{}] ping/pong", port.deviceId());
+            log::info("[{}] ping/pong", port.deviceId());
             break;
         default:
             _eventManager->raiseEvent(SerialEvent{shared_from_this(), msg.msgId, msg.data, msg.len});
@@ -32,9 +32,9 @@ void SerialService::onMessage(serial::SerialPort &port, serial::Message &msg) {
 }
 
 void SerialService::onConnect(serial::SerialPort &port) {
-    logging::info("[{}] connected", port.deviceId());
+    log::info("[{}] connected", port.deviceId());
 }
 
 void SerialService::onDisconnect(serial::SerialPort &port) {
-    logging::info("[{}] disconnected", port.deviceId());
+    log::info("[{}] disconnected", port.deviceId());
 }
