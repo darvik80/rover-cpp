@@ -46,48 +46,47 @@ namespace xbox {
             bool changed = false;
             for (int idx = 0; idx < size; idx++) {
                 log::info("ev: {}, {}, {}", _events[idx].number, _events[idx].type, _events[idx].value);
-                // reset events
                 if (_events[idx].number == 0 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.axisLRLeft = _events[idx].value;
+                    event.setAxisX(axis_left, _events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 2 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.axisLRRight = _events[idx].value;
+                    event.setAxisX(axis_right, _events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 1 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.axisUDLeft = _events[idx].value;
+                    event.setAxisY(axis_left, _events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 3 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.axisUDRight = _events[idx].value;
+                    event.setAxisY(axis_right, _events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 6 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.axisLRMid = _events[idx].value;
+                    event.setAxisX(axis_mid, _events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 7 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.axisUDMid = _events[idx].value;
+                    event.setAxisY(axis_mid, _events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 5 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.lt = ((int) _events[idx].value + 32768) >> 8;
+                    event.setLt(((int) _events[idx].value + 32768) >> 8);
                     changed = true;
                 } else if (_events[idx].number == 4 && JS_EVENT_AXIS == _events[idx].type) {
-                    event.rt = ((int) _events[idx].value + 32768) >> 8;
+                    event.setRt(((int) _events[idx].value + 32768) >> 8);
                     changed = true;
                 } else if (_events[idx].number == 4 && JS_EVENT_BUTTON == _events[idx].type) {
-                    event.rb = _events[idx].value;
+                    event.setRb(_events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 5 && JS_EVENT_BUTTON == _events[idx].type) {
-                    event.lb = _events[idx].value;
+                    event.setRb(_events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 0 && JS_EVENT_BUTTON == _events[idx].type) {
-                    event.btnA = _events[idx].value;
+                    event.setBtnA(_events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 2 && JS_EVENT_BUTTON == _events[idx].type) {
-                    event.btnX = _events[idx].value;
+                    event.setBtnX(_events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 3 && JS_EVENT_BUTTON == _events[idx].type) {
-                    event.btnY = _events[idx].value;
+                    event.setBtnY(_events[idx].value);
                     changed = true;
                 } else if (_events[idx].number == 1 && JS_EVENT_BUTTON == _events[idx].type) {
-                    event.btnB = _events[idx].value;
+                    event.setBtnB(_events[idx].value);
                     changed = true;
                 }
 

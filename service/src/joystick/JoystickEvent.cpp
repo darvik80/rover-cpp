@@ -6,41 +6,44 @@
 
 namespace xbox {
     void to_json(nlohmann::json &j, const Xbox380Event &event) {
-        j = nlohmann::json{
-                {"rb",            event.rb},
-                {"lb",            event.lb},
-                {"rt",            event.rt},
-                {"lt",            event.lt},
-                {"btn-a",         event.btnA},
-                {"btn-x",         event.btnX},
-                {"btn-b",         event.btnB},
-                {"btn-Y",         event.btnY},
-                {"axis-lr-left",  event.axisLRLeft},
-                {"axis-ud-left",  event.axisUDLeft},
-                {"axis-lr-right", event.axisLRRight},
-                {"axis-ud-right", event.axisUDRight},
-                {"axis-lr-mid",   event.axisLRMid},
-                {"axis-ud-mid",   event.axisUDMid},
+        j = {
+                {"rb",         event.isRb()},
+                {"lb",         event.isLb()},
+                {"rt",         event.getRt()},
+                {"lt",         event.getLt()},
+                {"btn-a",      event.isBtnA()},
+                {"btn-x",      event.isBtnX()},
+                {"btn-b",      event.isBtnB()},
+                {"btn-Y",      event.isBtnY()},
+                {"left-axis",  {{"x", event.getAxis(axis_left).x},  {"y", event.getAxis(axis_left).y}}},
+                {"mid-axis",   {{"x", event.getAxis(axis_mid).x},   {"y", event.getAxis(axis_mid).y}}},
+                {"right-axis", {{"x", event.getAxis(axis_right).x}, {"y", event.getAxis(axis_right).y}}}
         };
     }
 
     void from_json(const nlohmann::json &j, Xbox380Event &event) {
-        j.at("rb").get_to(event.rb);
-        j.at("lb").get_to(event.lb);
+        event.setRb(j.at("rb").get<bool>());
+        event.setLb(j.at("lb").get<bool>());
 
-        j.at("rt").get_to(event.rt);
-        j.at("lt").get_to(event.lt);
+        event.setRb(j.at("rt").get<int>());
+        event.setLb(j.at("lt").get<int>());
 
-        j.at("btn-a").get_to(event.btnA);
-        j.at("btn-x").get_to(event.btnX);
-        j.at("btn-b").get_to(event.btnB);
-        j.at("btn-y").get_to(event.btnY);
-        j.at("axis-lr-left").get_to(event.axisLRLeft);
-        j.at("axis-ud-left").get_to(event.axisUDLeft);
-        j.at("axis-lt-right").get_to(event.axisLRRight);
-        j.at("axis-ud-right").get_to(event.axisUDRight);
-        j.at("axis-lr-mid").get_to(event.axisLRMid);
-        j.at("axis-ud-mid").get_to(event.axisUDMid);
+        event.setBtnA(j.at("btn-a").get<bool>());
+        event.setBtnX(j.at("btn-x").get<bool>());
+        event.setBtnB(j.at("btn-b").get<bool>());
+        event.setBtnY(j.at("btn-y").get<bool>());
+
+        auto axis = j.at("left-axis");
+        event.setAxisX(axis_left, axis.at("x").get<int>());
+        event.setAxisY(axis_left, axis.at("y").get<int>());
+
+        axis = j.at("right-axis");
+        event.setAxisX(axis_right, axis.at("x").get<int>());
+        event.setAxisY(axis_right, axis.at("y").get<int>());
+
+        axis = j.at("mid-axis");
+        event.setAxisX(axis_mid, axis.at("x").get<int>());
+        event.setAxisY(axis_mid, axis.at("y").get<int>());
     }
 
 }
