@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 24.04.2021.
 //
 
-#ifndef ROVER_EVENTHANDLER_H
-#define ROVER_EVENTHANDLER_H
+#pragma once
 
 #include "Event.h"
 
@@ -24,4 +23,3 @@ namespace em {
     };
 }
 
-#endif //ROVER_EVENTHANDLER_H

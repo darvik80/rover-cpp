@@ -19,6 +19,7 @@
 #include "InfoService.h"
 #include "joystick/JoystickService.h"
 #include "BarcodeReaderService.h"
+#include "zeromq/ZeroMQService.h"
 
 using namespace boost;
 
@@ -45,7 +46,7 @@ void Application::postConstruct(Registry &registry) {
     registry.addService(std::make_shared<EventManagerService>());
     registry.addService(std::make_shared<HttpService>());
     registry.addService(std::make_shared<GrpcService>());
-    registry.addService(std::make_shared<MqttService>());
+    //registry.addService(std::make_shared<MqttService>());
     // } System Services
 
     registry.addService(std::make_shared<InfoService>());
@@ -56,6 +57,7 @@ void Application::postConstruct(Registry &registry) {
     registry.addService(std::make_shared<BarcodeReaderService>());
 #endif
     //registry.addService(std::make_shared<SerialService>());
+    registry.addService(std::make_shared<ZeroMQService>());
 
     registry.visitService([&registry](auto &service) {
         service.postConstruct(registry);

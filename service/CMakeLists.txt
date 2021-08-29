@@ -11,10 +11,13 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (APPLE)
-    set(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@1.1/1.1.1k)
+    set(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@1.1/1.1.1l)
 endif ()
 
 find_package(OpenSSL REQUIRED)
+#find_package(ZeroMQ 4.0 REQUIRED)
+#find_package(Azmq REQUIRED)
+set(MAIN_SERVICE_LIBS logging event-manager mqtt zmq zmqpp)
 
 ### proto build {
 find_package(Protobuf REQUIRED)
@@ -67,6 +70,7 @@ file(GLOB SRCS_G
         src/scheduler/*.cpp
         src/grpc/*.cpp
         src/joystick/*.cpp
+        src/zeromq/*.cpp
         ${PROTO_SRCS}
         ${GRPC_SRCS}
         )
@@ -133,4 +137,4 @@ endif ()
 
 add_subdirectory(testsuite)
 
-target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} logging event-manager mqtt gRPC::grpc++ ${Protobuf_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${MAIN_LIBS} ${MAIN_SERVICE_LIBS} gRPC::grpc++ ${Protobuf_LIBRARIES})

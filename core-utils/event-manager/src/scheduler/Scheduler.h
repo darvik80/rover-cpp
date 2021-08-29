@@ -8,6 +8,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/deadline_timer.hpp>
+#include "SchedulerLogger.h"
 
 class TimerHandler {
 
@@ -45,6 +46,8 @@ public:
         _timer->async_wait([fn](const boost::system::error_code& ec) {
             if (!ec) {
                 fn();
+            } else {
+                scheduler::log::warning("failed wait timer: {}", ec.message());
             }
         });
     }

@@ -8,7 +8,7 @@ Service based on Boost C++ Libraries (https://boost.org/)
 
 ## deps
 ```bash
-sudo apt install libssl-dev libfmt-dev libboost-all-dev nlohmann-json3-dev cmake clang git mc htop xboxdrv
+sudo apt install libssl-dev libfmt-dev libboost-all-dev nlohmann-json3-dev cmake clang git mc htop xboxdrv zeromq
 ```
 
 ## build
