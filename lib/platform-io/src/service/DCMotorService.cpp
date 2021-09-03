@@ -44,18 +44,4 @@ void DCMotorService::on_receive(const IRControlMessage &msg) {
 
 void DCMotorService::postConstruct() {
     getRegistry().getMessageBus().subscribe(*this);
-    Serial.println("Reset");
-    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_FORWARD, 0);
-    delay(5000);
-    Serial.println("Move forward");
-    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_FORWARD, 255);
-    delay(5000);
-    Serial.println("Stop");
-    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_BACKWARD, 0);
-    delay(5000);
-    Serial.println("Move backward");
-    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_BACKWARD, 255);
-    delay(5000);
-    Serial.println("Stop");
-    _motor->move(DCMotor::ENGINE_ONE, DCMotor::DIR_BACKWARD, 0);
 }

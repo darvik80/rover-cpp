@@ -3,7 +3,11 @@
 //
 
 #include "ZeroMQUtils.h"
-#include "Z
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+
 
 std::string byte2hex[256];
 std::string hexpadding[16];
@@ -11,12 +15,14 @@ std::string byte2char[256];
 std::string bytepadding[16];
 
 void ZeroMQUtils::init() {
+    char buf[16];
     for (int i = 0; i < 256; i++) {
-        byte2hex[i] = fmt::format(" {:02x}", i);
+        sprintf(buf, " %02x", i);
+        byte2hex[i] = buf;
     }
 
     for (int i = 0; i < 16; i++) {
-        std::string str = "";
+        std::string str;
         for (int j = 0; j < 16 - i; j++) {
             str += "   ";
         }
@@ -47,7 +53,7 @@ std::string ZeroMQUtils::netDump(const uint8_t *data, std::size_t size) {
 
     std::stringstream str;
 
-
+    str << std::endl;
     str << "         +-------------------------------------------------+" << std::endl;
     str << "         |  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f |" << std::endl;
     str << "+--------+-------------------------------------------------+----------------+";
@@ -58,13 +64,13 @@ std::string ZeroMQUtils::netDump(const uint8_t *data, std::size_t size) {
         auto relIdx = i - startIndex;
         auto relIdxMod16 = relIdx & 15;
         if (relIdxMod16 == 0) {
-            str << std::endl << fmt::format("|{:08x}|", relIdx);
+            str << std::endl << "|" << std::setw(8) << std::hex << relIdx << "|";
         }
 
         str << byte2hex[data[i]];
         if (relIdxMod16 == 15) {
             str << " |";
-            for (int j = i - 15; j <= i; j++) {
+            for (size_t j = i - 15; j <= i; j++) {
                 str << byte2char[data[j]];
             }
             str << "|";
@@ -75,7 +81,7 @@ std::string ZeroMQUtils::netDump(const uint8_t *data, std::size_t size) {
         auto remainder = size & 15;
         str << hexpadding[remainder];
         str << " |";
-        for (int j = i - remainder; j < i; j++) {
+        for (size_t j = i - remainder; j < i; j++) {
             str << byte2char[data[j]];
         }
         str << bytepadding[remainder];

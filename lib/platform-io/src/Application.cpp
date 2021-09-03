@@ -2,6 +2,7 @@
 // Created by Ivan Kishchenko on 01.05.2021.
 //
 
+#include <service/zeromq/ZeroMQService.h>
 #include "Application.h"
 #include "service/wifi/WifiService.h"
 #include "service/mqtt/MqttService.h"
@@ -35,6 +36,7 @@ void Application::postConstruct() {
     Serial.begin(115200);
 #if defined ESP8266 || ESP32
     _services.emplace_back(new WifiService(getRegistry()));
+    _services.emplace_back(new ZeroMQService(getRegistry()));
     //_services.emplace_back(new MqttService(getRegistry()));
 #endif
 

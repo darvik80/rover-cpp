@@ -54,7 +54,7 @@ void WifiService::onWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info) {
     switch (event) {
         case SYSTEM_EVENT_STA_GOT_IP:
             Serial.println("WiFi connected");
-            Serial.println("Got IP address: ");
+            Serial.print("Got IP address: ");
             Serial.println(WiFi.localIP());
             etl::send_message(getRegistry().getMessageBus(), WifiMessageConnected{});
             break;

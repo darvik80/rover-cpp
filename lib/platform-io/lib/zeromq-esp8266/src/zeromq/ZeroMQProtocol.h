@@ -16,7 +16,6 @@
 #include <vector>
 
 #include "ZeroMQUtils.h"
-#include "ZeroMQErrorCode.h"
 
 enum ZeroMQFlag {
     flag_msg = 0x00,
@@ -27,7 +26,7 @@ enum ZeroMQFlag {
 
 struct ZeroMQVersion {
     uint8_t major{3};
-    uint8_t minor{1};
+    uint8_t minor{0};
 };
 
 class ZeroMQGreeting {
@@ -36,11 +35,23 @@ class ZeroMQGreeting {
     bool _isServer{false};
 public:
     explicit ZeroMQGreeting(bool isServer)
-            : _version{3, 1}, _mechanism("NULL"), _isServer(isServer) {
+            : _version{3, 0}, _mechanism("NULL"), _isServer(isServer) {
 
     }
 
-    ZeroMQGreeting(const ZeroMQVersion &version, const std::string &mechanism, bool isServer)
+    const ZeroMQVersion &getVersion() const {
+        return _version;
+    }
+
+    const std::string &getMechanism() const {
+        return _mechanism;
+    }
+
+    bool isIsServer() const {
+        return _isServer;
+    }
+
+    ZeroMQGreeting(const ZeroMQVersion &version, std::string_view mechanism, bool isServer)
             : _version(version), _mechanism(mechanism), _isServer(isServer) {}
 
     friend std::ostream &operator<<(std::ostream &out, const ZeroMQGreeting &greeting) {
@@ -66,6 +77,7 @@ public:
 
         greeting._version.major = inc.get();
         greeting._version.minor = inc.get();
+        greeting._mechanism.clear();
         for (auto idx = 0; idx < 20; idx++) {
             auto ch = inc.get();
             if (ch) {
@@ -78,6 +90,7 @@ public:
         return inc;
     }
 };
+
 
 
 template<ZeroMQFlag flags, typename T>
@@ -209,13 +222,13 @@ public:
         if (cmd._name == ZERO_MQ_CMD_READY) {
             while (left) {
                 std::string prop, val;
-                int propSize = inc.get();
-                for (int idx = 0; idx < propSize; ++idx) {
+                std::size_t propSize = inc.get();
+                for (std::size_t idx = 0; idx < propSize; ++idx) {
                     prop += (char) inc.get();
                 }
                 ZeroMQBin<flag_msg, uint32_t> valSize;
                 inc >> valSize;
-                for (int idx = 0; idx < valSize.getValue(); ++idx) {
+                for (std::size_t idx = 0; idx < valSize.getValue(); ++idx) {
                     val += (char) inc.get();
                 }
 
@@ -224,13 +237,13 @@ public:
             }
         } else if (cmd._name == ZERO_MQ_CMD_SUBSCRIBE || cmd._name == ZERO_MQ_CMD_CANCEL) {
             std::string topic;
-            for (int idx = 0; idx < left; ++idx) {
+            for (std::size_t idx = 0; idx < left; ++idx) {
                 topic += (char) inc.get();
             }
 
             cmd._props.emplace(ZERO_MQ_PROP_SUBSCRIPTION, topic);
         } else {
-            for (int idx = 0; idx < left; ++idx) {
+            for (std::size_t idx = 0; idx < left; ++idx) {
                 inc.get();
             }
         }
@@ -245,6 +258,10 @@ public:
     ZeroMQMessage &operator<<(std::string_view msg) {
         _data.emplace_back(msg);
         return *this;
+    }
+
+    const std::vector<std::string> &getData() const {
+        return _data;
     }
 
     friend std::ostream &operator<<(std::ostream &out, const ZeroMQMessage &msg) {
@@ -269,7 +286,7 @@ public:
             ZeroMQBin<flag_more, uint64_t> size;
             inc >> size;
             std::string val;
-            for (int idx = 0; idx < size.getValue(); ++idx) {
+            for (size_t idx = 0; idx < size.getValue(); ++idx) {
                 val += (char) inc.get();
             }
             msg._data.emplace_back(val);
@@ -283,38 +300,50 @@ public:
     }
 };
 
-
 template<class CharT = char>
 class ZeroMQBuf : public std::basic_streambuf<CharT> {
-    //std::array<CharT, SIZE> _buf;
 public:
     using Base = std::basic_streambuf<CharT>;
+    using char_type = typename Base::char_type;
     using int_type = typename Base::int_type;
-    using pos_type = typename Base::pos_type;
-    using off_type = typename Base::off_type;
 
-    ZeroMQBuf(CharT *data, size_t size) {
-        Base::setp(data, data + size);
-        Base::setg(data, data, data);
+    virtual std::size_t size() = 0;
+    virtual const char_type* data() = 0;
+    virtual std::string dump() = 0;
+};
+
+template<std::size_t SIZE>
+class ZeroMQBufFix : public ZeroMQBuf<> {
+    std::array<char, SIZE> _buf;
+public:
+    using char_type = typename ZeroMQBuf::char_type;
+    using int_type = typename ZeroMQBuf::int_type;
+
+    ZeroMQBufFix()
+            : _buf{} {
+        setp(_buf.begin(), _buf.end());
+        setg(_buf.begin(), _buf.begin(), _buf.begin());
     }
 
-public:
-    std::streamsize xsputn(const CharT *s, std::streamsize n) override {
-        Base::setg(Base::pbase(), Base::pbase(), Base::pptr() + n);
+protected:
+
+    std::streamsize xsputn(const char_type *s, std::streamsize n) override {
+        ptrdiff_t diff = ZeroMQBuf::pptr() - Base::pbase() + n;
+        ZeroMQBuf::setg(_buf.begin(), _buf.begin(), _buf.begin() + diff);
         return Base::xsputn(s, n);
     }
 
-
 public:
-    std::string dump() {
-        return ZeroMQUtils::netDump((uint8_t *) Base::pbase(), Base::pptr() - Base::pbase());
+    std::string dump() override {
+        ptrdiff_t diff = ZeroMQBuf::pptr() - ZeroMQBuf::pbase();
+        return ZeroMQUtils::netDump((uint8_t *) _buf.begin(), diff);
     }
 
-    std::size_t size() {
-        return Base::pptr() - Base::pbase();
+    std::size_t size() override {
+        return ZeroMQBuf::pptr() - ZeroMQBuf::pbase();
     }
-    const CharT* data() {
-        return Base::pbase();
+    const char_type* data() override {
+        return ZeroMQBuf::pbase();
     }
 
     void compress() {
