@@ -285,6 +285,10 @@ public:
             uint8_t flag = inc.peek();
             ZeroMQBin<flag_more, uint64_t> size;
             inc >> size;
+            if (inc.rdbuf()->in_avail() < size.getValue()) {
+                inc.setstate(std::ios::badbit);
+                return inc;
+            }
             std::string val;
             for (size_t idx = 0; idx < size.getValue(); ++idx) {
                 val += (char) inc.get();

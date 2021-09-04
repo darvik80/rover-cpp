@@ -13,22 +13,26 @@ void ZeroMQService::postConstruct(Registry &registry) {
     ZeroMQUtils::init();
 
 
-    std::array<char, 1024> data{};
+    std::array<char, 10> data{};
     ZeroMQBuf<char> buf(data.data(), data.size());
     std::ostream out(&buf);
     std::istream inc(&buf);
 
     ZeroMQGreeting greeting(false);
     out << greeting;
-    zero_mq::log::info("data: {}:{}", buf.in_avail(), buf.size());
-    inc.get();
-    //inc >> greeting;
-    zero_mq::log::info("data: {}:{}:", buf.in_avail(), buf.size());
-    zero_mq::log::info("data: {}", buf.dump());
-    buf.compress();
-    out << greeting;
-    zero_mq::log::info("data: {}:{}", buf.in_avail(), buf.size());
-    zero_mq::log::info("data: {}", buf.dump());
+    if (out) {
+        zero_mq::log::info("data: {}:{}", buf.in_avail(), buf.size());
+    }
+    inc >> greeting;
+    if (inc) {
+        zero_mq::log::info("data: {}:{}", buf.in_avail(), buf.size());
+    }
+//    zero_mq::log::info("data: {}:{}:", buf.in_avail(), buf.size());
+//    zero_mq::log::info("data: {}", buf.dump());
+//    buf.compress();
+//    out << greeting;
+//    zero_mq::log::info("data: {}:{}", buf.in_avail(), buf.size());
+//    zero_mq::log::info("data: {}", buf.dump());
 
     _pub = std::make_unique<zmqpp::socket>(_context, zmqpp::socket_type::publish);
     _pub->connect("tcp://192.168.100.163:5556");

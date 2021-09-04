@@ -42,6 +42,23 @@ void DCMotorService::on_receive(const IRControlMessage &msg) {
     }
 }
 
+void DCMotorService::on_receive(const JoystickEvent &msg) {
+    //Serial.printf("DC move: %d\n", msg.leftAxis.axisY);
+    int value = abs(msg.leftAxis.axisY);
+    if (value < 64) {
+        value = 0;
+    } else if (value > 255) {
+        value = 255;
+    }
+    _motor->move(
+            DCMotor::ENGINE_ONE,
+            msg.leftAxis.axisY > 0 ? DCMotor::DIR_FORWARD : DCMotor::DIR_BACKWARD,
+            value
+    );
+}
+
 void DCMotorService::postConstruct() {
     getRegistry().getMessageBus().subscribe(*this);
+    Serial.println("DC init");
 }
+

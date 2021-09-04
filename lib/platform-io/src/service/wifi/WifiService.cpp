@@ -11,7 +11,7 @@ void onTimer(WifiService *service) {
     service->onWifiConnect();
 }
 
-void onConnect(const WiFiEventStationModeGotIP& event) {
+void onConnect(const WiFiEventStationModeGotIP &event) {
     Serial.println("Connected to Wi-Fi.");
 }
 
@@ -20,12 +20,16 @@ WifiService::WifiService(Registry &registry)
 
 void WifiService::postConstruct() {
 #ifdef ESP8266
-    _handlerGotIp = WiFi.onStationModeGotIP([this](const WiFiEventStationModeGotIP& event) {
+    _handlerSoftApConnected = WiFi.onSoftAPModeStationConnected([this](const WiFiEventSoftAPModeStationConnected& event) {
+       etl::send_message(getRegistry().getMessageBus(), WifiMessageConnected{});
+    });
+
+    _handlerGotIp = WiFi.onStationModeGotIP([this](const WiFiEventStationModeGotIP &event) {
         Serial.println("Got IP address: ");
         Serial.println(event.ip);
         etl::send_message(getRegistry().getMessageBus(), WifiMessageConnected{});
     });
-    _handlerDisconnect = WiFi.onStationModeDisconnected([this](const WiFiEventStationModeDisconnected& event) {
+    _handlerDisconnect = WiFi.onStationModeDisconnected([this](const WiFiEventStationModeDisconnected &event) {
         Serial.println("WiFi lost connection");
         etl::send_message(getRegistry().getMessageBus(), WifiMessageDisconnected{});
     });
@@ -44,8 +48,25 @@ void WifiService::postConstruct() {
 
 }
 
+/* Put IP Address details */
+IPAddress localIp(192, 168, 1, 1);
+IPAddress gateway(192, 168, 1, 1);
+IPAddress subnet(255, 255, 255, 0);
+
+#define WIFI_SSID "ED7-6"
+#define WIFI_AP_SSID "rover"
+#define WIFI_PASS "1234554321"
+
 void WifiService::onWifiConnect() {
-    Serial.println("Connecting to Wi-Fi...");
+    Serial.println("Init Wi-Fi...");
+//    WiFi.mode(WIFI_AP);
+//    WiFi.softAPConfig(localIp, gateway, subnet);
+//    WiFi.softAP(WIFI_AP_SSID, WIFI_PASS);
+//
+//    Serial.println("SoftAP started");
+//    Serial.println(WiFi.softAPIP());
+//
+//    etl::send_message(getRegistry().getMessageBus(), WifiMessageConnected{});
     WiFi.begin(WIFI_SSID, WIFI_PASS);
 }
 

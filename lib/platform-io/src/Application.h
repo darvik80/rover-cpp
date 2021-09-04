@@ -37,7 +37,7 @@ public:
     void on_receive_unknown(const etl::imessage &msg);
 
 private:
-    etl::vector<Service *, 3> _services{};
+    etl::vector<Service *, 4> _services{};
 };
 
 

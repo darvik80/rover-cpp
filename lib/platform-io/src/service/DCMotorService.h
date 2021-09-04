@@ -9,9 +9,10 @@
 #include <device/controller/IRRemoteButton.h>
 #include <service/IRControlMessage.h>
 #include "service/Service.h"
+#include "JoystickEvent.h"
 
 
-class DCMotorService : public BaseService, public etl::message_router<DCMotorService, IRControlMessage> {
+class DCMotorService : public BaseService, public etl::message_router<DCMotorService, IRControlMessage, JoystickEvent> {
     int _pos = 6;
     int _lastPos = 0;
 
@@ -23,6 +24,8 @@ public:
     void postConstruct() override;
 
     void on_receive(const IRControlMessage &msg);
+
+    void on_receive(const JoystickEvent &msg);
 
     void on_receive_unknown(const etl::imessage &msg) {}
 };

@@ -10,10 +10,12 @@
 #include "service/Service.h"
 
 #include "device/motor/ServoMotor.h"
+#include "JoystickEvent.h"
 
-#define SERVO_STEP 15
 
-class ServoMotorService : public BaseService, public etl::message_router<ServoMotorService, IRControlMessage> {
+#define SERVO_STEP 10
+
+class ServoMotorService : public BaseService, public etl::message_router<ServoMotorService, IRControlMessage, JoystickEvent> {
     int _angle = 90;
     int _lastAngle = 0;
 
@@ -24,6 +26,8 @@ public:
     void postConstruct() override;
 
     void on_receive(const IRControlMessage &msg);
+
+    void on_receive(const JoystickEvent &msg);
 
     void on_receive_unknown(const etl::imessage &msg) {}
 

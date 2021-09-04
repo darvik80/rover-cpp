@@ -26,7 +26,7 @@
 
 #endif
 
-etl::message_bus<3> appMessageBus;
+etl::message_bus<4> appMessageBus;
 
 Application::Application()
         : message_router(ROUTER_APP) {
@@ -49,7 +49,7 @@ void Application::postConstruct() {
 #endif
 
 #ifdef MG90S_SERVO_MOTOR
-    _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(D7)));
+    _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(D8)));
 #endif
     appMessageBus.subscribe(*this);
 

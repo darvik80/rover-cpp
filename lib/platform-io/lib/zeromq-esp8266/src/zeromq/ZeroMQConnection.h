@@ -10,6 +10,7 @@
 #include <etl/list.h>
 
 #include "ZeroMQProtocol.h"
+#include "ZeroMQTopicEvent.h"
 
 class ZeroMQDataMessage {
     std::unique_ptr<ZeroMQBuf<> > _buf;
@@ -41,11 +42,12 @@ enum class ZeroMQStatus {
 };
 
 class ZeroMQConnection {
+    ZeroMQTopicEventHandler _topicEventHandler{nullptr};
 
     bool _serverMode{false};
     AsyncClient *_client;
 
-    ZeroMQBufFix<1024> _inc;
+    ZeroMQBufFix<256> _inc;
     ZeroMQStatus _state;
 
     etl::list<std::unique_ptr<ZeroMQDataMessage>, 32> _out;
@@ -59,6 +61,10 @@ private:
 public:
     explicit ZeroMQConnection(AsyncClient *client)
             : _serverMode{true}, _client(client), _state{ZeroMQStatus::ZMQ_Idle} {}
+
+    void onTopicEvent(ZeroMQTopicEventHandler topicEventHandler) {
+        _topicEventHandler = topicEventHandler;
+    }
 
     void onConnect();
 
@@ -90,5 +96,9 @@ public:
         return _client->remotePort();
     }
 
-
+    void close() {
+        if (_client) {
+            _client->close(true);
+        }
+    }
 };

@@ -15,6 +15,9 @@ class WifiMessageConnected : public etl::message<MSG_WIFI_CONNECTED> {
 class WifiMessageDisconnected : public etl::message<MSG_WIFI_DISCONNECTED> {
 };
 
+class WifiClientMessageClientDisconnected : public etl::message<MSG_WIFI_CLIENT_DISCONNECTED> {
+};
+
 #endif
 
 #endif //PLATFORM_IO_WIFIMESSAGE_H

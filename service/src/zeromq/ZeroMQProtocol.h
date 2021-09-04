@@ -74,6 +74,11 @@ public:
         }
         greeting._isServer = inc.get() > 0;
         inc.ignore(31);
+        if (inc.eof()) {
+            //inc.setstate(std::ios::badbit);
+            return inc;
+
+        }
 
         return inc;
     }

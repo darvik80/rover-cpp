@@ -19,34 +19,81 @@ void ZeroMQServer::start(uint16_t port) {
 }
 
 void ZeroMQServer::onNewClient(AsyncClient* client) {
+    Serial.printf("Client connected: %s:%d\n", client->remoteIP().toString().c_str(), client->remotePort());
+
     auto conn = new ZeroMQConnection(client);
+    if (_clients.full()) {
+        Serial.printf("Client destroy: %s:%d\n", _clients.front()->getRemoteAddress().c_str(), _clients.front()->getRemotePort());
+        _clients.front()->close();
+        // prepare place for new connection
+        Serial.println(1);
+    }
+    Serial.println(3);
+    _clients.push_back(conn);
+
+    Serial.println(4);
+
+    conn->onTopicEvent(_topicEventHandler);
+
+    Serial.println(5);
 
     conn->onConnect();
 
-    client->onError([conn](void* arg, AsyncClient* client, int8_t error) {
+    client->setRxTimeout(0);
+    client->onError([](void* arg, AsyncClient* client, int8_t error) {
+        auto conn = (ZeroMQConnection*)arg;
         conn->onError(error);
+        Serial.printf("Client error: %d, %s:%d\n", error, client->remoteIP().toString().c_str(), client->remotePort());
     }, conn);
 
-    client->onTimeout([conn](void* arg, AsyncClient* client, uint32_t time) {
+    client->onTimeout([](void* arg, AsyncClient* client, uint32_t time) {
+        Serial.printf("Client timeout: %s:%d\n", client->remoteIP().toString().c_str(), client->remotePort());
+        auto conn = (ZeroMQConnection*)arg;
         conn->onTimeOut(time);
     }, conn);
 
-    client->onAck([conn](void* arg, AsyncClient* client, size_t len, uint32_t time) {
+    client->onAck([](void* arg, AsyncClient* client, size_t len, uint32_t time) {
+        auto conn = (ZeroMQConnection*)arg;
         conn->onAck(len);
     }, conn);
 
-    client->onPoll([conn](void* arg, AsyncClient* client) {
-        conn->onPool();
+    client->onPoll([this](void* arg, AsyncClient* client) {
+//        auto conn = (ZeroMQConnection*)arg;
+//        //Serial.printf("Client onPool: %s:%d\n", client->remoteIP().toString().c_str(), client->remotePort());
+//        //conn->onPool();
+//        bool handle = false;
+//        for (const auto &item : _clients) {
+//            if (item == conn) {
+//                conn->onPool();
+//                handle = true;
+//            }
+//        }
+//        if (!handle) {
+//            Serial.println("UNHANDLED ON POOL!!!");
+//        }
     }, conn);
 
-    client->onData([conn](void* arg, AsyncClient* client, void *data, size_t len) {
+    client->onData([](void* arg, AsyncClient* client, void *data, size_t len) {
+        auto conn = (ZeroMQConnection*)arg;
         conn->onData(data, len);
     }, conn);
 
-    client->onDisconnect([conn](void* arg, AsyncClient* client) {
-        conn->onDisconnect();
-        delete conn;
+    client->onDisconnect([this](void* arg, AsyncClient* client) {
+        this->onDestroyClient((ZeroMQConnection*)arg, client);
     }, conn);
+}
+
+void ZeroMQServer::onDestroyClient(ZeroMQConnection* conn, AsyncClient* client) {
+    Serial.printf("Client disconnected: %s:%d\n", client->remoteIP().toString().c_str(), client->remotePort());
+    std::remove_if(_clients.begin(), _clients.end(), [conn](const ZeroMQConnection* value) -> bool {
+        Serial.printf("Client for destroy: %d\n", value == conn);
+        return value == conn;
+    });
+    conn->onDisconnect();
+    delete conn;
+    Serial.printf("conn destroyed\n");
+    delete client;
+    Serial.printf("Client destroyed\n");
 }
 
 void ZeroMQServer::shutdown() {

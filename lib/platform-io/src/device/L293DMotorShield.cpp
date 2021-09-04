@@ -11,7 +11,7 @@ const char *L293DMotorShield::name() {
 }
 
 void L293DMotorShield::move(Engine engine, Direction direction, int pulse) {
-    _motor.motor(engine, direction, pulse);
+    _motor.motor(engine, direction == DIR_FORWARD ? FORWARD : BACKWARD, pulse);
 }
 
 #endif

@@ -38,7 +38,7 @@ ZeroMQDataMessage::ZeroMQDataMessage(std::unique_ptr<ZeroMQBuf<>> &buf)
 
 
 void ZeroMQConnection::onConnect() {
-    Serial.printf("client %s connected \n", _client->remoteIP().toString().c_str());
+    //Serial.printf("client %s connected \n", _client->remoteIP().toString().c_str());
 
     std::unique_ptr<ZeroMQBuf<>> buf(new ZeroMQBufFix<64>());
     std::ostream out(buf.get());
@@ -53,7 +53,7 @@ void ZeroMQConnection::onError(int8_t error) {
 }
 
 void ZeroMQConnection::onData(void *data, size_t len) {
-    Serial.printf("recv: %s \n", ZeroMQUtils::netDump((const uint8_t *) data, len).c_str());
+    //Serial.printf("recv: %s \n", ZeroMQUtils::netDump((const uint8_t *) data, len).c_str());
 
     _inc.compress();
     _inc.sputn((const char *) data, (std::streamsize)len);
@@ -90,9 +90,10 @@ void ZeroMQConnection::onData(void *data, size_t len) {
                 }
                 ZeroMQGreeting greeting{false};
                 inc >> greeting;
-//                if (!inc) {
-//                    return;
-//                }
+                if (!inc) {
+                    _client->close();
+                    return;
+                }
 
                 if (greeting.isIsServer()) {
                     //_client->close();
@@ -167,11 +168,11 @@ void ZeroMQConnection::onData(void *data, size_t len) {
 }
 
 void ZeroMQConnection::onDisconnect() {
-    Serial.printf("client %s disconnected \n", _client->remoteIP().toString().c_str());
+    //Serial.printf("client %s disconnected \n", _client->remoteIP().toString().c_str());
 }
 
 void ZeroMQConnection::onTimeOut(uint32_t time) {
-    Serial.printf("client ACK timeout ip: %s \n", _client->remoteIP().toString().c_str());
+    //Serial.printf("client ACK timeout ip: %s \n", _client->remoteIP().toString().c_str());
 }
 
 void ZeroMQConnection::onPool() {
@@ -187,7 +188,7 @@ void ZeroMQConnection::onAck(size_t len) {
 }
 
 void ZeroMQConnection::send(std::unique_ptr<ZeroMQBuf<>> &msg) {
-    Serial.printf("send: %s \n", msg->dump().c_str());
+    //Serial.printf("send: %s \n", msg->dump().c_str());
 
     _out.emplace_back(new ZeroMQDataMessage(msg));
     if (_client->canSend()) {
@@ -212,6 +213,10 @@ void ZeroMQConnection::onCommand(ZeroMQCommand &cmd) {
 }
 
 void ZeroMQConnection::onMessage(ZeroMQMessage &msg) {
+    if (msg.getData().size() == 2 && _topicEventHandler) {
+        _topicEventHandler(ZeroMQTopicEvent{msg.getData().front(), msg.getData().back()});
+        return;
+    }
     for (const auto &item: msg.getData()) {
         Serial.printf("Msg %s\n", item.c_str());
     }

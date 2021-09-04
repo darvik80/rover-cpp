@@ -18,14 +18,13 @@
 #include <service/Service.h>
 #include <Ticker.h>
 
-#define WIFI_SSID "ED7-6"
-#define WIFI_PASS "1234554321"
-
 class WifiService : public BaseService {
 #ifdef ESP32
     Ticker _reconnectTimer;
 #endif
 #ifdef ESP8266
+    WiFiEventHandler _handlerSoftApConnected;
+    WiFiEventHandler _handlerSoftApDisconnected;
     WiFiEventHandler _handlerGotIp;
     WiFiEventHandler _handlerDisconnect;
 #endif
