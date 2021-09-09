@@ -11,7 +11,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (APPLE)
-    set(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@1.1/1.1.1k)
+    set(OPENSSL_ROOT_DIR /usr/local/Cellar/openssl@1.1/1.1.1l)
 endif ()
 
 find_package(OpenSSL REQUIRED)
