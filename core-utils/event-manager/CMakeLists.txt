@@ -11,6 +11,8 @@ include_directories(
 
 set(EVENT_MAIN_LIBS logging)
 
+add_subdirectory(example)
+
 add_library(${PROJECT_NAME} ${SRCS_G})
 
 target_link_libraries(${PROJECT_NAME} ${EVENT_MAIN_LIBS})
