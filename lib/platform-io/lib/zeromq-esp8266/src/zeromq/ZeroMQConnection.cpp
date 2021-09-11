@@ -56,7 +56,7 @@ void ZeroMQConnection::onData(void *data, size_t len) {
     //Serial.printf("recv: %s \n", ZeroMQUtils::netDump((const uint8_t *) data, len).c_str());
 
     _inc.compress();
-    _inc.sputn((const char *) data, (std::streamsize)len);
+    _inc.sputn((const char *) data, (std::streamsize) len);
     std::istream inc(&_inc);
 
     while (_inc.in_avail()) {
@@ -117,11 +117,17 @@ void ZeroMQConnection::onData(void *data, size_t len) {
 
             }
             case ZeroMQStatus::ZMQ_S_Wait_Ready: {
-                inc.ignore(_inc.in_avail());
+                ZeroMQCommand cmd;
+                inc >> cmd;
+                if (!inc) {
+                    Serial.printf("failed cmd");
+                    _client->close();
+                    return;
+                }
                 std::unique_ptr<ZeroMQBuf<>> buf(new ZeroMQBufFix<64>());
                 std::ostream out(buf.get());
                 std::string topic = "joystick";
-                out << (uint8_t)00 << (uint8_t)(topic.size() + 1) << (uint8_t)0x01 << topic;
+                out << (uint8_t) 00 << (uint8_t) (topic.size() + 1) << (uint8_t) 0x01 << topic;
                 send(buf);
 
 //                ZeroMQCommand cmd;
@@ -139,8 +145,14 @@ void ZeroMQConnection::onData(void *data, size_t len) {
                 _state = ZeroMQStatus::ZMQ_Stream;
                 break;
             }
-            case ZeroMQStatus::ZMQ_Stream:
-                if (_inc.sgetc() & flag_cmd) {
+            case ZeroMQStatus::ZMQ_Stream: {
+                auto flag = _inc.sgetc();
+                if (flag > (flag_cmd | flag_long | flag_more)) {
+                    Serial.printf("failed stream");
+                    _client->close();
+                    return;
+                }
+                if (flag & flag_cmd) {
                     ZeroMQCommand cmd;
                     inc >> cmd;
                     if (inc) {
@@ -149,7 +161,6 @@ void ZeroMQConnection::onData(void *data, size_t len) {
                         _client->close();
                         return;
                     }
-
                 } else {
                     ZeroMQMessage msg;
                     inc >> msg;
@@ -160,6 +171,7 @@ void ZeroMQConnection::onData(void *data, size_t len) {
                         return;
                     }
                 }
+            }
                 break;
             default:
                 break;

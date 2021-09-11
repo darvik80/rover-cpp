@@ -212,8 +212,16 @@ public:
         }
         ZeroMQBin<flag_cmd, uint64_t> cmdZSize;
         inc >> cmdZSize;
+        if (!inc) {
+            return inc;
+        }
 
         std::size_t left = cmdZSize.getValue();
+        if (inc.rdbuf()->in_avail() < left) {
+            inc.setstate(std::ios::badbit);
+            return inc;
+        }
+
         int cmdSize = inc.get();
         for (int idx = 0; idx < cmdSize; ++idx) {
             cmd._name += (char) inc.get();
@@ -285,6 +293,9 @@ public:
             uint8_t flag = inc.peek();
             ZeroMQBin<flag_more, uint64_t> size;
             inc >> size;
+            if (!inc) {
+                return inc;
+            }
             if (inc.rdbuf()->in_avail() < size.getValue()) {
                 inc.setstate(std::ios::badbit);
                 return inc;
@@ -323,7 +334,7 @@ public:
     using char_type = typename ZeroMQBuf::char_type;
     using int_type = typename ZeroMQBuf::int_type;
 
-    ZeroMQBufFix()
+    ZeroMQBufFix(CharT *data, size_t size)
             : _buf{} {
         setp(_buf.begin(), _buf.end());
         setg(_buf.begin(), _buf.begin(), _buf.begin());

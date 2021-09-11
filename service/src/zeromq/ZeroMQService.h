@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 23.08.2021.
 //
 
-#ifndef ROVER_ZEROMQSERVICE_H
-#define ROVER_ZEROMQSERVICE_H
+#pragma once
 
 #include "BaseService.h"
 #include <zmqpp/zmqpp.hpp>
@@ -39,6 +38,3 @@ public:
 private:
     void run();
 };
-
-
-#endif //ROVER_ZEROMQSERVICE_H

@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 02.09.2021.
 //
 
-#ifndef ROVER_ZEROMQERRORCODE_H
-#define ROVER_ZEROMQERRORCODE_H
+#pragma once
 
 #include <system_error>
 
@@ -53,5 +52,3 @@ namespace std
     struct is_error_code_enum<zeromq_error>:
             public true_type {};
 }
-
-#endif //ROVER_ZEROMQERRORCODE_H

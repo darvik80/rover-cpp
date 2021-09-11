@@ -77,7 +77,7 @@ std::string ZeroMQUtils::netDump(const uint8_t *data, std::size_t size) {
         auto remainder = size & 15;
         str << hexpadding[remainder];
         str << " |";
-        for (int j = i - remainder; j < i; j++) {
+        for (size_t j = i - remainder; j < i; j++) {
             str << byte2char[data[j]];
         }
         str << bytepadding[remainder];

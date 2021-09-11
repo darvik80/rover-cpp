@@ -29,7 +29,7 @@ void ZeroMQServer::onNewClient(AsyncClient* client) {
         Serial.println(1);
     }
     Serial.println(3);
-    _clients.push_back(conn);
+    _clients.emplace_back(conn);
 
     Serial.println(4);
 
@@ -85,7 +85,7 @@ void ZeroMQServer::onNewClient(AsyncClient* client) {
 
 void ZeroMQServer::onDestroyClient(ZeroMQConnection* conn, AsyncClient* client) {
     Serial.printf("Client disconnected: %s:%d\n", client->remoteIP().toString().c_str(), client->remotePort());
-    std::remove_if(_clients.begin(), _clients.end(), [conn](const ZeroMQConnection* value) -> bool {
+    _clients.remove_if([conn](const ZeroMQConnection* value) -> bool {
         Serial.printf("Client for destroy: %d\n", value == conn);
         return value == conn;
     });

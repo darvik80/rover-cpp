@@ -2,11 +2,10 @@
 // Created by Ivan Kishchenko on 29.08.2021.
 //
 
-#ifndef ROVER_ZEROMQSOCKET_H
-#define ROVER_ZEROMQSOCKET_H
-
+#pragma once
 #include <boost/asio.hpp>
 #include "ZeroMQProtocol.h"
+#include "ZeroMQBuf.h"
 #include "scheduler/Scheduler.h"
 
 #include <string>
@@ -23,8 +22,10 @@ enum class ZeroMQStatus {
 class ZeroMQSocket {
     boost::asio::ip::tcp::endpoint _endpoint;
     boost::asio::ip::tcp::socket _socket;
-    std::array<char, 1024> _incBuf;
-    boost::asio::streambuf _inc;
+
+
+    std::array<char, 256> _incBuf;
+    ZeroMQBufFix<1024> _inc;
 
     ZeroMQStatus _status{ZeroMQStatus::ZMQ_Idle};
     TimerHandler _timer;
@@ -37,13 +38,10 @@ public:
 private:
     void startConnect();
     void startRecv();
-    void startSend(std::unique_ptr<boost::asio::streambuf>& buf);
+    void startSend(std::unique_ptr<ZeroMQCharBuf>& buf);
 
-    void handleData(boost::asio::streambuf& inc);
+    void handleData(ZeroMQBuf<>& inc);
 
-
-    void onCommand(ZeroMQCommand& cmd);
+    void onCommand(const ZeroMQCommand& cmd);
+    void onMessage(const ZeroMQMessage& cmd);
 };
-
-
-#endif //ROVER_ZEROMQSOCKET_H
