@@ -13,11 +13,11 @@
 #include "ZeroMQTopicEvent.h"
 
 class ZeroMQDataMessage {
-    std::unique_ptr<ZeroMQBuf<> > _buf;
+    std::shared_ptr<ZeroMQCharBuf> _buf;
     size_t _acked{};
     size_t _sent{};
 public:
-    explicit ZeroMQDataMessage(std::unique_ptr<ZeroMQBuf<>> &buf);
+    explicit ZeroMQDataMessage(std::shared_ptr<ZeroMQCharBuf> &buf);
 
     size_t ack(size_t len);
 
@@ -42,25 +42,31 @@ enum class ZeroMQStatus {
 };
 
 class ZeroMQConnection {
+    ZeroMQVersion _version{};
     ZeroMQTopicEventHandler _topicEventHandler{nullptr};
 
     bool _serverMode{false};
     AsyncClient *_client;
 
-    ZeroMQBufFix<256> _inc;
+    ZeroMQBufFix<1024> _inc;
     ZeroMQStatus _state;
 
     etl::list<std::unique_ptr<ZeroMQDataMessage>, 32> _out;
+
+    ZeroMQEncoder _enc;
+    ZeroMQDecoder _dec;
+
+    etl::vector<std::string, 3> _topics;
 private:
     void runQueue();
 
-    void send(std::unique_ptr<ZeroMQBuf<>>& msg);
+    void send(std::shared_ptr<ZeroMQCharBuf>& msg);
 
-    void onCommand(ZeroMQCommand& cmd);
-    void onMessage(ZeroMQMessage& msg);
+    void onData(ZeroMQCharBuf& inc);
+    void onCommand(const ZeroMQCommand& cmd);
+    void onMessage(const ZeroMQMessage& msg);
 public:
-    explicit ZeroMQConnection(AsyncClient *client)
-            : _serverMode{true}, _client(client), _state{ZeroMQStatus::ZMQ_Idle} {}
+    explicit ZeroMQConnection(AsyncClient *client);
 
     void onTopicEvent(ZeroMQTopicEventHandler topicEventHandler) {
         _topicEventHandler = topicEventHandler;

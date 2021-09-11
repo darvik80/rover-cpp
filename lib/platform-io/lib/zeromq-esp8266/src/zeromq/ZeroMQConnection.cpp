@@ -3,6 +3,7 @@
 //
 
 #include "ZeroMQConnection.h"
+#include "ZeroMQReader.h"
 
 #include <HardwareSerial.h>
 
@@ -33,14 +34,26 @@ size_t ZeroMQDataMessage::send(AsyncClient *client) {
     return sent;
 }
 
-ZeroMQDataMessage::ZeroMQDataMessage(std::unique_ptr<ZeroMQBuf<>> &buf)
-        : _buf(std::move(buf)) {}
+ZeroMQDataMessage::ZeroMQDataMessage(std::shared_ptr<ZeroMQCharBuf> &buf)
+        : _buf(std::move(buf)) {
+}
 
+ZeroMQConnection::ZeroMQConnection(AsyncClient *client)
+        : _serverMode{true}, _client(client), _state{ZeroMQStatus::ZMQ_Idle} {
+    _dec.onCommand([this](const ZeroMQCommand &cmd) {
+        onCommand(cmd);
+    });
+
+    _dec.onMessage([this](const ZeroMQMessage &msg) {
+        onMessage(msg);
+    });
+
+    _topics.emplace_back("joystick");
+}
 
 void ZeroMQConnection::onConnect() {
-    //Serial.printf("client %s connected \n", _client->remoteIP().toString().c_str());
-
-    std::unique_ptr<ZeroMQBuf<>> buf(new ZeroMQBufFix<64>());
+    _state = ZeroMQStatus::ZMQ_Idle;
+    std::shared_ptr<ZeroMQCharBuf> buf(new ZeroMQBufFix<64>());
     std::ostream out(buf.get());
     ZeroMQGreeting reply(true);
     out << reply;
@@ -49,127 +62,51 @@ void ZeroMQConnection::onConnect() {
 }
 
 void ZeroMQConnection::onError(int8_t error) {
-    Serial.printf("connection error %s from client %s \n", _client->errorToString(error), _client->remoteIP().toString().c_str());
+    Serial.printf("%s: conn error: %s \n", _client->remoteIP().toString().c_str(), _client->errorToString(error));
 }
 
 void ZeroMQConnection::onData(void *data, size_t len) {
-    //Serial.printf("recv: %s \n", ZeroMQUtils::netDump((const uint8_t *) data, len).c_str());
+//    Serial.printf("%s: recv: %d\n", _client->remoteIP().toString().c_str(), len);
+//    Serial.println(ZeroMQUtils::netDump((uint8_t *) data, len).c_str());
 
-    _inc.compress();
     _inc.sputn((const char *) data, (std::streamsize) len);
-    std::istream inc(&_inc);
+    onData(_inc);
+}
 
-    while (_inc.in_avail()) {
+void ZeroMQConnection::onData(ZeroMQCharBuf &incBuf) {
+    while (incBuf.in_avail()) {
         switch (_state) {
-            case ZeroMQStatus::ZMQ_Idle: {
-                if (_inc.in_avail() < 11) {
-                    return;
-                }
-
-                const uint8_t hdrs[3][11] = {
-                        {0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0x03},
-                        {0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x09, 0x7f, 0x03},
-                        {0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x7f, 0x03},
-                };
-
-                bool handle = false;
-                for (auto hdr: hdrs) {
-                    if (std::memcmp(_inc.data(), hdr, 11) == 0) {
-                        handle = true;
-                    }
-                }
-                if (!handle) {
-                    _client->close(true);
-                    return;
-                }
-                _state = ZeroMQStatus::ZMQ_S_Wait_Greeting;
-            }
+            case ZeroMQStatus::ZMQ_Idle:
             case ZeroMQStatus::ZMQ_S_Wait_Greeting: {
                 if (_inc.in_avail() < 64) {
                     return;
                 }
-                ZeroMQGreeting greeting{false};
-                inc >> greeting;
-                if (!inc) {
+                ZeroMQReader inc(incBuf);
+                std::array<uint8_t, 64> greeting{};
+                inc.readBinary<uint8_t, 64>(greeting);
+                _inc.consume(64);
+                _version.major = greeting[10];
+                _version.minor = greeting[11];
+                if (_version.major != 0x03) {
+                    Serial.printf("%s: unsupported version: %d:%d\n", getRemoteAddress().c_str(), _version.major, _version.minor);
                     _client->close();
                     return;
                 }
-
-                if (greeting.isIsServer()) {
-                    //_client->close();
-                    //return;
-                }
-
-                if (greeting.getMechanism() != "NULL") {
-                    _client->close();
-                    return;
-                }
+                Serial.printf("%s: version: %d:%d\n", getRemoteAddress().c_str(), _version.major, _version.minor);
 
                 ZeroMQCommand reply(ZERO_MQ_CMD_READY);
-                reply.setProperty(ZERO_MQ_PROP_SOCKET_TYPE, "SUB");
-                std::unique_ptr<ZeroMQBuf<>> buf(new ZeroMQBufFix<64>());
-                std::ostream out(buf.get());
-                out << reply;
-                send(buf);
+                reply.props.emplace(ZERO_MQ_PROP_SOCKET_TYPE, "SUB");
 
-                _state = ZeroMQStatus::ZMQ_S_Wait_Ready;
-                break;
+                std::shared_ptr<ZeroMQCharBuf> out(new ZeroMQBufFix<64>());
+                _enc.write(*out, reply);
+                send(out);
 
-            }
-            case ZeroMQStatus::ZMQ_S_Wait_Ready: {
-                ZeroMQCommand cmd;
-                inc >> cmd;
-                if (!inc) {
-                    Serial.printf("failed cmd");
-                    _client->close();
-                    return;
-                }
-                std::unique_ptr<ZeroMQBuf<>> buf(new ZeroMQBufFix<64>());
-                std::ostream out(buf.get());
-                std::string topic = "joystick";
-                out << (uint8_t) 00 << (uint8_t) (topic.size() + 1) << (uint8_t) 0x01 << topic;
-                send(buf);
-
-//                ZeroMQCommand cmd;
-//                inc >> cmd;
-
-//                if (inc) {
-//                    ZeroMQCommand reply(ZERO_MQ_CMD_READY);
-//                    reply.setProperty(ZERO_MQ_PROP_SOCKET_TYPE, "SUB");
-//                    std::unique_ptr<ZeroMQBuf<>> buf(new ZeroMQBufFix<64>());
-//                    std::ostream out(buf.get());
-//                    out << reply;
-//                    send(buf);
-//                    _state = ZeroMQStatus::ZMQ_Stream;
-//                }
                 _state = ZeroMQStatus::ZMQ_Stream;
                 break;
             }
             case ZeroMQStatus::ZMQ_Stream: {
-                auto flag = _inc.sgetc();
-                if (flag > (flag_cmd | flag_long | flag_more)) {
-                    Serial.printf("failed stream");
-                    _client->close();
+                if (_dec.read(incBuf)) {
                     return;
-                }
-                if (flag & flag_cmd) {
-                    ZeroMQCommand cmd;
-                    inc >> cmd;
-                    if (inc) {
-                        onCommand(cmd);
-                    } else {
-                        _client->close();
-                        return;
-                    }
-                } else {
-                    ZeroMQMessage msg;
-                    inc >> msg;
-                    if (inc) {
-                        onMessage(msg);
-                    } else {
-                        _client->close();
-                        return;
-                    }
                 }
             }
                 break;
@@ -180,11 +117,9 @@ void ZeroMQConnection::onData(void *data, size_t len) {
 }
 
 void ZeroMQConnection::onDisconnect() {
-    //Serial.printf("client %s disconnected \n", _client->remoteIP().toString().c_str());
 }
 
 void ZeroMQConnection::onTimeOut(uint32_t time) {
-    //Serial.printf("client ACK timeout ip: %s \n", _client->remoteIP().toString().c_str());
 }
 
 void ZeroMQConnection::onPool() {
@@ -199,8 +134,9 @@ void ZeroMQConnection::onAck(size_t len) {
     onPool();
 }
 
-void ZeroMQConnection::send(std::unique_ptr<ZeroMQBuf<>> &msg) {
-    //Serial.printf("send: %s \n", msg->dump().c_str());
+void ZeroMQConnection::send(std::shared_ptr<ZeroMQCharBuf> &msg) {
+//    Serial.printf("send: %d\n", msg->size());
+//    Serial.println(msg->dump().c_str());
 
     _out.emplace_back(new ZeroMQDataMessage(msg));
     if (_client->canSend()) {
@@ -220,16 +156,32 @@ void ZeroMQConnection::runQueue() {
     }
 }
 
-void ZeroMQConnection::onCommand(ZeroMQCommand &cmd) {
-    Serial.printf("Cmd %s\n", cmd.getName().c_str());
+void ZeroMQConnection::onCommand(const ZeroMQCommand &cmd) {
+    Serial.printf("%s: cmd %s\n", getRemoteAddress().c_str(), cmd.getName().c_str());
+    if (cmd.getName() == ZERO_MQ_CMD_READY) {
+        // subscribe = %x00 short-size %d1 subscription
+        for (auto &topic: _topics) {
+            std::shared_ptr<ZeroMQCharBuf> out(new ZeroMQBufFix<64>());
+            if (_version.minor == 0x00) {
+                std::ostream str(out.get());
+                str << (uint8_t) 0x00 << (uint8_t) (1 + 8) << (uint8_t) 0x01 << topic;
+            } else if (_version.minor == 0x01) {
+                ZeroMQCommand sub(ZERO_MQ_CMD_SUBSCRIBE);
+                sub.props.emplace(ZERO_MQ_PROP_SUBSCRIPTION, topic);
+                _enc.write(*out, sub);
+            }
+            send(out);
+        }
+    }
 }
 
-void ZeroMQConnection::onMessage(ZeroMQMessage &msg) {
-    if (msg.getData().size() == 2 && _topicEventHandler) {
-        _topicEventHandler(ZeroMQTopicEvent{msg.getData().front(), msg.getData().back()});
+void ZeroMQConnection::onMessage(const ZeroMQMessage &msg) {
+    if (msg.data.size() == 2 && _topicEventHandler) {
+        Serial.printf("%s: sub: %s:%s\n", getRemoteAddress().c_str(), msg.data.front().c_str(), msg.data.back().c_str());
+        _topicEventHandler(ZeroMQTopicEvent{msg.data.front(), msg.data.back()});
         return;
     }
-    for (const auto &item: msg.getData()) {
-        Serial.printf("Msg %s\n", item.c_str());
+    for (const auto &item: msg.data) {
+        Serial.printf("%s: msg %s\n", getRemoteAddress().c_str(), item.c_str());
     }
 }
