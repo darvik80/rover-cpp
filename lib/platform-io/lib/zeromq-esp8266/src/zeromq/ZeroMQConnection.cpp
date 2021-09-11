@@ -157,8 +157,12 @@ void ZeroMQConnection::runQueue() {
 }
 
 void ZeroMQConnection::onCommand(const ZeroMQCommand &cmd) {
-    Serial.printf("%s: cmd %s\n", getRemoteAddress().c_str(), cmd.getName().c_str());
     if (cmd.getName() == ZERO_MQ_CMD_READY) {
+        Serial.printf("%s: %s\n", getRemoteAddress().c_str(), cmd.getName().c_str());
+        for (auto &prop: cmd.props) {
+            Serial.printf("%s: %s %s\n", getRemoteAddress().c_str(), prop.first.c_str(), prop.second.c_str());
+        }
+
         // subscribe = %x00 short-size %d1 subscription
         for (auto &topic: _topics) {
             std::shared_ptr<ZeroMQCharBuf> out(new ZeroMQBufFix<64>());
@@ -172,6 +176,8 @@ void ZeroMQConnection::onCommand(const ZeroMQCommand &cmd) {
             }
             send(out);
         }
+    } else {
+        Serial.printf("%s: %s unsupported\n", getRemoteAddress().c_str(), cmd.name.c_str());
     }
 }
 

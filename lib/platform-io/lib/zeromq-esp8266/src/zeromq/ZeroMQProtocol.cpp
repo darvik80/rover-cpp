@@ -71,7 +71,7 @@ std::error_code ZeroMQDecoder::read(ZeroMQCharBuf &buf) {
 
                 size -= (5 + prop.size() + val.size());
             }
-        } else if (cmd.name == ZERO_MQ_CMD_SUBSCRIBE) {
+        } else if (cmd.name == ZERO_MQ_CMD_SUBSCRIBE || cmd.name == ZERO_MQ_CMD_CANCEL) {
             std::string topic;
             if (auto err = reader.readString(size, topic)) {
                 return err;
@@ -155,9 +155,7 @@ std::error_code ZeroMQEncoder::writeCmdReady(ZeroMQCharBuf &buf, ZeroMQCommand &
 std::error_code ZeroMQEncoder::write(ZeroMQCharBuf &buf, ZeroMQCommand &cmd) {
     if (cmd.name == ZERO_MQ_CMD_READY) {
         return writeCmdReady(buf, cmd);
-    }
-
-    if (cmd.name == ZERO_MQ_CMD_SUBSCRIBE) {
+    } else if (cmd.name == ZERO_MQ_CMD_SUBSCRIBE || cmd.name == ZERO_MQ_CMD_CANCEL) {
         return writeCmdSub(buf, cmd);
     }
 

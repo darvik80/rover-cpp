@@ -7,7 +7,9 @@
 
 #include <ESPAsyncTCP.h>
 #include <cstdint>
+
 #include <etl/list.h>
+#include <etl/set.h>
 
 #include "ZeroMQProtocol.h"
 #include "ZeroMQTopicEvent.h"
@@ -56,7 +58,7 @@ class ZeroMQConnection {
     ZeroMQEncoder _enc;
     ZeroMQDecoder _dec;
 
-    etl::vector<std::string, 3> _topics;
+    etl::set<std::string, 3> _topics;
 private:
     void runQueue();
 
@@ -68,7 +70,7 @@ private:
 public:
     explicit ZeroMQConnection(AsyncClient *client);
 
-    void onTopicEvent(ZeroMQTopicEventHandler topicEventHandler) {
+    void onTopicEvent(const ZeroMQTopicEventHandler& topicEventHandler) {
         _topicEventHandler = topicEventHandler;
     }
 
