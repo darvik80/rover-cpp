@@ -1,0 +1,32 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "description": "Interfaces and base classes",
+  "keywords": "service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darvik80/platform-core.git"
+  },
+  "authors": [
+    {
+      "name": "Ivan Kishchenko",
+      "email": "darvik@crearts.xyz",
+      "url": "https://www.linkedin.com/in/darvik/",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://www.helloworld.org/",
+  "dependencies": [
+    {
+      "name": "etlcpp/Embedded Template Library ETL",
+      "version": "~20.11.5",
+      "platforms": [
+        "espressif8266",
+        "espressif32"
+      ]
+    }
+  ],
+  "frameworks": "arduino",
+  "platforms": ["espressif8266", "espressif32"]
+}

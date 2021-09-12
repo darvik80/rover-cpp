@@ -1,0 +1,41 @@
+{
+  "name": "zeromq",
+  "version": "1.0.0",
+  "description": "ZeroMQ Support",
+  "keywords": "zero-mq, tcp",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/darvik80/platform-core.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Ivan Kishchenko",
+      "email": "darvik@crearts.xyz",
+      "url": "https://www.linkedin.com/in/darvik/",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://crearts.xyz/",
+  "frameworks": "arduino",
+  "platforms": ["espressif8266", "espressif32"],
+  "dependencies": [
+    {
+      "name": "ESPAsyncTCP-esphome",
+      "version": "^1.2.2",
+      "platforms": "espressif8266"
+    },
+    {
+      "name": "AsyncTCP-esphome",
+      "version": "^1.1.1",
+      "platforms": "espressif32"
+    },
+    {
+      "name": "etlcpp/Embedded Template Library ETL",
+      "version": "~20.11.5",
+      "platforms": ["espressif8266", "espressif32"]
+    }
+  ]
+}

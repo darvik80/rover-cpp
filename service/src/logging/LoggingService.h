@@ -5,7 +5,6 @@
 #ifndef ROVER_LOGGINGSERVICE_H
 #define ROVER_LOGGINGSERVICE_H
 
-#include "Logger.h"
 #include "Service.h"
 #include <logging/Logging.h>
 

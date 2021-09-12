@@ -17,7 +17,7 @@ endif ()
 find_package(OpenSSL REQUIRED)
 #find_package(ZeroMQ 4.0 REQUIRED)
 #find_package(Azmq REQUIRED)
-set(MAIN_SERVICE_LIBS logging event-manager mqtt zmq zmqpp)
+set(MAIN_SERVICE_LIBS logging event-manager mqtt zmq zmqpp zeromq)
 
 ### proto build {
 find_package(Protobuf REQUIRED)
@@ -49,8 +49,8 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/../core-utils/logging/src
         ${PROJECT_SOURCE_DIR}/../core-utils/event-manager/src
         ${PROJECT_SOURCE_DIR}/../mqtt/src
-        ${PROJECT_SOURCE_DIR}/../platform/src
-        ${PROJECT_SOURCE_DIR}/../lib/platform-io/lib/core/src
+        ${PROJECT_SOURCE_DIR}/../platform-io/lib/core/src
+        ${PROJECT_SOURCE_DIR}/../platform-io/lib/zeromq/src
 )
 
 file(GLOB SRCS_G

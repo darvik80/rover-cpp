@@ -11,7 +11,7 @@
 
 #include "scheduler/SchedulerService.h"
 
-#include "ZeroMQSocket.h"
+#include "zeromq/raspberry/ZeroMQSocket.h"
 
 class ZeroMQService : public BaseService {
     std::unique_ptr<std::thread> _thread;

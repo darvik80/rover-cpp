@@ -29,6 +29,8 @@ endif ()
 
 include_directories(
         /usr/local/include
+        core-utils/event-manager/src
+        core-utils/logging/src
 )
 
 link_directories(
@@ -40,11 +42,7 @@ set(CMAKE_INSTALL_NAME_DIR "")
 
 enable_testing()
 
-#add_subdirectory(lib/arduino)
-#add_subdirectory(lib/json)
-#add_subdirectory(lib/serial)
 add_subdirectory(core-utils)
+add_subdirectory(platform-io/lib/zeromq)
 add_subdirectory(mqtt)
-#add_subdirectory(platform)
-#add_subdirectory(plugins/system)
 add_subdirectory(service)

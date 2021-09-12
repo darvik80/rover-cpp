@@ -3,11 +3,10 @@
 //
 
 #include "ZeroMQService.h"
-#include "ZeroMQLogger.h"
+#include "zeromq/raspberry/ZeroMQLogger.h"
 
 #include <thread>
-#include "ZeroMQUtils.h"
-#include "ZeroMQProtocol.h"
+#include "zeromq/ZeroMQUtils.h"
 
 void ZeroMQService::postConstruct(Registry &registry) {
     BaseService::postConstruct(registry);
