@@ -1,8 +1,12 @@
 //
 // Created by Ivan Kishchenko on 01.05.2021.
 //
+#include <service/Logger.h>
 
+#if defined ESP8266
 #include <service/zeromq/ZeroMQService.h>
+#endif
+
 #include "Application.h"
 #include "service/wifi/WifiService.h"
 #include "service/mqtt/MqttService.h"
@@ -34,9 +38,21 @@ Application::Application()
 
 void Application::postConstruct() {
     Serial.begin(115200);
+    Serial.println();
+    //logging::addLogger(new logging::SerialLogger());
+    logging::addLogger(new logging::SerialColorLogger());
+    logging::debug("postConstruct");
+    logging::info("postConstruct");
+    logging::warning("postConstruct");
+    logging::error("postConstruct");
+    logging::critical("postConstruct");
+
 #if defined ESP8266 || ESP32
     _services.emplace_back(new WifiService(getRegistry()));
+#if defined ESP8266
     _services.emplace_back(new ZeroMQService(getRegistry()));
+#endif
+
     //_services.emplace_back(new MqttService(getRegistry()));
 #endif
 

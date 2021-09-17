@@ -44,6 +44,20 @@
 #define MOTOR3_PWM D4
 #define MOTOR4_PWM D3
 
+#elif ESP32
+
+
+#define MOTORLATCH 6
+#define MOTORCLK 2
+#define MOTORENABLE 5
+#define MOTORDATA 6
+
+// ESP8266 pins for the PWM signals.
+#define MOTOR1_PWM 7
+#define MOTOR2_PWM 1
+#define MOTOR3_PWM 4
+#define MOTOR4_PWM 3
+
 #endif
 
 // Codes for the motor function.

@@ -7,6 +7,8 @@
 
 #ifdef SUPPORT_ETHERNET
 
+#include "WifiLogger.h"
+
 #include <Arduino.h>
 
 #ifdef ESP8266

@@ -5,15 +5,18 @@
 #include "WifiService.h"
 #include "WifiMessage.h"
 
+
 using namespace std::placeholders;
 
 void onTimer(WifiService *service) {
     service->onWifiConnect();
 }
 
+#ifdef ESP8266
 void onConnect(const WiFiEventStationModeGotIP &event) {
     Serial.println("Connected to Wi-Fi.");
 }
+#endif
 
 WifiService::WifiService(Registry &registry)
         : BaseService(registry) {}
@@ -58,7 +61,7 @@ IPAddress subnet(255, 255, 255, 0);
 #define WIFI_PASS "1234554321"
 
 void WifiService::onWifiConnect() {
-    Serial.println("Init Wi-Fi...");
+    wifi::log::info("Init Wi-Fi...");
 //    WiFi.mode(WIFI_AP);
 //    WiFi.softAPConfig(localIp, gateway, subnet);
 //    WiFi.softAP(WIFI_AP_SSID, WIFI_PASS);
@@ -74,13 +77,12 @@ void WifiService::onWifiConnect() {
 void WifiService::onWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info) {
     switch (event) {
         case SYSTEM_EVENT_STA_GOT_IP:
-            Serial.println("WiFi connected");
-            Serial.print("Got IP address: ");
-            Serial.println(WiFi.localIP());
+            wifi::log::info("WiFi connected");
+            wifi::log::info("Got IP address: {}", WiFi.localIP().toString().c_str());
             etl::send_message(getRegistry().getMessageBus(), WifiMessageConnected{});
             break;
         case SYSTEM_EVENT_STA_DISCONNECTED:
-            Serial.println("WiFi lost connection");
+            wifi::log::info("WiFi lost connection");
             _reconnectTimer.once_ms(2000, ::onTimer, this);
             etl::send_message(getRegistry().getMessageBus(), WifiMessageDisconnected{});
             break;

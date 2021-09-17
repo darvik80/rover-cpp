@@ -4,9 +4,9 @@
 
 #include "ZeroMQProtocol.h"
 
-#include <memory>
 #include "ZeroMQReader.h"
 #include "ZeroMQWriter.h"
+#include <memory>
 
 std::error_code ZeroMQDecoder::read(ZeroMQCharBuf &buf) {
     ZeroMQReader reader(buf);
@@ -84,7 +84,7 @@ std::error_code ZeroMQDecoder::read(ZeroMQCharBuf &buf) {
         }
     } else {
         if (!_msg) {
-            _msg = std::make_unique<ZeroMQMessage>();
+            _msg.reset(new ZeroMQMessage());
         }
         std::string val;
         if (auto err = reader.readString(size, val)) {
@@ -147,6 +147,17 @@ std::error_code ZeroMQEncoder::writeCmdReady(ZeroMQCharBuf &buf, ZeroMQCommand &
         writer.writeSize((uint32_t) prop.second.size());
         writer.writeString(prop.second);
     }
+
+    return {};
+}
+
+std::error_code ZeroMQEncoder::write(ZeroMQCharBuf &buf, ZeroMQGreeting& greeting) {
+    ZeroMQWriter writer(buf);
+    writer << (uint8_t) 0xFF << std::setfill((char) 0x00) << std::setw(8) << (uint8_t) 0x00 << (uint8_t) 0x7F;
+    writer << (uint8_t) greeting.version.major << (uint8_t) greeting.version.minor;
+    writer << std::left << std::setw(20) << greeting.mechanism;
+    writer << (uint8_t) (greeting.isServer ? 0x01 : 0x00);
+    writer << std::setw(31) << (uint8_t) 0x00;
 
     return {};
 }

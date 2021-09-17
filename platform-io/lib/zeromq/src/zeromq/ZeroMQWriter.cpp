@@ -53,6 +53,6 @@ std::error_code ZeroMQWriter::writeSize(uint64_t size) {
     return writeData(&size, sizeof(uint64_t));
 }
 
-std::error_code ZeroMQWriter::writeString(std::string_view str) {
+std::error_code ZeroMQWriter::writeString(const std::string& str) {
     return writeData(str.data(), str.size());
 }

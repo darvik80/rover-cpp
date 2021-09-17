@@ -5,9 +5,7 @@
 #pragma once
 
 #include <string>
-#include <string_view>
 #include <unordered_map>
-#include <optional>
 #include <cstdint>
 #include <iostream>
 #include <iomanip>
@@ -25,24 +23,24 @@ struct ZeroMQVersion {
 
 };
 
-class ZeroMQGreeting {
-    ZeroMQVersion _version{};
-    std::string _mechanism{"NULL"};
-    bool _isServer{false};
+struct ZeroMQGreeting {
+    ZeroMQVersion version{};
+    std::string mechanism{"NULL"};
+    bool isServer{false};
 public:
     explicit ZeroMQGreeting(bool isServer)
-            : _mechanism("NULL"), _isServer(isServer) {
+            : mechanism("NULL"), isServer(isServer) {
 
     }
 
-    ZeroMQGreeting(const ZeroMQVersion &version, std::string_view mechanism, bool isServer)
-            : _version(version), _mechanism(mechanism), _isServer(isServer) {}
+    ZeroMQGreeting(const ZeroMQVersion &version, const std::string& mechanism, bool isServer)
+            : version(version), mechanism(mechanism), isServer(isServer) {}
 
     friend std::ostream &operator<<(std::ostream &out, const ZeroMQGreeting &greeting) {
         out << (uint8_t) 0xFF << std::setfill((char) 0x00) << std::setw(8) << (uint8_t) 0x00 << (uint8_t) 0x7F;
-        out << (uint8_t) greeting._version.major << (uint8_t) greeting._version.minor;
-        out << std::left << std::setw(20) << greeting._mechanism;
-        out << (uint8_t) (greeting._isServer ? 0x01 : 0x00);
+        out << (uint8_t) greeting.version.major << (uint8_t) greeting.version.minor;
+        out << std::left << std::setw(20) << greeting.mechanism;
+        out << (uint8_t) (greeting.isServer ? 0x01 : 0x00);
         out << std::setw(31) << (uint8_t) 0x00;
 
         return out;
@@ -59,15 +57,15 @@ public:
             return inc;
         }
 
-        greeting._version.major = inc.get();
-        greeting._version.minor = inc.get();
+        greeting.version.major = inc.get();
+        greeting.version.minor = inc.get();
         for (auto idx = 0; idx < 20; idx++) {
             auto ch = inc.get();
             if (ch) {
-                greeting._mechanism += (char) ch;
+                greeting.mechanism += (char) ch;
             }
         }
-        greeting._isServer = inc.get() > 0;
+        greeting.isServer = inc.get() > 0;
         inc.ignore(31);
         if (inc.eof()) {
             return inc;
@@ -91,7 +89,7 @@ struct ZeroMQCommand {
     std::string name;
     std::unordered_map<std::string, std::string> props;
 
-    explicit ZeroMQCommand(std::string_view name)
+    explicit ZeroMQCommand(const std::string name)
             : name(name) {}
 
     explicit ZeroMQCommand()
@@ -105,7 +103,7 @@ struct ZeroMQCommand {
 struct ZeroMQMessage {
     std::vector<std::string> data;
 
-    ZeroMQMessage &operator<<(std::string_view msg) {
+    ZeroMQMessage &operator<<(const std::string& msg) {
         data.emplace_back(msg);
         return *this;
     }
@@ -120,11 +118,11 @@ class ZeroMQDecoder {
 
     std::unique_ptr<ZeroMQMessage> _msg;
 public:
-    void onCommand(ZeroMQCommandHandler handler) {
+    void onCommand(const ZeroMQCommandHandler& handler) {
         _cmdHandler = handler;
     }
 
-    void onMessage(ZeroMQMessageHandler handler) {
+    void onMessage(const ZeroMQMessageHandler& handler) {
         _msgHandler = handler;
     }
 
@@ -135,6 +133,7 @@ class ZeroMQEncoder {
     std::error_code writeCmdSub(ZeroMQCharBuf &buf, ZeroMQCommand& cmd);
     std::error_code writeCmdReady(ZeroMQCharBuf &buf, ZeroMQCommand& cmd);
 public:
+    std::error_code write(ZeroMQCharBuf &buf, ZeroMQGreeting& greeting);
     std::error_code write(ZeroMQCharBuf &buf, ZeroMQCommand& cmd);
     std::error_code write(ZeroMQCharBuf &buf, ZeroMQMessage& msg);
 };

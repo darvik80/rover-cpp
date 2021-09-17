@@ -3,10 +3,12 @@
 //
 
 #include "ZeroMQProtocolTest.h"
+#include "zeromq/ZeroMQProtocol.h"
 
 BOOST_FIXTURE_TEST_SUITE(ZeroMQProtocolTest, ZeroMQProtocolFixture)
 
     BOOST_AUTO_TEST_CASE(testEncodeGreeting) {
+        ZeroMQEncoder encoder;
     }
 
 

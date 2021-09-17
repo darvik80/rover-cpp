@@ -4,6 +4,8 @@
 
 #pragma once
 
+#ifdef ESP8266
+
 #include <zeromq/esp8266/ZeroMQServer.h>
 #include <zeromq/ZeroMQUtils.h>
 
@@ -23,3 +25,5 @@ public:
 
     void on_receive_unknown(const etl::imessage &msg) {}
 };
+
+#endif

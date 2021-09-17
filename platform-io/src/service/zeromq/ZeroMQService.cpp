@@ -2,6 +2,8 @@
 // Created by Ivan Kishchenko on 29.08.2021.
 //
 
+#ifdef ESP8266
+
 #include "ZeroMQService.h"
 #include <zeromq/ZeroMQUtils.h>
 #include <ArduinoJson.hpp>
@@ -49,3 +51,5 @@ void ZeroMQService::on_receive(const WifiMessageDisconnected &msg) {
 void ZeroMQService::on_receive(const WifiClientMessageClientDisconnected &msg) {
     etl::send_message(getRegistry().getMessageBus(), JoystickEvent{});
 }
+
+#endif

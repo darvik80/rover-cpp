@@ -27,6 +27,6 @@ public:
 
     std::error_code writeSize(uint64_t size);
 
-    std::error_code writeString(std::string_view str);
+    std::error_code writeString(const std::string& str);
 
 };
