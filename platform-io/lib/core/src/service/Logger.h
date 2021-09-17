@@ -103,10 +103,13 @@ namespace logging {
                     Serial.print("\033[1;31m  unk");
                     break;
             }
-            Serial.print("\033[38;5;15m]");
-            Serial.print(" [\033[34m");
-            Serial.print(module);
             Serial.print("\033[38;5;15m] ");
+
+            if (module) {
+                Serial.print("[\033[34m");
+                Serial.print(module);
+                Serial.print("\033[38;5;15m] ");
+            }
 
             Serial.println(message);
         }
