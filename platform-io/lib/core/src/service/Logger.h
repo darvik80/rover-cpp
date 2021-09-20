@@ -11,7 +11,7 @@
 #define DECLARE_LEVEL(LEVEL) \
     template <class... A> \
     static void LEVEL(const char* fmt, A&&... args) { \
-        CompositeLogger::instance().log(level::LEVEL, fmt::format(fmt, std::forward<A>(args)...).c_str()); \
+        CompositeLogger::instance().log(level::LEVEL, nullptr, fmt::format(fmt, std::forward<A>(args)...).c_str()); \
     }
 
 namespace logging {
@@ -27,15 +27,13 @@ namespace logging {
     public:
         template<class... A>
         void log(level lvl, const std::string &fmt, A &&... args) {
-            log(lvl, fmt::format(fmt, std::forward<A>(args)...));
+            log(lvl, nullptr, fmt::format(fmt, std::forward<A>(args)...));
         }
 
         template<class... A>
         void log(level lvl, const char *module, const std::string &fmt, A &&... args) {
             log(lvl, module, fmt::format(fmt, std::forward<A>(args)...));
         }
-
-        virtual void log(level lvl, const char *message) = 0;
 
         virtual void log(level lvl, const char *module, const char *message) = 0;
 
@@ -44,12 +42,8 @@ namespace logging {
 
     class SerialLogger : public Logger {
     public:
-        void log(level lvl, const char *message) override {
-            log(lvl, nullptr, message);
-        }
-
         void log(level lvl, const char *module, const char *message) override {
-            Serial.printf("%08d", millis());
+            Serial.printf("%08lu", millis());
             switch (lvl) {
                 case level::debug:
                     Serial.print(" [debug]");
@@ -81,8 +75,9 @@ namespace logging {
     };
 
     class SerialColorLogger : public SerialLogger {
+    public:
         void log(level lvl, const char *module, const char *message) override {
-            Serial.printf("\033[38;5;15m%08d [", millis());
+            Serial.printf("\033[38;5;15m%08lu [", millis());
             switch (lvl) {
                 case level::debug:
                     Serial.print("\033[1;37mdebug");
@@ -117,23 +112,20 @@ namespace logging {
 
     class CompositeLogger : public Logger {
         etl::vector<Logger *, 3> _loggers;
+    private:
+        CompositeLogger() = default;
+        CompositeLogger(CompositeLogger& dup) = default;
     public:
-        void log(level lvl, const char *message) override {
-            for (auto logger: _loggers) {
-                logger->log(lvl, message);
-            }
+        static CompositeLogger &instance() {
+            static CompositeLogger inst;
+            return inst;
         }
-
         void log(level lvl, const char *module, const char *message) override {
             for (auto logger: _loggers) {
                 logger->log(lvl, module, message);
             }
         }
 
-        static CompositeLogger &instance() {
-            static CompositeLogger inst;
-            return inst;
-        }
 
         void addLogger(Logger *log) {
             _loggers.emplace_back(log);
