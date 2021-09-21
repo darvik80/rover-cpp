@@ -38,6 +38,54 @@ void Application::run(int argc, char **argv) {
     preDestroy(registry);
 }
 
+#include <logging/Logging.h>
+#include <type_traits>
+#include <optional>
+#include <vector>
+
+namespace {
+    template<class T>
+    struct is_vector : std::false_type {
+    };
+
+    template<template<typename...> class C, typename U>
+    struct is_vector<C<U>> {
+        static constexpr bool value = std::is_same<C<U>, std::vector<U>>::value;
+    };
+
+    template<class T>
+    struct is_optional : std::false_type {
+    };
+
+    template<class T>
+    struct is_optional<std::optional<T>> : std::true_type {
+    };
+
+}
+
+template<typename T>
+void doPrint(const T &val) {
+    if constexpr(is_optional<T>::value) {
+        logger::info("it's optional");
+        doPrint(*val);
+    }
+
+    if constexpr(is_vector<T>::value) {
+        logger::info("it's vector");
+        if (val.size()) {
+            doPrint(val[0]);
+        }
+    }
+
+    if constexpr(std::is_base_of<std::string, T>::value) {
+        logger::info("it's string");
+    }
+
+    if constexpr(std::is_integral<T>::value) {
+        logger::info("it's int");
+    }
+}
+
 void Application::postConstruct(Registry &registry) {
 
     // { System Services
@@ -62,6 +110,14 @@ void Application::postConstruct(Registry &registry) {
     registry.visitService([&registry](auto &service) {
         service.postConstruct(registry);
     });
+
+    logger::info("test");
+    auto d = std::optional<std::string>("is_optional");
+    doPrint(d);
+    auto v = std::vector<int>({1, 2, 3,});
+    doPrint(v);
+    std::string s = "Hello World";
+    doPrint(s);
 }
 
 void Application::run(Registry &registry) {

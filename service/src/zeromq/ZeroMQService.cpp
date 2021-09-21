@@ -69,29 +69,29 @@ void ZeroMQService::postConstruct(Registry &registry) {
 
 //    _pub = std::make_unique<zmqpp::socket>(_context, zmqpp::socket_type::publish);
 //    _pub->connect("tcp://192.168.100.163:5556");
-    _sub = std::make_unique<zmqpp::socket>(_context, zmqpp::socket_type::subscribe);
-    _sub->subscribe("joystick");
-    _sub->bind("tcp://*:5556");
-    _sub->subscribe("joystick");
-
-    zero_mq::log::info("init: {}", 5556);
-
-    _thread = std::make_unique<std::thread>([this]() {
-        while (true) {
-            zmqpp::message message;
-            _sub->receive(message);
-            std::string topic, data;
-
-            message >> topic;
-            message >> data;
-            zero_mq::log::info("data recv: {}:{}", topic, data);
-            //sleep(5);
-
-        }
-    });
-
-    _publisher = std::make_unique<ZeroMQSocket>(registry.getIoService(), "127.0.0.1", 5556);
-    //_publisher->publish("joystick", "test");
+//    _sub = std::make_unique<zmqpp::socket>(_context, zmqpp::socket_type::subscribe);
+//    _sub->subscribe("joystick");
+//    _sub->bind("tcp://*:5556");
+//    _sub->subscribe("joystick");
+//
+//    zero_mq::log::info("init: {}", 5556);
+//
+//    _thread = std::make_unique<std::thread>([this]() {
+//        while (true) {
+//            zmqpp::message message;
+//            _sub->receive(message);
+//            std::string topic, data;
+//
+//            message >> topic;
+//            message >> data;
+//            zero_mq::log::info("data recv: {}:{}", topic, data);
+//            //sleep(5);
+//
+//        }
+//    });
+//
+//    _publisher = std::make_unique<ZeroMQSocket>(registry.getIoService(), "127.0.0.1", 5556);
+//    //_publisher->publish("joystick", "test");
 }
 
 void ZeroMQService::preDestroy(Registry &registry) {

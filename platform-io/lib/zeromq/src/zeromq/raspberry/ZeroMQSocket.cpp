@@ -170,7 +170,7 @@ void ZeroMQSocket::publish(std::string_view topic, std::string_view data) {
         std::unique_ptr<ZeroMQBuf<>> buf(new ZeroMQBufFix<256>());
 
         ZeroMQMessage msg;
-        msg << topic << data;
+        msg << topic.data() << data.data();
 
         if (!enc.write(*buf, msg)) {
             startSend(buf);
