@@ -2,8 +2,7 @@
 // Created by Kishchenko, Ivan on 3/25/21.
 //
 
-#ifndef ROVER_ASYNCUDP_H
-#define ROVER_ASYNCUDP_H
+#pragma once
 
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
@@ -18,7 +17,7 @@ class UdpSocketHandler : public SocketHandler {
 private:
     UdpEndpoint _endpoint;
 public:
-    UdpSocketHandler(const UdpEndpoint &endpoint)
+    explicit UdpSocketHandler(const UdpEndpoint &endpoint)
             : _endpoint(endpoint) {
     }
 
@@ -67,5 +66,3 @@ private:
     void handleSend(const boost::system::error_code &error, size_t size);
 };
 
-
-#endif //ROVER_ASYNCUDP_H

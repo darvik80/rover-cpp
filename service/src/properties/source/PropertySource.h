@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 11.04.2021.
 //
 
-#ifndef ROVER_PROPERTYSOURCE_H
-#define ROVER_PROPERTYSOURCE_H
+#pragma once
 
 #include <string>
 #include <string_view>
@@ -29,6 +28,3 @@ public:
     virtual void getProperties(JoystickProperties& props) = 0;
     ~PropertySource() = default;
 };
-
-
-#endif //ROVER_PROPERTYSOURCE_H

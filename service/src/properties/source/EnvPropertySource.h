@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#ifndef ROVER_ENVPROPERTYSOURCE_H
-#define ROVER_ENVPROPERTYSOURCE_H
+#pragma once
 
 #include "PropertySource.h"
 #include <cstdlib>
@@ -117,6 +116,3 @@ public:
         }
     }
 };
-
-
-#endif //ROVER_ENVPROPERTYSOURCE_H

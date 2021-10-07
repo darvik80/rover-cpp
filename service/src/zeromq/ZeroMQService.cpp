@@ -5,13 +5,11 @@
 #include "ZeroMQService.h"
 #include "zeromq/raspberry/ZeroMQLogger.h"
 
-#include <thread>
 #include "zeromq/ZeroMQUtils.h"
 
 void ZeroMQService::postConstruct(Registry &registry) {
     BaseService::postConstruct(registry);
     ZeroMQUtils::init();
-
 
 //    ZeroMQBufFix<1024> buf;
 //    std::ostream out(&buf);

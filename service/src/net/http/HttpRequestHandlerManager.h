@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#ifndef ROVER_HTTPREQUESTHANDLERMANAGER_H
-#define ROVER_HTTPREQUESTHANDLERMANAGER_H
+#pragma once
 
 #include <unordered_map>
 #include <boost/beast/http.hpp>
@@ -50,6 +49,3 @@ public:
     virtual void process(const HttpRequest &req, HttpResponse &resp);
 
 };
-
-
-#endif //ROVER_HTTPREQUESTHANDLERMANAGER_H

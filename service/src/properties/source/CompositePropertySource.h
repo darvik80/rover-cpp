@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#ifndef ROVER_COMPOSITEPROPERTYSOURCE_H
-#define ROVER_COMPOSITEPROPERTYSOURCE_H
+#pragma once
 
 #include "PropertySource.h"
 #include <utility>
@@ -49,6 +48,3 @@ public:
         merge(props);
     }
 };
-
-
-#endif //ROVER_COMPOSITEPROPERTYSOURCE_H

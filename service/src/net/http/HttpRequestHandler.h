@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#ifndef ROVER_HTTPREQUESTHANDLER_H
-#define ROVER_HTTPREQUESTHANDLER_H
+#pragma once
 
 #include <boost/beast/http.hpp>
 #include <functional>
@@ -25,5 +24,3 @@ public:
 public:
     virtual void handle(const HttpRequest &, HttpResponse &) = 0;
 };
-
-#endif //ROVER_HTTPREQUESTHANDLER_H

@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 24.04.2021.
 //
 
-#ifndef ROVER_BASESERVICE_H
-#define ROVER_BASESERVICE_H
+#pragma once
 
 #include "Service.h"
 #include "Registry.h"
@@ -52,5 +51,3 @@ protected:
 
 template<typename T>
 class BaseServiceShared : public BaseService, public std::enable_shared_from_this<T> {};
-
-#endif //ROVER_BASESERVICE_H

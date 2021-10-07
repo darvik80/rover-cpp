@@ -5,7 +5,7 @@
 #pragma once
 
 #include "BaseService.h"
-#include <zmqpp/zmqpp.hpp>
+//#include <zmqpp/zmqpp.hpp>
 #include <memory>
 #include <array>
 
@@ -14,14 +14,14 @@
 #include "zeromq/raspberry/ZeroMQSocket.h"
 
 class ZeroMQService : public BaseService {
-    std::unique_ptr<std::thread> _thread;
-    std::unique_ptr<std::thread> _threadPub;
-
-    zmqpp::context _context;;
-    std::unique_ptr<zmqpp::socket> _sub;
-
-    std::unique_ptr<zmqpp::socket> _pub;
-
+//    std::unique_ptr<std::thread> _thread;
+//    std::unique_ptr<std::thread> _threadPub;
+//
+//    zmqpp::context _context;;
+//    std::unique_ptr<zmqpp::socket> _sub;
+//
+//    std::unique_ptr<zmqpp::socket> _pub;
+//
     TimerHandler _timer;
 
     std::unique_ptr<ZeroMQSocket> _publisher;
@@ -34,7 +34,4 @@ public:
 
 
     void preDestroy(Registry &registry) override;
-
-private:
-    void run();
 };

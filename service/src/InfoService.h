@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#ifndef ROVER_INFOSERVICE_H
-#define ROVER_INFOSERVICE_H
+#pragma once
 
 #include "BaseService.h"
 #include "net/http/JsonRpcHandler.h"
@@ -19,5 +18,3 @@ public:
     void postConstruct(Registry &registry) override;
 };
 
-
-#endif //ROVER_INFOSERVICE_H

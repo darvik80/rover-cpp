@@ -38,7 +38,7 @@ public:
         return _service;
     }
 
-    void visitService(std::function<void(Service& service)> visitor) {
+    void visitService(const std::function<void(Service& service)>& visitor) {
         for (auto &ptr : _services) {
             visitor(*ptr);
         }

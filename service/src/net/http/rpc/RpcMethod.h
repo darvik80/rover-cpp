@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 2019-06-09.
 //
 
-#ifndef ROVER_RPCMETHOD_H
-#define ROVER_RPCMETHOD_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -79,6 +78,3 @@ class RpcExec : public RpcMethod {
 
     virtual void exec() const = 0;
 };
-
-
-#endif //ROVER_RPCMETHOD_H

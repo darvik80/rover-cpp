@@ -2,8 +2,7 @@
 // Created by Kishchenko, Ivan on 3/26/21.
 //
 
-#ifndef ROVER_TRANSPORT_H
-#define ROVER_TRANSPORT_H
+#pragma once
 
 #include <system_error>
 #include <memory>
@@ -46,4 +45,3 @@ public:
     virtual Transport::Ptr create() = 0;
 };
 
-#endif //ROVER_TRANSPORT_H

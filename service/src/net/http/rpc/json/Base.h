@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 2019-07-13.
 //
 
-#ifndef ROVER_BASE_H
-#define ROVER_BASE_H
+#pragma once
 
 #include <nlohmann/json.hpp>
 #include <boost/optional.hpp>
@@ -51,6 +50,3 @@ namespace json {
         virtual ~UnMarshaller() = default;
     };
 }
-
-
-#endif //ROVER_BASE_H

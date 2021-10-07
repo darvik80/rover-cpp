@@ -1,9 +1,7 @@
 //
 // Created by Kishchenko, Ivan on 4/1/21.
 //
-
-#ifndef ROVER_BOOSTMULTICASTMESSAGE_H
-#define ROVER_BOOSTMULTICASTMESSAGE_H
+#pragma once
 
 #ifdef RASPBERRY_ARCH
 
@@ -29,5 +27,3 @@ C fromJson(std::string_view json) {
 }
 
 #endif
-
-#endif //ROVER_BOOSTMULTICASTMESSAGE_H

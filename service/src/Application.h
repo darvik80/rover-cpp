@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 09.04.2021.
 //
 
-#ifndef ROVER_APPLICATION_H
-#define ROVER_APPLICATION_H
+#pragma once
 
 #include "BaseService.h"
 #include "Registry.h"
@@ -28,6 +27,3 @@ public:
 
     void preDestroy(Registry &registry) override;
 };
-
-
-#endif //ROVER_APPLICATION_H

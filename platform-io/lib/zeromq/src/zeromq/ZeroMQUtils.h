@@ -8,11 +8,16 @@
 #include <cstddef>
 #include <string>
 #include <algorithm>
-#ifdef RASPBERRY_ARCH
-#include <machine/endian.h>
-#else
-#include <lwip/def.h>
+
+template <typename T>
+constexpr T htonT (T value) noexcept
+{
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    char* ptr = reinterpret_cast<char*>(&value);
+    std::reverse(ptr, ptr + sizeof(T));
 #endif
+    return value;
+}
 
 class ZeroMQUtils {
 public:
@@ -21,26 +26,14 @@ public:
     static std::string netDump(const uint8_t *data, std::size_t size);
 
     static uint64_t swapEndian(uint64_t val) {
-#ifdef RASPBERRY_ARCH
-        return htonll(val);
-#else
-        return 0;
-#endif
+        return htonT(val);
     }
 
     static uint32_t swapEndian(uint32_t val) {
-#ifdef RASPBERRY_ARCH
-        return htonl(val);
-#else
-        return lwip_htonl(val);
-#endif
+        return htonT(val);
     }
 
     static uint16_t swapEndian(uint16_t val) {
-#ifdef RASPBERRY_ARCH
-        return htons(val);
-#else
-        return lwip_htons(val);
-#endif
+        return htonT(val);
     }
 };

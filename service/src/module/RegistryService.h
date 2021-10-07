@@ -2,8 +2,7 @@
 // Created by Kishchenko, Ivan on 3/24/21.
 //
 
-#ifndef ROVER_REGISTRYSERVICE_H
-#define ROVER_REGISTRYSERVICE_H
+#pragma once
 
 #include "module/raspberry/AsyncUdp.h"
 #include "Service.h"
@@ -38,5 +37,3 @@ private:
     std::shared_ptr<MulticastSender> _sender;
 };
 
-
-#endif //ROVER_REGISTRYSERVICE_H

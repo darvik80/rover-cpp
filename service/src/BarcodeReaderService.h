@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 15.07.2021.
 //
 
-#ifndef ROVER_BARCODEREADERSERVICE_H
-#define ROVER_BARCODEREADERSERVICE_H
+#pragma once
 
 #ifdef SUPPORT_BARCODE
 
@@ -25,5 +24,3 @@ public:
 };
 
 #endif
-
-#endif //ROVER_BARCODEREADERSERVICE_H

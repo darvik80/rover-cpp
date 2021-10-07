@@ -24,7 +24,7 @@ SocketHandler::Ptr AsyncUdp::connect(std::string_view host, uint16_t port) {
     _socket.open(udp::v4(), ec);
     boost::asio::detail::throw_error(ec, "open");
 
-    udp::resolver resolver(_socket.get_executor());
+    udp::resolver resolver(_socket.get_io_service());
     udp::resolver::query query(udp::v4(), host.data(), std::to_string(port));
 
     return std::make_shared<UdpSocketHandler>(*resolver.resolve(query));
@@ -39,7 +39,7 @@ SocketHandler::Ptr AsyncUdp::broadcast(std::string_view host, uint16_t port) {
     _socket.set_option(UdpSocket::broadcast(true));
 
     udp::resolver::query query(udp::v4(), host.data(), std::to_string(port));
-    udp::resolver resolver(_socket.get_executor());
+    udp::resolver resolver(_socket.get_io_service());
 
     return std::make_shared<UdpSocketHandler>(*resolver.resolve(query));
 }

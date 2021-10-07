@@ -2,8 +2,7 @@
 // Created by Kishchenko, Ivan on 4/1/21.
 //
 
-#ifndef ROVER_BOOSTMULTICAST_H
-#define ROVER_BOOSTMULTICAST_H
+#pragma once
 
 #ifdef RASPBERRY_ARCH
 
@@ -30,5 +29,3 @@ public:
 };
 
 #endif
-
-#endif //ROVER_BOOSTMULTICAST_H

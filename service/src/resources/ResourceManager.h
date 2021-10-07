@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 21.04.2021.
 //
 
-#ifndef ROVER_RESOURCEMANAGER_H
-#define ROVER_RESOURCEMANAGER_H
+#pragma once
 
 #include <cstddef>
 #include <memory>
@@ -39,6 +38,3 @@ public:
 
     virtual std::string getResourcesDir() = 0;
 };
-
-
-#endif //ROVER_RESOURCEMANAGER_H

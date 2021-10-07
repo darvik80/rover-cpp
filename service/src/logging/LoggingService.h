@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 11.04.2021.
 //
 
-#ifndef ROVER_LOGGINGSERVICE_H
-#define ROVER_LOGGINGSERVICE_H
+#pragma once
 
 #include "Service.h"
 #include <logging/Logging.h>
@@ -27,5 +26,3 @@ public:
     }
 };
 
-
-#endif //ROVER_LOGGINGSERVICE_H

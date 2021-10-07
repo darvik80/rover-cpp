@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#ifndef ROVER_JSONRPCHANDLER_H
-#define ROVER_JSONRPCHANDLER_H
+#pragma once
 
 #include "HttpRequestHandler.h"
 #include "rpc/RpcRegistry.h"
@@ -26,5 +25,3 @@ public:
         return _jsonRpc;
     }
 };
-
-#endif //ROVER_JSONRPCHANDLER_H

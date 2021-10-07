@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 2019-07-14.
 //
 
-#ifndef ROVER_SPEC_H
-#define ROVER_SPEC_H
+#pragma once
 
 #include "Helper.h"
 
@@ -54,6 +53,3 @@ __DECLARE_DTO_FIELDS4(
         std::string, jsonrpc
 )
 END_DECLARE_DTO
-
-
-#endif //ROVER_SPEC_H

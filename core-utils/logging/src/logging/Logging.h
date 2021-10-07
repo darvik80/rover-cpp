@@ -2,8 +2,7 @@
 // Created by Kishchenko, Ivan on 5/6/21.
 //
 
-#ifndef CORE_UTILS_LOGGING_H
-#define CORE_UTILS_LOGGING_H
+#pragma once
 
 #include <boost/log/trivial.hpp>
 #include <fmt/ranges.h>
@@ -62,4 +61,3 @@ namespace logger {
     DECLARE_LEVEL(g_logger, fatal)
 }
 
-#endif //CORE_UTILS_LOGGING_H

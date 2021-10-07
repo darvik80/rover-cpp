@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 2019-06-16.
 //
 
-#ifndef ROVER_RPCREGISTRY_H
-#define ROVER_RPCREGISTRY_H
+#pragma once
 
 #include <map>
 #include "RpcMethod.h"
@@ -32,5 +31,3 @@ public:
         return _methods;
     }
 };
-
-#endif //ROVER_RPCREGISTRY_H

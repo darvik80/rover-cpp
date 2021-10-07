@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 26.04.2021.
 //
 
-#ifndef ROVER_HTTPSERVICE_H
-#define ROVER_HTTPSERVICE_H
+#pragma once
 
 #include "BaseService.h"
 #include "properties/HttpProperties.h"
@@ -26,6 +25,3 @@ public:
 private:
     void addHandlers(Registry &registry, const HttpProperties& props);
 };
-
-
-#endif //ROVER_HTTPSERVICE_H

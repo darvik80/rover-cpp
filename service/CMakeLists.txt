@@ -8,6 +8,7 @@ add_definitions(-DRASPBERRY_ARCH -DSUPPORT_ETHERNET)
 if(UNIX AND NOT APPLE)
     add_definitions(-DSUPPORT_XBOXDRV)
     add_definitions(-DSUPPORT_BARCODE)
+    add_definitions(-DBOOST_LOG_DYN_LINK)
 endif()
 
 if (APPLE)
@@ -15,9 +16,7 @@ if (APPLE)
 endif ()
 
 find_package(OpenSSL REQUIRED)
-#find_package(ZeroMQ 4.0 REQUIRED)
-#find_package(Azmq REQUIRED)
-set(MAIN_SERVICE_LIBS logging event-manager mqtt zmq zmqpp zeromq)
+set(MAIN_SERVICE_LIBS logging event-manager mqtt zeromq)
 
 ### proto build {
 find_package(Protobuf REQUIRED)

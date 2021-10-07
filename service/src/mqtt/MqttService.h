@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 31.07.2021.
 //
 
-#ifndef ROVER_MQTTSERVICE_H
-#define ROVER_MQTTSERVICE_H
+#pragma once
 
 #include "BaseService.h"
 #include <mqtt/Library.h>
@@ -27,5 +26,3 @@ public:
     void onEvent(const xbox::Xbox380Event &event) override;
 };
 
-
-#endif //ROVER_MQTTSERVICE_H

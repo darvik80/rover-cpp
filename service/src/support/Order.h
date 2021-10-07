@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 27.04.2021.
 //
 
-#ifndef ROVER_ORDER_H
-#define ROVER_ORDER_H
+#pragma once
 
 #include <queue>
 
@@ -32,5 +31,3 @@ struct OrderedLess
 
 template<typename T>
 using PriorityVector = std::priority_queue<T, std::vector<T>, OrderedLess<T>>;
-
-#endif //ROVER_ORDER_H

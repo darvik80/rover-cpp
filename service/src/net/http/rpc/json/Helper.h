@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 2019-07-13.
 //
 
-#ifndef ROVER_HELPER_H
-#define ROVER_HELPER_H
+#pragma once
 
 #include "Base.h"
 #include <memory>
@@ -305,5 +304,3 @@ BEGIN_JSON_UNMARSHAL                                                            
     ITEM_JSON_UNMARSHAL(name5)                                                          \
     ITEM_JSON_UNMARSHAL(name6)                                                          \
 END_JSON_UNMARSHAL
-
-#endif //ROVER_HELPER_H

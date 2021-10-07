@@ -4,8 +4,7 @@
 // Created by Ivan Kishchenko on 2019-07-13.
 //
 
-#ifndef ROVER_HTTPWORKER_H
-#define ROVER_HTTPWORKER_H
+#pragma once
 
 #include <boost/beast/http.hpp>
 #include <boost/beast/core.hpp>
@@ -83,5 +82,3 @@ private:
 
     void visit(HttpFileResponse& resp);
 };
-
-#endif //ROVER_HTTPWORKER_H

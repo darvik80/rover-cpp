@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 2019-06-09.
 //
 
-#ifndef ROVER_SAMPLES_H
-#define ROVER_SAMPLES_H
+#pragma once
 
 #include "Helper.h"
 
@@ -69,5 +68,3 @@ __DECLARE_DTO_FIELD(Message, message)
             ITEM_JSON_MARSHAL(message)
     END_JSON_MARSHAL
 END_DECLARE_DTO
-
-#endif //ROVER_SAMPLES_H

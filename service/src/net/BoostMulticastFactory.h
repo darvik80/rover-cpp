@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 09.04.2021.
 //
 
-#ifndef ROVER_BOOSTMULTICASTFACTORY_H
-#define ROVER_BOOSTMULTICASTFACTORY_H
+#pragma once
 
 #include <net/MulticastFactory.h>
 #include <boost/asio.hpp>
@@ -15,6 +14,3 @@ public:
     std::shared_ptr<MulticastReceiver> createReceiver(const char* group, int port) override;
     std::shared_ptr<MulticastSender> createSender(const char* group, int port) override;
 };
-
-
-#endif //ROVER_BOOSTMULTICASTFACTORY_H

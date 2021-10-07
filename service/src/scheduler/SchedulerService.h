@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 02.05.2021.
 //
 
-#ifndef ROVER_SCHEDULERSERVICE_H
-#define ROVER_SCHEDULERSERVICE_H
+#pragma once
 
 #include "BaseService.h"
 #include <scheduler/Scheduler.h>
@@ -21,6 +20,3 @@ public:
         return INT32_MAX - 1;
     }
 };
-
-
-#endif //ROVER_SCHEDULERSERVICE_H

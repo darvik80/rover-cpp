@@ -2,8 +2,7 @@
 // Created by Ivan Kishchenko on 11.04.2021.
 //
 
-#ifndef ROVER_JSONPROPERTYSOURCE_H
-#define ROVER_JSONPROPERTYSOURCE_H
+#pragma once
 
 #include "PropertySource.h"
 #include <nlohmann/json.hpp>
@@ -25,6 +24,3 @@ public:
     void getProperties(MqttProperties &props) override;
     void getProperties(JoystickProperties &props) override;
 };
-
-
-#endif //ROVER_JSONPROPERTYSOURCE_H
