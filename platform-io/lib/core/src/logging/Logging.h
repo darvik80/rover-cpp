@@ -115,6 +115,7 @@ namespace logging {
     };
 
     class CompositeLogger : public Logger {
+        level _level{level::info};
         etl::vector<Logger *, 3> _loggers;
     private:
         CompositeLogger() = default;
@@ -125,8 +126,10 @@ namespace logging {
             return inst;
         }
         void log(level lvl, const char *module, const char *message) override {
-            for (auto logger: _loggers) {
-                logger->log(lvl, module, message);
+            if (lvl >= _level) {
+                for (auto logger: _loggers) {
+                    logger->log(lvl, module, message);
+                }
             }
         }
 
@@ -142,9 +145,7 @@ namespace logging {
         }
     };
 
-    static void addLogger(Logger *log) {
-        CompositeLogger::instance().addLogger(log);
-    }
+    void addLogger(Logger *log);
 
     DECLARE_LEVEL(debug);
 

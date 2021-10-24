@@ -5,12 +5,13 @@
 #ifndef PLATFORM_IO_DCMOTORSERVICE_H
 #define PLATFORM_IO_DCMOTORSERVICE_H
 
+#include "logging/Logging.h"
+
 #include <device/motor/DCMotor.h>
 #include <device/controller/IRRemoteButton.h>
 #include <service/IRControlMessage.h>
 #include "service/Service.h"
 #include "JoystickEvent.h"
-
 
 class DCMotorService : public BaseService, public etl::message_router<DCMotorService, IRControlMessage, JoystickEvent> {
     int _pos = 6;

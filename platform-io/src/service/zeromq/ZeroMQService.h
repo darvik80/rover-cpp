@@ -6,14 +6,16 @@
 
 #ifdef ESP8266
 
-#include <zeromq/esp8266/ZeroMQServer.h>
-#include <zeromq/ZeroMQUtils.h>
+//#include <zeromq/esp8266/ZeroMQServer.h>
+//#include <zeromq/ZeroMQUtils.h>
+
+#include <network/esp8266/AsyncTcpServer.h>
 
 #include "service/Service.h"
 #include "service/wifi/WifiMessage.h"
 
 class ZeroMQService : public BaseService, public etl::message_router<ZeroMQService, WifiMessageConnected, WifiMessageDisconnected, WifiClientMessageClientDisconnected> {
-    ZeroMQServer _server;
+    network::AsyncTcpServer* _server;
 public:
     explicit ZeroMQService(Registry &registry);
 

@@ -23,6 +23,13 @@
 
 #endif
 
+#ifdef ESP12E_DC_MOTOR_SHIELD
+
+#include "service/DCMotorService.h"
+#include "device/ESP12EMotorShield.h"
+
+#endif
+
 #ifdef MG90S_SERVO_MOTOR
 
 #include "device/MG90sServoMotor.h"
@@ -38,14 +45,8 @@ Application::Application()
 
 void Application::postConstruct() {
     Serial.begin(115200);
-    Serial.println();
-    //logging::addLogger(new logging::SerialLogger());
-    logging::addLogger(new logging::SerialColorLogger());
-    logging::debug("postConstruct");
-    logging::info("postConstruct");
-    logging::warning("postConstruct");
-    logging::error("postConstruct");
-    logging::critical("postConstruct");
+    logging::addLogger(new logging::SerialLogger());
+    ///logging::addLogger(new logging::SerialColorLogger());
 
 #if defined ESP8266 || ESP32
     _services.emplace_back(new WifiService(getRegistry()));
@@ -64,6 +65,10 @@ void Application::postConstruct() {
     _services.emplace_back(new DCMotorService(getRegistry(), new L293DMotorShield()));
 #endif
 
+#ifdef ESP12E_DC_MOTOR_SHIELD
+    _services.emplace_back(new DCMotorService(getRegistry(), new ESP12EMotorShield()));
+#endif
+
 #ifdef MG90S_SERVO_MOTOR
     _services.emplace_back(new ServoMotorService(getRegistry(), new MG90sServoMotor(D8)));
 #endif
@@ -72,6 +77,7 @@ void Application::postConstruct() {
     for (const auto &service : _services) {
         service->postConstruct();
     }
+
 }
 
 void Application::run() {
