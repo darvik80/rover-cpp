@@ -130,8 +130,6 @@ else ()
 
     add_executable(${PROJECT_NAME} ${SRCS_G} ${RES_SRC_FILE} ${RES_EMBED_FILES} ${PROTO_SRCS} ${GRPC_SRCS})
     set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
-
-    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/www/build/ DESTINATION ${VAR_DIR}/www)
 endif ()
 
 add_subdirectory(testsuite)

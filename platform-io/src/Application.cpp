@@ -1,7 +1,7 @@
 //
 // Created by Ivan Kishchenko on 01.05.2021.
 //
-#include <service/Logger.h>
+#include <logging/Logging.h>
 
 #if defined ESP8266
 #include <service/zeromq/ZeroMQService.h>

@@ -4,6 +4,6 @@
 
 #pragma once
 
-#include <service/Logger.h>
+#include <logging/Logging.h>
 
 LOG_COMPONENT_SETUP(wifi)
